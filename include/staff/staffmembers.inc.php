@@ -105,7 +105,7 @@ $query="$select $from $where GROUP BY staff.staff_id ORDER BY $order_by LIMIT ".
         <input class="btn btn-primary" type="submit" name="submit" value="Apply"/>
     </form>
  </div>
-<div style="float:right;text-align:right;padding-right:5px;"><b><a href="staff.php?a=add" class="btn btn-primary pull-right">Add New Staff</a></b></div>
+<div style="float:right;text-align:right;padding-right:5px;"><b><a href="staff.php?a=add" class="btn btn-default pull-right">Add New Staff</a></b></div>
 <div class="clear"></div>
 <?php
 $res=db_query($query);
@@ -203,10 +203,10 @@ endif;
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="btn btn-default">
+            <input type="button" value="No, Cancel" class="btn btn-default close">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="btn btn-primary">
+            <input type="button" value="Yes, Do it!" class="btn btn-primary confirm">
         </span>
      </p>
     <div class="clear"></div>

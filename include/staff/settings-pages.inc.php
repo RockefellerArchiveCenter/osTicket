@@ -161,10 +161,10 @@ $pages = Page::getPages();
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="btn btn-default">
+            <input type="button" value="No, Cancel" class="btn btn-default close">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="btn btn-primary">
+            <input type="button" value="Yes, Do it!" class="btn btn-primary confirm">
         </span>
      </p>
     <div class="clear"></div>
