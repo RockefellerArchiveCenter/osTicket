@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="cache-control" content="no-cache" />
     <meta http-equiv="pragma" content="no-cache" />
-    <title><?php echo ($ost && ($title=$ost->getPageTitle()))?$title:'osTicket :: Staff Control Panel'; ?></title>
+    <title><?php echo ($ost && ($title=$ost->getPageTitle()))?$title:'RAC Research Requests'; ?></title>
     <!--[if IE]>
     <style type="text/css">
         .tip_shadow { display:block !important; }
@@ -18,8 +18,10 @@
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor.min.js"></script>
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor-osticket.js"></script>
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/redactor-fonts.js"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/bootstrap.js"></script>
     <script type="text/javascript" src="./js/bootstrap-typeahead.js"></script>
     <script type="text/javascript" src="./js/scp.js"></script>
+    <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/thread.css" media="screen">
     <link rel="stylesheet" href="./css/scp.css" media="screen">
     <link rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/redactor.css" media="screen">
@@ -49,7 +51,10 @@
         echo sprintf('<div id="notice_bar">%s</div>', $ost->getNotice());
     ?>
     <div id="header">
-        <a href="index.php" id="logo">osTicket - Customer Support System</a>
+        <a href="index.php">
+            <!--<img src="images/rac-logo.jpg"></img>-->
+            <h1>Research Requests</h1>
+        </a>
         <p id="info">Welcome, <strong><?php echo $thisstaff->getFirstName(); ?></strong>
            <?php
             if($thisstaff->isAdmin() && !defined('ADMINPAGE')) { ?>
@@ -61,27 +66,27 @@
             | <a href="logout.php?auth=<?php echo $ost->getLinkToken(); ?>">Log Out</a>
         </p>
     </div>
-    <ul id="nav">
+    <ul class="nav nav-tabs">
         <?php
         if(($tabs=$nav->getTabs()) && is_array($tabs)){
             foreach($tabs as $name =>$tab) {
                 echo sprintf('<li class="%s"><a href="%s">%s</a>',$tab['active']?'active':'inactive',$tab['href'],$tab['desc']);
-                if(!$tab['active'] && ($subnav=$nav->getSubMenu($name))){
-                    echo "<ul>\n";
-                    foreach($subnav as $k => $item) {
-                        if (!($id=$item['id']))
-                            $id="nav$k";
+                //if(!$tab['active'] && ($subnav=$nav->getSubMenu($name))){
+                  //  echo '<ul class="dropdown-menu">';
+                    //foreach($subnav as $k => $item) {
+                      //  if (!($id=$item['id']))
+                        //    $id="nav$k";
 
-                        echo sprintf('<li><a class="%s" href="%s" title="%s" id="%s">%s</a></li>',
-                                $item['iconclass'], $item['href'], $item['title'], $id, $item['desc']);
-                    }
-                    echo "\n</ul>\n";
-                }
+                   //     echo sprintf('<li><a href="%s" title="%s" id="%s">%s</a></li>',
+                     //           /*$item['iconclass'], */$item['href'], $item['title'], $id, $item['desc']);
+                  //  }
+                 //   echo "\n</ul>\n";
+               // }
                 echo "\n</li>\n";
             }
         } ?>
     </ul>
-    <ul id="sub_nav">
+    <ul class="nav nav-tabs">
         <?php
         if(($subnav=$nav->getSubMenu()) && is_array($subnav)){
             $activeMenu=$nav->getActiveMenu();
@@ -89,19 +94,21 @@
                 $activeMenu=0;
             foreach($subnav as $k=> $item) {
                 if($item['droponly']) continue;
-                $class=$item['iconclass'];
+                //$class=$item['iconclass'];
                 if ($activeMenu && $k+1==$activeMenu
-                        or (!$activeMenu
+                        or 
+                        (!$activeMenu
                             && (strpos(strtoupper($item['href']),strtoupper(basename($_SERVER['SCRIPT_NAME']))) !== false
                                 or ($item['urls']
                                     && in_array(basename($_SERVER['SCRIPT_NAME']),$item['urls'])
-                                    )
+                                   )
                                 )))
-                    $class="$class active";
+                    {$class="active";}
+                    else {$class="inactive";}
                 if (!($id=$item['id']))
                     $id="subnav$k";
 
-                echo sprintf('<li><a class="%s" href="%s" title="%s" id="%s">%s</a></li>',
+                echo sprintf('<li class="%s"><a href="%s" title="%s" id="%s">%s</a></li>',
                         $class, $item['href'], $item['title'], $id, $item['desc']);
             }
         }
