@@ -36,11 +36,11 @@ $tpl=$msgtemplates[$selected];
 ?>
 <h2>Email Template Message - <span><?php echo $name; ?></span></h2>
 <div style="padding-top:10px;padding-bottom:5px;">
-    <form method="get" action="templates.php?">
+    <form method="get" action="templates.php?" class="form-inline">
     <input type="hidden" name="a" value="manage">
     <input type="hidden" name="tpl_id" value="<?php echo $tpl_id; ?>">
     Message Template:
-    <select id="tpl_options" name="id" style="width:300px;">
+    <select class="form-control" id="tpl_options" name="id" style="width:300px;">
         <option value="">&mdash; Select Setting Group &mdash;</option>
         <?php
         $impl = $group->getTemplates();
@@ -69,7 +69,7 @@ $tpl=$msgtemplates[$selected];
             echo "</optgroup>";
         ?>
     </select>
-    <input type="submit" value="Go">
+    <input class="btn btn-primary" type="submit" value="Go">
     &nbsp;&nbsp;&nbsp;<font color="red"><?php echo $errors['tpl']; ?></font>
     </form>
 </div>
@@ -82,7 +82,7 @@ $tpl=$msgtemplates[$selected];
 <input type="hidden" name="a" value="manage">
 <input type="hidden" name="do" value="<?php echo $action; ?>">
 
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
    <thead>
      <tr>
         <th colspan="2">
@@ -111,11 +111,11 @@ $tpl=$msgtemplates[$selected];
         </tr>
     </tbody>
 </table>
-<p style="padding-left:210px;">
-    <input class="button" type="submit" name="submit" value="Save Changes">
-    <input class="button" type="reset" name="reset" value="Reset Changes" onclick="javascript:
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="Save Changes">
+    <input class="btn btn-warning" type="reset" name="reset" value="Reset Changes" onclick="javascript:
         setTimeout('location.reload()', 25);" />
-    <input class="button" type="button" name="cancel" value="Cancel Changes"
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel Changes"
         onclick='window.location.href="templates.php?tpl_id=<?php echo $tpl_id; ?>"'>
 </p>
 </form>

@@ -11,15 +11,13 @@ $info = ($_POST && $errors)?Format::htmlchars($_POST):array();
         <?php csrf_token(); ?>
         <input type="hidden" name="do" value="sendmail">
         <fieldset>
-            <input type="text" name="userid" id="name" value="<?php echo
+            <input class="form-control" type="text" name="userid" id="name" value="<?php echo
                 $info['userid']; ?>" placeholder="username" autocorrect="off"
                 autocapitalize="off">
         </fieldset>
-        <input class="submit" type="submit" name="submit" value="Send Email"/>
+        <input class="btn btn-primary" type="submit" name="submit" value="Send Email"/>
     </form>
 
 </div>
-
-<div id="copyRights">Copyright &copy; <a href='http://www.osticket.com' target="_blank">osTicket.com</a></div>
 </body>
 </html>

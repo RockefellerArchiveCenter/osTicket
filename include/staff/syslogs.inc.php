@@ -85,22 +85,21 @@ else
 
 <h2>System Logs</h2>
 <div id='filter' >
- <form action="logs.php" method="get">
+ <form action="logs.php" method="get" class="form-inline">
     <div style="padding-left:2px;">
         <b>Date Span</b>:
-        &nbsp;From&nbsp;<input class="dp" id="sd" size=15 name="startDate" value="<?php echo Format::htmlchars($_REQUEST['startDate']); ?>" autocomplete=OFF>
+        &nbsp;From&nbsp;<input class="dp form-control" id="sd" size=15 name="startDate" value="<?php echo Format::htmlchars($_REQUEST['startDate']); ?>" autocomplete=OFF>
             &nbsp;&nbsp; to &nbsp;&nbsp;
-            <input class="dp" id="ed" size=15 name="endDate" value="<?php echo Format::htmlchars($_REQUEST['endDate']); ?>" autocomplete=OFF>
+            <input class="dp form-control" id="ed" size=15 name="endDate" value="<?php echo Format::htmlchars($_REQUEST['endDate']); ?>" autocomplete=OFF>
             &nbsp;&nbsp;
             &nbsp;Type:
-            <select name='type'>
+            <select class="form-control" name='type'>
                 <option value="" selected>All</option>
                 <option value="Error" <?php echo ($type=='Error')?'selected="selected"':''; ?>>Errors</option>
                 <option value="Warning" <?php echo ($type=='Warning')?'selected="selected"':''; ?>>Warnings</option>
                 <option value="Debug" <?php echo ($type=='Debug')?'selected="selected"':''; ?>>Debug</option>
             </select>
-            &nbsp;&nbsp;
-            <input type="submit" Value="Go!" />
+            <input class="btn btn-primary" type="submit" Value="Go!" />
     </div>
  </form>
 </div>
@@ -108,7 +107,7 @@ else
 <?php csrf_token(); ?>
  <input type="hidden" name="do" value="mass_process" >
  <input type="hidden" id="action" name="a" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
+ <table class="table table-striped" border="0" cellspacing="1" cellpadding="0" width="100%">
     <caption><?php echo $showing; ?></caption>
     <thead>
         <tr>
@@ -162,7 +161,7 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="button" type="submit" name="delete" value="Delete Selected Entries">
+    <input class="btn btn-danger" type="submit" name="delete" value="Delete Selected Entries">
 </p>
 <?php
 endif;

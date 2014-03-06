@@ -21,7 +21,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
     <input type="hidden" name="do" value="<?php echo $action; ?>">
     <input type="hidden" name="id" value="<?php echo $info['id']; ?>">
     <h2>Custom Form</h2>
-    <table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+    <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -50,7 +50,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
     </tbody>
     </table>
-    <table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+    <table class="form_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <?php if ($form && $form->get('type') == 'T') { ?>
     <thead>
         <tr>
@@ -224,9 +224,9 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
     </tbody>
     </table>
 <p class="centered">
-    <input type="submit" name="submit" value="<?php echo $submit_text; ?>">
-    <input type="reset"  name="reset"  value="Reset">
-    <input type="button" name="cancel" value="Cancel" onclick='window.location.href="?"'>
+    <input class="btn btn-success" type="submit" name="submit" value="<?php echo $submit_text; ?>">
+    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset">
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="?"'>
 </p>
 </form>
 

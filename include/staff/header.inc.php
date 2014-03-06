@@ -66,7 +66,7 @@
             | <a href="logout.php?auth=<?php echo $ost->getLinkToken(); ?>">Log Out</a>
         </p>
     </div>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-primary">
         <?php
         if(($tabs=$nav->getTabs()) && is_array($tabs)){
             foreach($tabs as $name =>$tab) {
@@ -86,7 +86,7 @@
             }
         } ?>
     </ul>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-secondary">
         <?php
         if(($subnav=$nav->getSubMenu()) && is_array($subnav)){
             $activeMenu=$nav->getActiveMenu();
@@ -116,9 +116,9 @@
     </ul>
     <div id="content">
         <?php if($errors['err']) { ?>
-            <div id="msg_error"><?php echo $errors['err']; ?></div>
+            <div class="alert alert-danger"><?php echo $errors['err']; ?></div>
         <?php }elseif($msg) { ?>
-            <div id="msg_notice"><?php echo $msg; ?></div>
+            <div class="alert alert-info"><?php echo $msg; ?></div>
         <?php }elseif($warn) { ?>
-            <div id="msg_warning"><?php echo $warn; ?></div>
+            <div class="alert alert-warning"><?php echo $warn; ?></div>
         <?php } ?>

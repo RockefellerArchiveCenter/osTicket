@@ -25,7 +25,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
  <input type="hidden" name="a" value="<?php echo Format::htmlchars($_REQUEST['a']); ?>">
  <input type="hidden" name="id" value="<?php echo $info['id']; ?>">
  <h2>Manage Email Ban List</h2>
- <table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+ <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -73,9 +73,9 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
     </tbody>
 </table>
-<p style="padding-left:225px;">
-    <input type="submit" name="submit" value="<?php echo $submit_text; ?>">
-    <input type="reset"  name="reset"  value="Reset">
-    <input type="button" name="cancel" value="Cancel" onclick='window.location.href="banlist.php"'>
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="<?php echo $submit_text; ?>">
+    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset">
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="banlist.php"'>
 </p>
 </form>

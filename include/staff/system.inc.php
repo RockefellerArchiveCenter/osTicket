@@ -4,7 +4,7 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin()) die('Access
 ?>
 <h2>About this osTicket Installation</h2>
 <br/>
-<table class="list" width="100%";>
+<table class="table table-striped" width="100%";>
 <thead>
     <tr><th colspan="2">Server Information</th></tr>
 </thead>

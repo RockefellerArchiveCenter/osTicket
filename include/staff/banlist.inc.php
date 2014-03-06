@@ -48,16 +48,15 @@ $query="$select $from $where ORDER BY $order_by LIMIT ".$pageNav->getStart().","
 ?>
 <h2>Banned Email Addresses</h2>
 <div style="width:600; float:left;padding-top:5px;">
-    <form action="banlist.php" method="GET" name="filter">
+    <form action="banlist.php" method="GET" name="filter" class="form-inline">
      <input type="hidden" name="a" value="filter" >
      <div>
-       Query: <input name="q" type="text" size="20" value="<?php echo Format::htmlchars($_REQUEST['q']); ?>">
-        &nbsp;&nbsp;
-        <input type="submit" name="submit" value="Search"/>
+       <input class="form-control" name="q" type="text" size="20" value="<?php echo Format::htmlchars($_REQUEST['q']); ?>">
+       <input class="btn btn-primary" type="submit" name="submit" value="Search"/>
      </div>
     </form>
  </div>
-<div style="float:right;text-align:right;padding-right:5px;"><b><a href="banlist.php?a=add" class="Icon newstaff">Ban New Email</a></b></div>
+<div style="float:right;text-align:right;padding-right:5px;"><b><a href="banlist.php?a=add" class="btn btn-default pull-right">Ban New Email</a></b></div>
 <div class="clear"></div>
 <?php
 if(($res=db_query($query)) && ($num=db_num_rows($res)))
@@ -73,7 +72,7 @@ if($search)
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="mass_process" >
 <input type="hidden" id="action" name="a" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
+ <table class="table table-striped" border="0" cellspacing="1" cellpadding="0" width="100%">
     <caption><?php echo $showing; ?></caption>
     <thead>
         <tr>
@@ -125,11 +124,9 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="button" type="submit" name="enable" value="Enable" >
-    &nbsp;&nbsp;
-    <input class="button" type="submit" name="disable" value="Disable" >
-    &nbsp;&nbsp;
-    <input class="button" type="submit" name="delete" value="Delete">
+    <input class="btn btn-success" type="submit" name="enable" value="Enable" >
+    <input class="btn btn-warning" type="submit" name="disable" value="Disable" >
+    <input class="btn btn-danger" type="submit" name="delete" value="Delete">
 </p>
 <?php
 endif;
@@ -153,10 +150,10 @@ endif;
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="close">
+            <input type="button" value="No, Cancel" class="btn btn-default">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="confirm">
+            <input type="button" value="Yes, Do it!" class="btn btn-primary">
         </span>
      </p>
     <div class="clear"></div>

@@ -13,10 +13,9 @@ $info = ($_POST && $errors)?Format::htmlchars($_POST):array();
     </em></h3>
 
     <form action="index.php" method="get">
-        <input class="submit" type="submit" name="submit" value="Login"/>
+        <input class="btn btn-primary" type="submit" name="submit" value="Login"/>
     </form>
 </div>
 
-<div id="copyRights">Copyright &copy; <a href='http://www.osticket.com' target="_blank">osTicket.com</a></div>
 </body>
 </html>

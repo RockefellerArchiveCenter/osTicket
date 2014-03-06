@@ -28,7 +28,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
  <input type="hidden" name="a" value="<?php echo Format::htmlchars($_REQUEST['a']); ?>">
  <input type="hidden" name="id" value="<?php echo $info['id']; ?>">
  <h2>Canned Response</h2>
- <table class="form_table fixed" width="940" border="0" cellspacing="0" cellpadding="2">
+ <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr><td></td><td></td></tr> <!-- For fixed table layout -->
         <tr>
@@ -121,15 +121,15 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
 </table>
  <?php if ($canned && $canned->getFilters()) { ?>
     <br/>
-    <div id="msg_warning">Canned response is in use by email filter(s): <?php
+    <div class="alert alert-warning">Canned response is in use by email filter(s): <?php
     echo implode(', ', $canned->getFilters()); ?></div>
  <?php } ?>
-<p style="padding-left:225px;">
-    <input type="submit" name="submit" value="<?php echo $submit_text; ?>">
-    <input type="reset"  name="reset"  value="Reset" onclick="javascript:
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="<?php echo $submit_text; ?>">
+    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset" onclick="javascript:
         $(this.form).find('textarea.richtext')
             .redactor('deleteDraft');
         location.reload();" />
-    <input type="button" name="cancel" value="Cancel" onclick='window.location.href="canned.php"'>
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="canned.php"'>
 </p>
 </form>

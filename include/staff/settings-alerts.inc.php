@@ -2,7 +2,7 @@
 <form action="settings.php?t=alerts" method="post" id="save">
 <?php csrf_token(); ?>
 <input type="hidden" name="t" value="alerts" >
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th>
@@ -185,8 +185,8 @@
         </tr>
     </tbody>
 </table>
-<p style="padding-left:350px;">
-    <input class="button" type="submit" name="submit" value="Save Changes">
-    <input class="button" type="reset" name="reset" value="Reset Changes">
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="Save Changes">
+    <input class="btn btn-warning" type="reset" name="reset" value="Reset Changes">
 </p>
 </form>

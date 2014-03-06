@@ -279,17 +279,13 @@ if ($results) {
 ?>
 <!-- SEARCH FORM START -->
 <div id='basic_search'>
-    <form action="tickets.php" method="get">
+    <form action="tickets.php" method="get" class="form-inline">
     <?php csrf_token(); ?>
     <input type="hidden" name="a" value="search">
-    <table>
-        <tr>
-            <td><input type="text" id="basic-ticket-search" name="query" size=30 value="<?php echo Format::htmlchars($_REQUEST['query']); ?>"
-                autocomplete="off" autocorrect="off" autocapitalize="off"></td>
-            <td><input type="submit" name="basic_search" class="button" value="Search"></td>
-            <td>&nbsp;&nbsp;<a href="" id="go-advanced">[advanced]</a></td>
-        </tr>
-    </table>
+    <input class="form-control" type="text" id="basic-ticket-search" name="query" size=30 value="<?php echo Format::htmlchars($_REQUEST['query']); ?>"
+                autocomplete="off" autocorrect="off" autocapitalize="off">
+    <input class="btn btn-primary" type="submit" name="basic_search" value="Search">
+   <a href="" id="go-advanced">[advanced]</a>
     </form>
 </div>
 <!-- SEARCH FORM END -->
@@ -297,11 +293,11 @@ if ($results) {
 <div style="margin-bottom:20px">
 <form action="tickets.php" method="POST" name='tickets'>
 <?php csrf_token(); ?>
- <a class="refresh" href="<?php echo $_SERVER['REQUEST_URI']; ?>">Refresh</a>
+ <a class="btn btn-default pull-right" href="<?php echo $_SERVER['REQUEST_URI']; ?>">Refresh</a>
  <input type="hidden" name="a" value="mass_process" >
  <input type="hidden" name="do" id="action" value="" >
  <input type="hidden" name="status" value="<?php echo Format::htmlchars($_REQUEST['status']); ?>" >
- <table class="list" border="0" cellspacing="1" cellpadding="2" width="940">
+ <table class="table table-striped" border="0" cellspacing="1" cellpadding="2" width="100%">
     <caption><?php echo $showing; ?>&nbsp;&nbsp;&nbsp;<?php echo $results_type; ?></caption>
     <thead>
         <tr>
@@ -527,11 +523,11 @@ if ($results) {
         <input type="hidden" name="a" value="search">
         <fieldset class="query">
             <label for="query">Keyword:</label>
-            <input type="input" id="query" name="query" size="20"> <em>Optional</em>
+            <input class="form-control" type="input" id="query" name="query" size="20"> <em>Optional</em>
         </fieldset>
         <fieldset>
             <label for="status">Status:</label>
-            <select id="status" name="status">
+            <select class="form-control" id="status" name="status">
                 <option value="">&mdash; Any Status &mdash;</option>
                 <option value="open">Open</option>
                 <?php
@@ -543,7 +539,7 @@ if ($results) {
                 <option value="closed">Closed</option>
             </select>
             <label for="deptId">Dept:</label>
-            <select id="deptId" name="deptId">
+            <select class="form-control" id="deptId" name="deptId">
                 <option value="">&mdash; All Departments &mdash;</option>
                 <?php
                 if(($mydepts = $thisstaff->getDepts()) && ($depts=Dept::getDepartments())) {
@@ -557,7 +553,7 @@ if ($results) {
         </fieldset>
         <fieldset class="owner">
             <label for="assignee">Assigned To:</label>
-            <select id="assignee" name="assignee">
+            <select class="form-control" id="assignee" name="assignee">
                 <option value="">&mdash; Anyone &mdash;</option>
                 <option value="0">&mdash; Unassigned &mdash;</option>
                 <option value="<?php echo $thisstaff->getId(); ?>">Me</option>
@@ -582,7 +578,7 @@ if ($results) {
                 ?>
             </select>
             <label for="staffId">Closed By:</label>
-            <select id="staffId" name="staffId">
+            <select class="form-control" id="staffId" name="staffId">
                 <option value="0">&mdash; Anyone &mdash;</option>
                 <option value="<?php echo $thisstaff->getId(); ?>">Me</option>
                 <?php
@@ -595,7 +591,7 @@ if ($results) {
         </fieldset>
         <fieldset>
             <label for="topicId">Help Topic:</label>
-            <select id="topicId" name="topicId">
+            <select class="form-control" id="topicId" name="topicId">
                 <option value="" selected >&mdash; All Help Topics &mdash;</option>
                 <?php
                 if($topics=Topic::getHelpTopics()) {
@@ -607,9 +603,9 @@ if ($results) {
         </fieldset>
         <fieldset class="date_range">
             <label>Date Range:</label>
-            <input class="dp" type="input" size="20" name="startDate">
+            <input class="form-control" class="dp" type="input" size="20" name="startDate">
             <span>TO</span>
-            <input class="dp" type="input" size="20" name="endDate">
+            <input class="form-control" class="dp" type="input" size="20" name="endDate">
         </fieldset>
         <fieldset>
         <?php
@@ -625,9 +621,9 @@ if ($results) {
         </fieldset>
         <p>
             <span class="buttons">
-                <input type="submit" value="Search">
-                <input type="reset" value="Reset">
-                <input type="button" value="Cancel" class="close">
+                <input class="btn btn-primary" type="submit" value="Search">
+                <input class="btn btn-default" type="reset" value="Reset">
+                <input class="btn btn-danger" type="button" value="Cancel">
             </span>
             <span class="spinner">
                 <img src="./images/ajax-loader.gif" width="16" height="16">

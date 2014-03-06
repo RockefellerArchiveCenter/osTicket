@@ -5,7 +5,7 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
 <form action="settings.php?t=kb" method="post" id="save">
 <?php csrf_token(); ?>
 <input type="hidden" name="t" value="kb" >
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -33,8 +33,8 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
         </tr>
     </tbody>
 </table>
-<p style="padding-left:210px;">
-    <input class="button" type="submit" name="submit" value="Save Changes">
-    <input class="button" type="reset" name="reset" value="Reset Changes">
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="Save Changes">
+    <input class="btn btn-warning" type="reset" name="reset" value="Reset Changes">
 </p>
 </form>

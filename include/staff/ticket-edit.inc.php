@@ -12,7 +12,7 @@ if ($_POST)
  <input type="hidden" name="a" value="edit">
  <input type="hidden" name="id" value="<?php echo $ticket->getId(); ?>">
  <h2>Update Ticket #<?php echo $ticket->getExtId(); ?></h2>
- <table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+ <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <tbody>
         <tr>
             <th colspan="2">
@@ -150,10 +150,10 @@ if ($_POST)
         </tr>
     </tbody>
 </table>
-<p style="padding-left:250px;">
-    <input type="submit" name="submit" value="Save">
-    <input type="reset"  name="reset"  value="Reset">
-    <input type="button" name="cancel" value="Cancel" onclick='window.location.href="tickets.php?id=<?php echo $ticket->getId(); ?>"'>
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="Save">
+    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset">
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="tickets.php?id=<?php echo $ticket->getId(); ?>"'>
 </p>
 </form>
 <div style="display:none;" class="dialog draggable" id="user-lookup">

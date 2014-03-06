@@ -280,8 +280,8 @@ jQuery(function($) {
         $('#toggle_ticket_thread').removeClass('active');
         $('#toggle_notes').addClass('active');
     } else {
-        $('#response_options ul.tabs li:first a').addClass('active');
-        $('#response_options '+$('#response_options ul.tabs li:first a').attr('href')).show();
+        $('#response_options ul.nav li:first').addClass('active');
+        $('#response_options '+$('#response_options ul.nav li:first a').attr('href')).show();
     }
 
     $('#reply_tab').click(function() {
@@ -294,13 +294,13 @@ jQuery(function($) {
         }
      });
 
-    $('#response_options ul.tabs li a').click(function(e) {
+    $('#response_options ul.nav li').click(function(e) {
         e.preventDefault();
-        $('#response_options ul.tabs li a').removeClass('active');
+        $('#response_options ul.nav li').removeClass('active');
         $(this).addClass('active');
         $('#response_options form').hide();
         //window.location.hash = this.hash;
-        $('#response_options '+$(this).attr('href')).show();
+        $('#response_options '+$(this).children('a').attr('href')).show();
         $("#msg_error, #msg_notice, #msg_warning").fadeOut();
      });
 
@@ -430,8 +430,7 @@ showImagesInline = function(urls, thread_id) {
             e = $(el);
         if (info) {
             // Add a hover effect with the filename
-            var timeout, caption = $('<div class="image-hover">')
-                .css({'float',e.css('float')});
+            var timeout, caption = $('<div class="image-hover">');
             e.wrap(caption).parent()
                 .hover(
                     function() {

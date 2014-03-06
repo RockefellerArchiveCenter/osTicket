@@ -77,9 +77,9 @@ header("Content-Type: text/html; charset=UTF-8\r\n");
         <div id="content">
 
          <?php if($errors['err']) { ?>
-            <div id="msg_error"><?php echo $errors['err']; ?></div>
+            <div class="alert alert-danger"><?php echo $errors['err']; ?></div>
          <?php }elseif($msg) { ?>
-            <div id="msg_notice"><?php echo $msg; ?></div>
+            <div class="alert alert-info"><?php echo $msg; ?></div>
          <?php }elseif($warn) { ?>
-            <div id="msg_warning"><?php echo $warn; ?></div>
+            <div class="alert alert-warning"><?php echo $warn; ?></div>
          <?php } ?>

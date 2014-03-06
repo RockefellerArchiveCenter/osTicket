@@ -62,9 +62,9 @@ $query="$select $from $where GROUP BY staff.staff_id ORDER BY $order_by LIMIT ".
 ?>
 <h2>Staff Members</h2>
 <div style="width:700px; float:left;">
-    <form action="directory.php" method="GET" name="filter">
-       <input type="text" name="q" value="<?php echo Format::htmlchars($_REQUEST['q']); ?>" >
-        <select name="did" id="did">
+    <form action="directory.php" method="GET" name="filter" class="form-inline">
+       <input class="form-control" type="text" name="q" value="<?php echo Format::htmlchars($_REQUEST['q']); ?>" >
+        <select class="form-control" name="did" id="did">
              <option value="0">&mdash; All Departments &mdash;</option>
              <?php
              $sql='SELECT dept.dept_id, dept.dept_name,count(staff.staff_id) as users  '.
@@ -79,8 +79,7 @@ $query="$select $from $where GROUP BY staff.staff_id ORDER BY $order_by LIMIT ".
              }
              ?>
         </select>
-        &nbsp;&nbsp;
-        <input type="submit" name="submit" value="Filter"/>
+        <input class="btn btn-primary" type="submit" name="submit" value="Filter"/>
     </form>
  </div>
 <div class="clear"></div>
@@ -91,7 +90,7 @@ if($res && ($num=db_num_rows($res)))
 else
     $showing='No staff members found!';
 ?>
-<table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
+<table class="table table-striped" border="0" cellspacing="1" cellpadding="0" width="100%">
     <caption><?php echo $showing; ?></caption>
     <thead>
         <tr>

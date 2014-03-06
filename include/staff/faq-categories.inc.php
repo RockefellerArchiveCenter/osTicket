@@ -6,8 +6,8 @@ if(!defined('OSTSTAFFINC') || !$thisstaff) die('Access Denied');
 <form id="kbSearch" action="kb.php" method="get">
     <input type="hidden" name="a" value="search">
     <div>
-        <input id="query" type="text" size="20" name="q" value="<?php echo Format::htmlchars($_REQUEST['q']); ?>">
-        <select name="cid" id="cid">
+        <input class="form-control" id="query" type="text" size="20" name="q" value="<?php echo Format::htmlchars($_REQUEST['q']); ?>">
+        <select class="form-control" name="cid" id="cid">
             <option value="">&mdash; All Categories &mdash;</option>
             <?php
             $sql='SELECT category_id, name, count(faq.category_id) as faqs '
@@ -26,10 +26,10 @@ if(!defined('OSTSTAFFINC') || !$thisstaff) die('Access Denied');
             }
             ?>
         </select>
-        <input id="searchSubmit" type="submit" value="Search">
+        <input class="btn" id="searchSubmit" type="submit" value="Search">
     </div>
     <div>
-        <select name="topicId" style="width:350px;" id="topic-id">
+        <select class="form-control" name="topicId" style="width:350px;" id="topic-id">
             <option value="">&mdash; All Help Topics &mdash;</option>
             <?php
             $sql='SELECT ht.topic_id, CONCAT_WS(" / ", pht.topic, ht.topic) as helptopic, count(faq.topic_id) as faqs '

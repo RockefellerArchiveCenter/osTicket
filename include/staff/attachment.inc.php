@@ -3,7 +3,7 @@ if(!defined('OSTADMININC') || !$thisstaff->isAdmin()) die('Access Denied');
 //Get the config info.
 $config=($errors && $_POST)?Format::input($_POST):$cfg->getConfigInfo();
 ?>
-<table width="100%" border="0" cellspacing=0 cellpadding=0>
+<table class="table" width="100%" border="0" cellspacing=0 cellpadding=0>
     <form action="admin.php?t=attach" method="post">
     <input type="hidden" name="t" value="attach">
     <tr>
@@ -75,8 +75,8 @@ $config=($errors && $_POST)?Format::input($_POST):$cfg->getConfigInfo();
         </table>
     </td></tr>
     <tr><td style="padding:10px 0 10px 200px">
-        <input class="button" type="submit" name="submit" value="Save Changes">
-        <input class="button" type="reset" name="reset" value="Reset Changes">
+        <input class="btn btn-success" type="submit" name="submit" value="Save Changes">
+        <input class="btn btn-warning" type="reset" name="reset" value="Reset Changes">
     </td></tr>
   </form>
 </table>

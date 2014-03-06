@@ -2,7 +2,7 @@
  <h2>Custom Forms</h2>
 </div>
 <div style="float:right;text-align:right;padding-top:5px;padding-right:5px;">
- <b><a href="forms.php?a=add" class="Icon form-add">Add New Custom Form</a></b></div>
+ <b><a href="forms.php?a=add" class="btn btn-default pull-right">Add New Custom Form</a></b></div>
 <div class="clear"></div>
 
 <?php
@@ -17,7 +17,7 @@ $showing=$pageNav->showing().' forms';
 <?php csrf_token(); ?>
 <input type="hidden" name="do" value="mass_process" >
 <input type="hidden" id="action" name="a" value="" >
-<table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
+<table class="table table-striped" border="0" cellspacing="1" cellpadding="0" width="100%">
     <thead>
         <tr>
             <th width="7">&nbsp;</th>
@@ -100,7 +100,7 @@ if ($count) //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="button" type="submit" name="delete" value="Delete">
+    <input class="btn btn-danger" type="submit" name="delete" value="Delete">
 </p>
 </form>
 
@@ -116,10 +116,10 @@ if ($count) //Show options..
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="close">
+            <input type="button" value="No, Cancel" class="btn btn-default">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="confirm">
+            <input type="button" value="Yes, Do it!" class="btn btn-primary">
         </span>
      </p>
     <div class="clear"></div>

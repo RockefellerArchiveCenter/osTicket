@@ -65,5 +65,5 @@ $ost->setWarning($sysnotice);
 $nav = new AdminNav($thisstaff);
 
 //Page title.
-$ost->setPageTitle('osTicket :: Admin Control Panel');
+$ost->setPageTitle('RAC Research Requests: Admin Control Panel');
 ?>

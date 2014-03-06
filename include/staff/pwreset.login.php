@@ -13,14 +13,13 @@ $info = ($_POST)?Format::htmlchars($_POST):array();
         <input type="hidden" name="do" value="newpasswd"/>
         <input type="hidden" name="token" value="<?php echo $_REQUEST['token']; ?>"/>
         <fieldset>
-            <input type="text" name="userid" id="name" value="<?php echo
+            <input class="form-control" type="text" name="userid" id="name" value="<?php echo
                 $info['userid']; ?>" placeholder="username or email"
                 autocorrect="off" autocapitalize="off"/>
         </fieldset>
-        <input class="submit" type="submit" name="submit" value="Login"/>
+        <input class="btn btn-primary" type="submit" name="submit" value="Login"/>
     </form>
 </div>
 
-<div id="copyRights">Copyright &copy; <a href='http://www.osticket.com' target="_blank">osTicket.com</a></div>
 </body>
 </html>

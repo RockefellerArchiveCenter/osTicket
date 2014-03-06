@@ -7,9 +7,9 @@ if (!$info['title'])
 <hr/>
 <?php
 if ($info['error']) {
-    echo sprintf('<p id="msg_error">%s</p>', $info['error']);
+    echo sprintf('<p class="alert alert-danger">%s</p>', $info['error']);
 } elseif ($info['msg']) {
-    echo sprintf('<p id="msg_notice">%s</p>', $info['msg']);
+    echo sprintf('<p class="alert alert-info">%s</p>', $info['msg']);
 } ?>
 <div id="user-profile" style="display:<?php echo $forms ? 'none' : 'block'; ?>;margin:5px;">
     <i class="icon-user icon-4x pull-left icon-border"></i>
@@ -41,7 +41,7 @@ if ($info['error']) {
     <div class="faded">Last updated <b><?php echo Format::db_datetime($user->getUpdateDate()); ?> </b></div>
 </div>
 <div id="user-form" style="display:<?php echo $forms ? 'block' : 'none'; ?>;">
-<div><p id="msg_info"><i class="icon-info-sign"></i>&nbsp; Please note that updates will be reflected system-wide.</p></div>
+<div><p class="alert alert-info"><i class="icon-info-sign"></i>&nbsp; Please note that updates will be reflected system-wide.</p></div>
 <?php
 $action = '#users/'.$user->getId();
 if ($ticket && $ticket->getOwnerId() == $user->getId())

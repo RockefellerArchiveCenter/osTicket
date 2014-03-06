@@ -220,8 +220,8 @@
                     goabs($('tbody[page='+page+']', q));
                 }
                 function enable_next_prev(page) {
-                    $('#table-here div.pagination li[page]').removeClass('active');
-                    $('#table-here div.pagination li[page='+page+']').addClass('active');
+                    $('#table-here ul.pagination li[page]').removeClass('active');
+                    $('#table-here ul.pagination li[page='+page+']').addClass('active');
 
                     if (page == 1)  $('#report-page-prev').addClass('disabled');
                     else            $('#report-page-prev').removeClass('disabled');
@@ -231,8 +231,8 @@
                     else            $('#report-page-next').removeClass('disabled');
                 }
 
-                var p = $('<ul>')
-                    .appendTo($('<div>').attr({'class':'pagination'})
+                var p = $('<ul>').attr({'class':'pagination'})
+                    .appendTo($('<div>')
                     .appendTo($('#table-here')));
                 $('<a>').click(goprev).attr({'href':'#'})
                     .append('&laquo;').appendTo($('<li>').attr({'id':'report-page-prev'})
@@ -248,10 +248,9 @@
                     .appendTo(p));
 
                 // ------------------------> Export <-----------------------
-                $('<a>').attr({'href':'ajax.php/report/overview/table/export?group='
+                $('<a class="btn btn-primary pull-right">').attr({'href':'ajax.php/report/overview/table/export?group='
                         +group+'&start='+start+'&stop='+stop}).append('Export')
-                    .appendTo($('<li>')
-                    .appendTo(p));
+                    .prependTo($('#tabular-navigation'));
 
                 gonext();
             }

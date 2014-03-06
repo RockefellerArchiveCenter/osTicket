@@ -54,7 +54,7 @@ require(STAFFINC_DIR.'header.inc.php');
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="<?php echo $action; ?>">
  <h2>Test Outgoing Email</h2>
- <table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+ <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -118,9 +118,9 @@ require(STAFFINC_DIR.'header.inc.php');
     </tbody>
 </table>
 <p style="padding-left:225px;">
-    <input type="submit" name="submit" value="Send Message">
-    <input type="reset"  name="reset"  value="Reset">
-    <input type="button" name="cancel" value="Cancel" onclick='window.location.href="emails.php"'>
+    <input class="btn btn-success" type="submit" name="submit" value="Send Message">
+    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset">
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="emails.php"'>
 </p>
 </form>
 <?php

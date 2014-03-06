@@ -135,6 +135,6 @@ if($thisstaff->forcePasswdChange() && !$exempt) {
     exit;
 }
 $ost->setWarning($sysnotice);
-$ost->setPageTitle('osTicket :: Staff Control Panel');
+$ost->setPageTitle('RAC Research Requests: Staff Control Panel');
 
 ?>

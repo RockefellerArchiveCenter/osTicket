@@ -56,9 +56,9 @@ $query="$select $from $where GROUP BY staff.staff_id ORDER BY $order_by LIMIT ".
 ?>
 <h2>Staff Members</h2>
 <div style="width:700px; float:left;">
-    <form action="staff.php" method="GET" name="filter">
+    <form action="staff.php" method="GET" name="filter" class="form-inline">
      <input type="hidden" name="a" value="filter" >
-        <select name="did" id="did">
+        <select class="form-control" name="did" id="did">
              <option value="0">&mdash; All Departments &mdash;</option>
              <?php
              $sql='SELECT dept.dept_id, dept.dept_name,count(staff.staff_id) as users  '.
@@ -73,7 +73,7 @@ $query="$select $from $where GROUP BY staff.staff_id ORDER BY $order_by LIMIT ".
              }
              ?>
         </select>
-        <select name="gid" id="gid">
+        <select class="form-control" name="gid" id="gid">
             <option value="0">&mdash; All Groups &mdash;</option>
              <?php
              $sql='SELECT grp.group_id, group_name,count(staff.staff_id) as users '.
@@ -88,7 +88,7 @@ $query="$select $from $where GROUP BY staff.staff_id ORDER BY $order_by LIMIT ".
              }
              ?>
         </select>
-        <select name="tid" id="tid">
+        <select class="form-control" name="tid" id="tid">
             <option value="0">&mdash; All Teams &mdash;</option>
              <?php
              $sql='SELECT team.team_id, team.name, count(member.staff_id) as users FROM '.TEAM_TABLE.' team '.
@@ -102,11 +102,10 @@ $query="$select $from $where GROUP BY staff.staff_id ORDER BY $order_by LIMIT ".
              }
              ?>
         </select>
-        &nbsp;&nbsp;
-        <input type="submit" name="submit" value="Apply"/>
+        <input class="btn btn-primary" type="submit" name="submit" value="Apply"/>
     </form>
  </div>
-<div style="float:right;text-align:right;padding-right:5px;"><b><a href="staff.php?a=add" class="Icon newstaff">Add New Staff</a></b></div>
+<div style="float:right;text-align:right;padding-right:5px;"><b><a href="staff.php?a=add" class="btn btn-primary pull-right">Add New Staff</a></b></div>
 <div class="clear"></div>
 <?php
 $res=db_query($query);
@@ -119,7 +118,7 @@ else
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="mass_process" >
  <input type="hidden" id="action" name="a" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
+ <table class="table table-striped" border="0" cellspacing="1" cellpadding="0" width="100%">
     <caption><?php echo $showing; ?></caption>
     <thead>
         <tr>
@@ -176,11 +175,9 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="button" type="submit" name="enable" value="Enable" >
-    &nbsp;&nbsp;
-    <input class="button" type="submit" name="disable" value="Lock" >
-    &nbsp;&nbsp;
-    <input class="button" type="submit" name="delete" value="Delete">
+    <input class="btn btn-success" type="submit" name="enable" value="Enable" >
+    <input class="btn btn-warning" type="submit" name="disable" value="Lock" >
+    <input class="btn btn-danger" type="submit" name="delete" value="Delete">
 </p>
 <?php
 endif;
@@ -206,10 +203,10 @@ endif;
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="close">
+            <input type="button" value="No, Cancel" class="btn btn-default">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="confirm">
+            <input type="button" value="Yes, Do it!" class="btn btn-primary">
         </span>
      </p>
     <div class="clear"></div>

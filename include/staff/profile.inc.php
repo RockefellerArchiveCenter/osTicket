@@ -11,7 +11,7 @@ $info['id']=$staff->getId();
  <input type="hidden" name="do" value="update">
  <input type="hidden" name="id" value="<?php echo $info['id']; ?>">
  <h2>My Account Profile</h2>
- <table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+ <table class="table table-condensed" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -235,9 +235,9 @@ $info['id']=$staff->getId();
         </tr>
     </tbody>
 </table>
-<p style="padding-left:200px;">
-    <input type="submit" name="submit" value="Save Changes">
-    <input type="reset"  name="reset"  value="Reset Changes">
-    <input type="button" name="cancel" value="Cancel Changes" onclick='window.location.href="index.php"'>
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="Save Changes">
+    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset Changes">
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel Changes" onclick='window.location.href="index.php"'>
 </p>
 </form>

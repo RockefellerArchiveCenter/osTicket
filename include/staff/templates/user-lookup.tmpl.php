@@ -2,13 +2,13 @@
 <h3><?php echo $info['title']; ?></h3>
 <b><a class="close" href="#"><i class="icon-remove-circle"></i></a></b>
 <hr/>
-<div><p id="msg_info"><i class="icon-info-sign"></i>&nbsp; Search existing users or add a new user.</p></div>
+<div><p class="alert alert-info"><i class="icon-info-sign"></i>&nbsp; Search existing users or add a new user.</p></div>
 <div style="margin-bottom:10px;"><input type="text" class="search-input" style="width:100%;" placeholder="Search by email, phone or name" id="user-search" autocorrect="off" autocomplete="off"/></div>
 <?php
 if ($info['error']) {
-    echo sprintf('<p id="msg_error">%s</p>', $info['error']);
+    echo sprintf('<p class="alert alert-danger">%s</p>', $info['error']);
 } elseif ($info['msg']) {
-    echo sprintf('<p id="msg_notice">%s</p>', $info['msg']);
+    echo sprintf('<p class="alert alert-info">%s</p>', $info['msg']);
 } ?>
 <div id="selected-user-info" style="display:<?php echo $user ? 'block' :'none'; ?>;margin:5px;">
 <form method="get" class="user" action="#users/lookup">

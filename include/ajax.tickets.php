@@ -352,11 +352,11 @@ class TicketsAjaxAPI extends AjaxController {
                  <h2>%s</h2><br>',Format::htmlchars($ticket->getSubject()));
 
         if($error)
-            echo sprintf('<div id="msg_error">%s</div>',$error);
+            echo sprintf('<div class="alert alert-danger">%s</div>',$error);
         elseif($msg)
-            echo sprintf('<div id="msg_notice">%s</div>',$msg);
+            echo sprintf('<div class="alert alert-info">%s</div>',$msg);
         elseif($warn)
-            echo sprintf('<div id="msg_warning">%s</div>',$warn);
+            echo sprintf('<div class="alert alert-warning">%s</div>',$warn);
 
         echo '<table border="0" cellspacing="" cellpadding="1" width="100%" class="ticket_info">';
 

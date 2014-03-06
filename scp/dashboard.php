@@ -33,12 +33,12 @@ require(STAFFINC_DIR.'header.inc.php');
 <form class="well form-inline" id="timeframe-form">
     <label>
         Report timeframe:
-        <input type="text" class="dp input-medium search-query"
+        <input type="text" class="form-control dp input-medium search-query"
             name="start" placeholder="Last month"/>
     </label>
     <label>
         period:
-        <select name="period">
+        <select class="form-control" name="period">
             <option value="now" selected="selected">Up to today</option>
             <option value="+7 days">One Week</option>
             <option value="+14 days">Two Weeks</option>
@@ -46,7 +46,7 @@ require(STAFFINC_DIR.'header.inc.php');
             <option value="+3 months">One Quarter</option>
         </select>
     </label>
-    <button class="btn" type="submit">Refresh</button>
+    <button class="btn btn-primary" type="submit">Refresh</button>
 </form>
 
 <!-- Create a graph and fetch some data to create pretty dashboard -->
@@ -56,7 +56,7 @@ require(STAFFINC_DIR.'header.inc.php');
 </div>
 
 <hr/>
-<h2>Statistics</h2>
+<h2 id="table-title">Statistics</h2>
 <p>Statistics of tickets organized by department, help topic, and staff.</p>
 <ul class="nav nav-tabs" id="tabular-navigation"></ul>
 

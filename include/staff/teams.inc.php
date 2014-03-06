@@ -42,13 +42,13 @@ else
  <h2>Teams</h2>
  </div>
 <div style="float:right;text-align:right;padding-top:5px;padding-right:5px;">
-    <b><a href="teams.php?a=add" class="Icon newteam">Add New Team</a></b></div>
+    <b><a href="teams.php?a=add" class="btn btn-default pull-right">Add New Team</a></b></div>
 <div class="clear"></div>
 <form action="teams.php" method="POST" name="teams">
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="mass_process" >
  <input type="hidden" id="action" name="a" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
+ <table class="table table-striped" border="0" cellspacing="1" cellpadding="0" width="100%">
     <caption><?php echo $showing; ?></caption>
     <thead>
         <tr>
@@ -110,9 +110,9 @@ else
 if($res && $num): //Show options..
 ?>
 <p class="centered" id="actions">
-    <input class="button" type="submit" name="enable" value="Enable" >
-    <input class="button" type="submit" name="disable" value="Disable" >
-    <input class="button" type="submit" name="delete" value="Delete" >
+    <input class="btn btn-success" type="submit" name="enable" value="Enable" >
+    <input class="btn btn-warning" type="submit" name="disable" value="Disable" >
+    <input class="btn btn-danger" type="submit" name="delete" value="Delete" >
 </p>
 <?php
 endif;
@@ -136,10 +136,10 @@ endif;
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="close">
+            <input type="button" value="No, Cancel" class="btn btn-default">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="confirm">
+            <input type="button" value="Yes, Do it!" class="btn btn-primary">
         </span>
      </p>
     <div class="clear"></div>

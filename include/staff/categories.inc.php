@@ -44,13 +44,13 @@ else
  <h2>FAQ Categories</h2>
  </div>
 <div style="float:right;text-align:right;padding-top:5px;padding-right:5px;">
-    <b><a href="categories.php?a=add" class="Icon newCategory">Add New Category</a></b></div>
+    <b><a href="categories.php?a=add" class="btn btn-default pull-right">Add New Category</a></b></div>
 <div class="clear"></div>
 <form action="categories.php" method="POST" name="cat">
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="mass_process" >
  <input type="hidden" id="action" name="a" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="0" width="940">
+ <table class="table table-striped" border="0" cellspacing="1" cellpadding="0" width="100%">
     <caption><?php echo $showing; ?></caption>
     <thead>
         <tr>
@@ -108,9 +108,9 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="button" type="submit" name="make_public" value="Make Public">
-    <input class="button" type="submit" name="make_private" value="Make Internal">
-    <input class="button" type="submit" name="delete" value="Delete" >
+    <input class="btn btn-success" type="submit" name="make_public" value="Make Public">
+    <input class="btn btn-warning" type="submit" name="make_private" value="Make Internal">
+    <input class="btn btn-danger" type="submit" name="delete" value="Delete" >
 </p>
 <?php
 endif;
@@ -134,10 +134,10 @@ endif;
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="close">
+            <input type="button" value="No, Cancel" class="btn btn-default">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="confirm">
+            <input type="button" value="Yes, Do it!" class="btn btn-primary">
         </span>
      </p>
     <div class="clear"></div>

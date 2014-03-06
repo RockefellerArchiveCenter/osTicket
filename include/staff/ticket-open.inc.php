@@ -8,7 +8,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
  <input type="hidden" name="do" value="create">
  <input type="hidden" name="a" value="open">
  <h2>Open New Ticket</h2>
- <table class="form_table fixed" width="940" border="0" cellspacing="0" cellpadding="2">
+ <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
     <!-- This looks empty - but beware, with fixed table layout, the user
          agent will usually only consult the cells in the first row to
@@ -355,10 +355,10 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
     </tbody>
 </table>
-<p style="padding-left:250px;">
-    <input type="submit" name="submit" value="Open">
-    <input type="reset"  name="reset"  value="Reset">
-    <input type="button" name="cancel" value="Cancel" onclick='window.location.href="tickets.php"'>
+<p class="centered">
+    <input class="btn btn-success" type="submit" name="submit" value="Open">
+    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset">
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="tickets.php"'>
 </p>
 </form>
 <script type="text/javascript">

@@ -40,13 +40,13 @@ if($thisstaff->canManageFAQ()) {
     //TODO: add js confirmation....
     ?>
    <div>
-    <form action="faq.php?id=<?php echo  $faq->getId(); ?>" method="post">
+    <form action="faq.php?id=<?php echo  $faq->getId(); ?>" method="post" class="form-inline">
 	 <?php csrf_token(); ?>
         <input type="hidden" name="id" value="<?php echo  $faq->getId(); ?>">
         <input type="hidden" name="do" value="manage-faq">
         <div>
             <strong>Options: </strong>
-            <select name="a" style="width:200px;">
+            <select class="form-control" name="a" style="width:200px;">
                 <option value="">Select Action</option>
                 <?php
                 if($faq->isPublished()) { ?>
@@ -59,7 +59,7 @@ if($thisstaff->canManageFAQ()) {
                 <option value="edit">Edit FAQ</option>
                 <option value="delete">Delete FAQ</option>
             </select>
-            &nbsp;&nbsp;<input type="submit" name="submit" value="Go">
+            <input class="btn btn-primary" type="submit" name="submit" value="Go">
         </div>
     </form>
    </div>
