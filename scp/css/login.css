@@ -1,6 +1,6 @@
 input:focus {
-    border: 1px solid rgb(207,16,118);
-    box-shadow: 0 0 4px rgb(207,16,118);
+    border: 1px solid #c45414;
+    box-shadow: 0 0 4px #c45414;
 }
 
 :-webkit-input-placeholder {
@@ -23,7 +23,7 @@ html {
 
 body {
     -webkit-font-smoothing:antialiased;
-    background:url(../images/login-background.jpg) top left repeat-x #fff;
+    /*background:url(../images/login-background.jpg) top left repeat-x #fff;*/
     font-size: 16px;
     font-smoothing:antialiased;
     height:100%;
@@ -46,10 +46,9 @@ input[type=reset], input[type=submit], input[type=button] {
 }
 
 #loginBox {
-    border:1px solid #2a67ac;
-    border-right:2px solid #2a67ac;
-    border-bottom:3px solid #2a67ac;
-    box-shadow: 2px 2px 8px rgba(42, 103, 172, 0.5);
+    border:1px solid #c45414;
+    border-top:10px solid #c45414;
+    box-shadow: 0px 3px 8px #999;
     background:#fff;
     width:400px;
     margin:10% auto 0 auto;
@@ -62,17 +61,7 @@ input[type=reset], input[type=submit], input[type=button] {
 }
 
 h1 {
-    margin:0;
-}
-
-#logo a {
-    display:block;
-    width:180px;
-    height:72px;
-    text-decoration:none;
-    text-indent:-9999px;
-    background:url(../images/login-logo.png);
-    margin:0 auto 1em auto;
+    color:#c45414
 }
 
 h3 {
@@ -80,7 +69,8 @@ h3 {
     text-align:center;
     font-size:0.8em;
     font-weight:normal;
-    color:#d00;
+    color:#c45414;
+    text-shadow: 1px 1px #ddd;
 }
 
 form {
@@ -114,8 +104,8 @@ input.submit {
     font-weight:bold;
     border:1px solid #666666;
     padding:0 10px;
-    background: url('../images/grey_btn_bg.png?1312910883') top left repeat-x;
     color: #333;
+    cursor:pointer;
 }
 
 input.submit:hover, input.submit:active {
