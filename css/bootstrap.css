@@ -5056,7 +5056,7 @@ a.list-group-item-danger.active:focus {
   padding: 9px;
   border-radius: 3px;
 }
-.close {
+/*.close {
   float: right;
   font-size: 21px;
   font-weight: bold;
@@ -5080,7 +5080,7 @@ button.close {
   cursor: pointer;
   background: transparent;
   border: 0;
-}
+}*/
 .modal-open {
   overflow: hidden;
 }

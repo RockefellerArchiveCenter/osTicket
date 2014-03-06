@@ -674,7 +674,7 @@ class Ticket {
             case 'notdue':
                 return $this->clearOverdue();
                 break;
-            case 'unassined':
+            case 'unassigned':
                 return $this->unassign();
         }
 

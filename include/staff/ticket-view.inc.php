@@ -39,45 +39,46 @@ if($ticket->isOverdue())
 ?>
 <table class="table" width="100%" cellpadding="2" cellspacing="0" border="0">
     <tr>
-        <td width="50%" class="has_bottom_border">
-             <h2><a href="tickets.php?id=<?php echo $ticket->getId(); ?>" title="Reload"><i class="icon-refresh"></i> Ticket #<?php echo $ticket->getExtId(); ?></a></h2>
+        <td width="50%">
+             <a class="btn btn-default" href="tickets.php?id=<?php echo $ticket->getId(); ?>" title="Reload"><i class="icon-refresh"></i></a>
+             <h2><?php echo Format::htmlchars($ticket->getSubject()); ?> (#<?php echo $ticket->getExtId(); ?>)</h2>
         </td>
-        <td width="50%" class="right_align has_bottom_border">
+        <td width="50%" style="text-align:right">
             <?php
             if($thisstaff->canBanEmails() || ($dept && $dept->isManager($thisstaff))) { ?>
-            <span class="btn btn-sm" data-dropdown="#action-dropdown-more">
+            <span class="btn btn-sm btn-default" data-dropdown="#action-dropdown-more">
                 <span ><i class="icon-cog"></i> More</span>
                 <i class="icon-caret-down"></i>
             </span>
             <?php
             } ?>
             <?php if($thisstaff->canDeleteTickets()) { ?>
-                <a id="ticket-delete" class="btn btn-sm" href="#delete"><i class="icon-trash"></i> Delete</a>
+                <a id="ticket-delete" class="btn btn-sm btn-default" href="#delete"><i class="icon-trash"></i> Delete</a>
             <?php } ?>
             <?php
             if($thisstaff->canCloseTickets()) {
                 if($ticket->isOpen()) {?>
-                <a id="ticket-close" class="btn btn-sm" href="#close"><i class="icon-remove-circle"></i> Close</a>
+                <a id="ticket-close" class="btn btn-sm btn-default" href="#close"><i class="icon-remove-circle"></i> Close</a>
                 <?php
                 } else { ?>
-                <a id="ticket-reopen" class="btn btn-sm" href="#reopen"><i class="icon-undo"></i> Reopen</a>
+                <a id="ticket-reopen" class="btn btn-sm btn-default" href="#reopen"><i class="icon-undo"></i> Reopen</a>
                 <?php
                 } ?>
             <?php
             } ?>
             <?php
             if($thisstaff->canEditTickets()) { ?>
-                <a class="btn btn-sm" href="tickets.php?id=<?php echo $ticket->getId(); ?>&a=edit"><i class="icon-edit"></i> Edit</a>
+                <a class="btn btn-sm btn-default" href="tickets.php?id=<?php echo $ticket->getId(); ?>&a=edit"><i class="icon-edit"></i> Edit</a>
             <?php
             } ?>
             <?php
             if($ticket->isOpen() && !$ticket->isAssigned() && $thisstaff->canAssignTickets()) {?>
-                <a id="ticket-claim" class="btn btn-sm" href="#claim"><i class="icon-user"></i> Claim</a>
+                <a id="ticket-claim" class="btn btn-sm btn-default" href="#claim"><i class="icon-user"></i> Claim</a>
 
             <?php
             }?>
 
-            <a id="ticket-print" class="btn btn-sm" href="tickets.php?id=<?php echo $ticket->getId(); ?>&a=print"><i class="icon-print"></i> Print</a>
+            <a id="ticket-print" class="btn btn-sm btn-default" href="tickets.php?id=<?php echo $ticket->getId(); ?>&a=print"><i class="icon-print"></i> Print</a>
 
             <div id="action-dropdown-more" class="action-dropdown anchor-right">
               <ul>
@@ -121,7 +122,7 @@ if($ticket->isOverdue())
         </td>
     </tr>
 </table>
-<table class="ticket_info" cellspacing="0" cellpadding="0" width="100%" border="0">
+<table class="table" cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
         <td width="50">
             <table border="0" cellspacing="" cellpadding="4" width="100%">
@@ -211,7 +212,7 @@ if($ticket->isOverdue())
     </tr>
 </table>
 <br>
-<table class="ticket_info" cellspacing="0" cellpadding="0" width="100%" border="0">
+<table class="table" cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
         <td width="50%">
             <table cellspacing="0" cellpadding="4" width="100%" border="0">
@@ -283,7 +284,7 @@ if($ticket->isOverdue())
     </tr>
 </table>
 <br>
-<table class="ticket_info" cellspacing="0" cellpadding="0" width="100%" border="0">
+<table class="table" cellspacing="0" cellpadding="0" width="100%" border="0">
 <?php
 $idx = 0;
 foreach (DynamicFormEntry::forTicket($ticket->getId()) as $form) {
@@ -320,17 +321,16 @@ foreach (DynamicFormEntry::forTicket($ticket->getId()) as $form) {
     </tr>
 </table>
 <div class="clear"></div>
-<h2 style="padding:10px 0 5px 0; font-size:11pt;"><?php echo Format::htmlchars($ticket->getSubject()); ?></h2>
 <?php
 $tcount = $ticket->getThreadCount();
 $tcount+= $ticket->getNumNotes();
 ?>
-<ul id="threads">
-    <li><a class="active" id="toggle_ticket_thread" href="#">Ticket Thread (<?php echo $tcount; ?>)</a></li>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#">Ticket Thread (<?php echo $tcount; ?>)</a></li>
 </ul>
 <div id="ticket_thread">
     <?php
-    $threadTypes=array('M'=>'message','R'=>'response', 'N'=>'note');
+    $threadTypes=array('M'=>'success','R'=>'warning', 'N'=>'info');
     /* -------- Messages & Responses & Notes (if inline)-------------*/
     $types = array('M', 'R', 'N');
     if(($thread=$ticket->getThreadEntries($types))) {
@@ -338,18 +338,17 @@ $tcount+= $ticket->getNumNotes();
            if ($entry['body'] == '-')
                $entry['body'] = '(EMPTY)';
            ?>
-        <table class="thread-entry <?php echo $threadTypes[$entry['thread_type']]; ?>" cellspacing="0" cellpadding="1" width="100%" border="0">
-            <tr>
+        <table class="table" cellspacing="0" cellpadding="1" width="100%" border="0">
+            <tr class="<?php echo $threadTypes[$entry['thread_type']]; ?>">
                 <th colspan="4" width="100%">
                 <div>
-                    <span style="display:inline-block"><?php
+                    <span><?php
                         echo Format::db_datetime($entry['created']);?></span>
-                    <span style="display:inline-block;padding-left:1em" class="faded title"><?php
+                    <span class="faded title"><?php
                         echo Format::truncate($entry['title'], 100); ?></span>
-                    <span style="float:right;white-space:no-wrap;display:inline-block">
-                        <span style="vertical-align:middle;" class="textra"></span>
-                        <span style="vertical-align:middle;"
-                            class="tmeta faded title"><?php
+                    <span>
+                        <span class="textra"></span>
+                        <span class="tmeta faded title"><?php
                             echo Format::htmlchars($entry['poster']); ?></span>
                     </span>
                 </div>
@@ -381,7 +380,7 @@ $tcount+= $ticket->getNumNotes();
         echo '<p>Error fetching ticket thread - get technical help.</p>';
     }?>
 </div>
-<div class="clear" style="padding-bottom:10px;"></div>
+<div class="clear"></div>
 <?php if($errors['err']) { ?>
     <div class="alert alert-danger"><?php echo $errors['err']; ?></div>
 <?php }elseif($msg) { ?>
@@ -391,7 +390,7 @@ $tcount+= $ticket->getNumNotes();
 <?php } ?>
 
 <div id="response_options">
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-response">
         <?php
         if($thisstaff->canPostReply()) { ?>
         <li id="reply_tab"><a href="#reply">Post Reply</a></li>
@@ -535,8 +534,8 @@ $tcount+= $ticket->getNumNotes();
             </div>
         </table>
         <p class="centered">
-            <input class="btn_sm" type="submit" value="Post Reply">
-            <input class="btn_sm" type="reset" value="Reset">
+            <input class="btn btn-sm btn-success" type="submit" value="Post Reply">
+            <input class="btn btn-sm btn-danger" type="reset" value="Reset">
         </p>
     </form>
     <?php
@@ -649,8 +648,8 @@ $tcount+= $ticket->getNumNotes();
         </table>
 
        <p class="centered">
-           <input class="btn_sm" type="submit" value="Post Note">
-           <input class="btn_sm" type="reset" value="Reset">
+           <input class="btn btn-sm btn-success" type="submit" value="Post Note">
+           <input class="btn btn-sm btn-danger" type="reset" value="Reset">
        </p>
    </form>
     <?php
@@ -706,8 +705,8 @@ $tcount+= $ticket->getNumNotes();
             </tr>
         </table>
         <p class="centered">
-           <input class="btn_sm" type="submit" value="Transfer">
-           <input class="btn_sm" type="reset" value="Reset">
+           <input class="btn btn-sm btn-success" type="submit" value="Transfer">
+           <input class="btn btn-sm btn-danger" type="reset" value="Reset">
         </p>
     </form>
     <?php
@@ -793,8 +792,8 @@ $tcount+= $ticket->getNumNotes();
             </tr>
         </table>
         <p class="centered">
-            <input class="btn" type="submit" value="<?php echo $ticket->isAssigned()?'Reassign':'Assign'; ?>">
-            <input class="btn" type="reset" value="Reset">
+            <input class="btn btn-sm btn-success" type="submit" value="<?php echo $ticket->isAssigned()?'Reassign':'Assign'; ?>">
+            <input class="btn btn-sm btn-danger" type="reset" value="Reset">
         </p>
     </form>
     <?php

@@ -280,7 +280,6 @@
 }
 .thread-body blockquote p {
   font-weight: 300;
-  line-height: 1.25;
 }
 .thread-body blockquote p:last-child {
   margin-bottom: 0;
@@ -393,7 +392,6 @@
 .thread-body blockquote,
 .thread-body pre {
 	font-size: 14px;
-	line-height: 1.25rem;
 }
 
 /* Adjust plain/text messages posted as <pre> in the thread body to show in

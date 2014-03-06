@@ -362,7 +362,7 @@ $(document).ready(function(){
     $('.dialog').each(function() {
         var w = $(window), $this=$(this);
         $this.css({
-            top : (w.innerHeight() / 7),
+            top : (w.innerHeight() / 15),
             left : (w.width() - $this.outerWidth()) / 2
         });
         $this.hasClass('draggable') && $this.draggable({handle:'h3'});
@@ -385,7 +385,7 @@ $(document).ready(function(){
 
     /* advanced search */
     $('.dialog#advanced-search').css({
-        top  : ($(window).height() / 6),
+        top  : ($(window).height() / 15),
         left : ($(window).width() / 2 - 300)
     });
 
