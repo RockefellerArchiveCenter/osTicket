@@ -7,7 +7,7 @@ defined('OSTSCPINC') or die('Invalid path');
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="refresh" content="7200" />
     <title>RAC Research Requests: Staff Login</title>
-    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="css/login.css" type="text/css" />
     <meta name="robots" content="noindex" />
     <meta http-equiv="cache-control" content="no-cache" />

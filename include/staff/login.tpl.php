@@ -9,8 +9,12 @@ $info = ($_POST && $errors)?Format::htmlchars($_POST):array();
         <?php csrf_token(); ?>
         <input type="hidden" name="do" value="scplogin">
         <fieldset>
+        <div class="form-group">
             <input class="form-control" type="text" name="userid" id="name" value="<?php echo $info['userid']; ?>" placeholder="username" autocorrect="off" autocapitalize="off">
+        </div>
+        <div class="form-group">
             <input class="form-control" type="password" name="passwd" id="pass" placeholder="password" autocorrect="off" autocapitalize="off">
+        </div>
         </fieldset>
         <?php if ($_SESSION['_staff']['strikes'] > 1 && $cfg->allowPasswordReset()) { ?>
         <h3 style="display:inline"><a href="pwreset.php">Forgot my password</a></h3>
