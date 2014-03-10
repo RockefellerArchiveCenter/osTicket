@@ -100,7 +100,7 @@ if ($count) //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="btn btn-danger" type="submit" name="delete" value="Delete">
+    <input class="button btn btn-danger" type="submit" name="delete" value="Delete">
 </p>
 </form>
 

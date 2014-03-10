@@ -108,9 +108,9 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="btn btn-success" type="submit" name="make_public" value="Make Public">
-    <input class="btn btn-warning" type="submit" name="make_private" value="Make Internal">
-    <input class="btn btn-danger" type="submit" name="delete" value="Delete" >
+    <input class="button btn btn-success" type="submit" name="make_public" value="Make Public">
+    <input class="button btn btn-warning" type="submit" name="make_private" value="Make Internal">
+    <input class="button btn btn-danger" type="submit" name="delete" value="Delete" >
 </p>
 <?php
 endif;

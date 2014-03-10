@@ -42,11 +42,11 @@ a {
     color: #555;
 }
 
-#notice_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; line-height: 16px; border: 1px solid #0a0; background: url('../images/icons/ok.png') 10px 50% no-repeat #e0ffe0; }
+#notice_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; border: 1px solid #0a0; background: url('../images/icons/ok.png') 10px 50% no-repeat #e0ffe0; }
 
-#warning_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; line-height: 16px; border: 1px solid #f26522; background: url('../images/icons/alert.png') 10px 50% no-repeat #ffffdd; }
+#warning_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; border: 1px solid #f26522; background: url('../images/icons/alert.png') 10px 50% no-repeat #ffffdd; }
 
-#error_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; line-height: 16px; border: 1px solid #a00; background: url('../images/icons/error.png') 10px 50% no-repeat #fff0f0; }
+#error_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; border: 1px solid #a00; background: url('../images/icons/error.png') 10px 50% no-repeat #fff0f0; }
 
 .nav {
     padding-left:1em;
@@ -267,7 +267,6 @@ a.edit, a.print {
     float:right;
     width:auto;
     height:16px;
-    line-height:16px;
     padding:2px 5px 2px 2px;
     background-position:2px 50%;
     background-repeat:no-repeat;
@@ -283,13 +282,11 @@ a.print {
 
 .search label {
     display:block;
-    line-height:25px;
     height:25px;
 }
 
 .search input[type=text] {
     height:23px;
-    line-height:23px;
     border:1px solid #aaa;
     background:#fff;
     padding:2px;
@@ -372,7 +369,6 @@ h2 .reload {
     width:auto;
     float:left;
     height:30px;
-    line-height:30px;
     border-top:1px solid #F4FAFF;
     padding:0 10px 0 32px;
     margin-right:10px;
@@ -461,7 +457,6 @@ h2 .reload {
     padding:5px;
     background:#F4FAFF;
     height:16px;
-    line-height:16px;
 }
 
 #ticket_notes .info {
@@ -497,7 +492,6 @@ h2 .reload {
     font-weight:bold;
     padding:5px;
     height:18px;
-    line-height:20px;
     color:#444;
     display:block;
     float:left;
@@ -564,7 +558,6 @@ h2 .reload {
 }
 
 .expander {
-    line-height:14px;
     display:inline-block;
     width:12px;
     height:12px;
@@ -625,7 +618,6 @@ h2 .reload {
     top:0;
     left:-1px;
     min-width:400px;
-    line-height: 1.15rem;
 }
 
 .tip_content .links {
@@ -700,7 +692,6 @@ h2 .reload {
 
 .tip_content form {
     display:none;
-    line-height:24px;
 }
 
 .tip_content select, .tip_content textarea {
@@ -718,7 +709,6 @@ h2 .reload {
     width:auto !important;
     width:295px;
     text-align:right;
-    line-height:24px;
 }
 
 .tip_content h1 {
@@ -838,7 +828,6 @@ i.help-tip:hover {
   display: inline;
   height: 16px;
   font-size:13px;
-  line-height: 16px;
   padding-left: 24px;
   background: url('../images/icons/page.png') 0 50% no-repeat;
 }
@@ -1056,7 +1045,7 @@ time {
 /* Upgrader */
 #upgrader { width: 100%; height: auto; clear: both;}
 #upgrader #sidebar { width: 220px; padding: 10px; border: 1px solid #C8DDFA; float: right; background: #F7FBFE; }
-#upgrader #sidebar h3 { font-size: 10pt; margin: 0 0 5px 0; padding: 0; text-indent: 32px; background: url('../images/cog.png?1312913866') top left no-repeat; line-height: 24px; color: #2a67ac; }
+#upgrader #sidebar h3 { font-size: 10pt; margin: 0 0 5px 0; padding: 0; text-indent: 32px; background: url('../images/cog.png?1312913866') top left no-repeat; color: #2a67ac; }
 
 #upgrader #main { width: 680px; float: left;}
 #upgrader #main h1 { margin: 0; padding: 0; font-size: 21pt; font-weight: normal; }
@@ -1073,8 +1062,8 @@ ul.progress li.no { background-image: url('../images/no.png?1312906277'); }
 ul.progress li.yes small {color:green; }
 ul.progress li.no small {color:red;}
 
-#bar { clear: both; padding-top: 10px; height: 24px; line-height: 24px; text-align: center; border-top: 1px solid #aaaaaa; }
-#bar a, #bar .btn { display: inline-block; margin: 0; height: 24px; line-height: 24px; font-weight: bold; border: 1px solid #666666; text-decoration: none; padding: 0 10px; background: url('../images/grey_btn_bg.png?1312910883') top left repeat-x; color: #333; }
+#bar { clear: both; padding-top: 10px; height: 24px; text-align: center; border-top: 1px solid #aaaaaa; }
+#bar a, #bar .btn { display: inline-block; margin: 0; height: 24px; font-weight: bold; border: 1px solid #666666; text-decoration: none; padding: 0 10px; background: url('../images/grey_btn_bg.png?1312910883') top left repeat-x; color: #333; }
 #bar a:hover, #bar .btn:hover, #bar .btnover { background-position: bottom left; }
 #bar a.unstyled, #bar a.unstyled:hover { font-weight: normal; background: none; border: none; text-decoration: underline; color: #2a67ac; }
 

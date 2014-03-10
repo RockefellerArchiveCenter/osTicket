@@ -178,6 +178,6 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
 <p class="centered">
     <input class="btn btn-success" type="submit" name="submit" value="<?php echo $submit_text; ?>">
     <input class="btn btn-warning" type="reset"  name="reset"  value="Reset">
-    <input class="btn btn-default" type="button" name="cancel" value="Cancel" onclick='window.location.href="groups.php"'>
+    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="groups.php"'>
 </p>
 </form>

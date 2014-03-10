@@ -116,9 +116,9 @@ else
 if($res && $num): //Show options..
 ?>
 <p class="centered" id="actions">
-    <input class="btn btn-success" type="submit" name="make_public" value="Make Public" >
-    <input class="btn btn-warning" type="submit" name="make_private" value="Make Private" >
-    <input class="btn btn-danger" type="submit" name="delete" value="Delete Dept(s)" >
+    <input class="button btn btn-success" type="submit" name="make_public" value="Make Public" >
+    <input class="button btn btn-warning" type="submit" name="make_private" value="Make Private" >
+    <input class="button btn btn-danger" type="submit" name="delete" value="Delete Dept(s)" >
 </p>
 <?php
 endif;

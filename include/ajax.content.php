@@ -39,16 +39,16 @@ class ContentAjaxAPI extends AjaxController {
     function ticket_variables() {
 
         $content='
-<div style="width:680px;">
+<div style="width:880px;">
     <h2>Ticket Variables</h2>
     Please note that non-base variables depend on the context of use. Visit osTicket Wiki for up-to-date documentation.
     <br/>
-    <table width="100%" border="0" cellspacing=1 cellpadding=2>
-        <tr><td width="55%" valign="top"><b>Base Variables</b></td><td><b>Other Variables</b></td></tr>
+    <table class="table" width="100%" border="0" cellspacing=1 cellpadding=2>
+        <tr><td width="50%" valign="top"><b>Base Variables</b></td><td><b>Other Variables</b></td></tr>
         <tr>
-            <td width="55%" valign="top">
+            <td width="50%" valign="top">
                 <table width="100%" border="0" cellspacing=1 cellpadding=1>
-                    <tr><td width="130">%{ticket.id}</td><td>Ticket ID (internal ID)</td></tr>
+                    <tr><td width="160">%{ticket.id}</td><td>Ticket ID (internal ID)</td></tr>
                     <tr><td>%{ticket.number}</td><td>Ticket number (external ID)</td></tr>
                     <tr><td>%{ticket.email}</td><td>Email address</td></tr>
                     <tr><td>%{ticket.name}</td><td>Full name &mdash;
@@ -73,7 +73,7 @@ class ContentAjaxAPI extends AjaxController {
             </td>
             <td valign="top">
                 <table width="100%" border="0" cellspacing=1 cellpadding=1>
-                    <tr><td width="100">%{message}</td><td>Incoming message</td></tr>
+                    <tr><td width="120">%{message}</td><td>Incoming message</td></tr>
                     <tr><td>%{response}</td><td>Outgoing response</td></tr>
                     <tr><td>%{comments}</td><td>Assign/transfer comments</td></tr>
                     <tr><td>%{note}</td><td>Internal note <em>(expandable)</em></td></tr>

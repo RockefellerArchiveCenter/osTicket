@@ -454,30 +454,30 @@ if ($results) {
             $status=$_REQUEST['status']?$_REQUEST['status']:$status;
             switch (strtolower($status)) {
                 case 'closed': ?>
-                    <input class="button" type="submit" name="reopen" value="Reopen" >
+                    <input class="button btn btn-success" type="submit" name="reopen" value="Reopen" >
                     <?php
                     break;
                 case 'open':
                 case 'answered':
                 case 'assigned':
                     ?>
-                    <input class="button" type="submit" name="mark_overdue" value="Overdue" >
-                    <input class="button" type="submit" name="close" value="Close">
+                    <input class="button btn btn-warning" type="submit" name="mark_overdue" value="Overdue" >
+                    <input class="button btn btn-info" type="submit" name="close" value="Close">
                     <?php
                     break;
                 case 'overdue':
                     ?>
-                    <input class="button" type="submit" name="close" value="Close">
+                    <input class="button btn btn-info" type="submit" name="close" value="Close">
                     <?php
                     break;
                 default: //search??
                     ?>
-                    <input class="button" type="submit" name="close" value="Close" >
-                    <input class="button" type="submit" name="reopen" value="Reopen">
+                    <input class="button btn btn-info" type="submit" name="close" value="Close" >
+                    <input class="button btn btn-success" type="submit" name="reopen" value="Reopen">
             <?php
             }
             if($thisstaff->canDeleteTickets()) { ?>
-                <input class="button" type="submit" name="delete" value="Delete">
+                <input class="button btn btn-danger" type="submit" name="delete" value="Delete">
             <?php } ?>
         </p>
         <?php

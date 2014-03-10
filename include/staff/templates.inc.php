@@ -113,9 +113,9 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="btn btn-success" type="submit" name="enable" value="Enable" >
-    <input class="btn btn-warning" type="submit" name="disable" value="Disable" >
-    <input class="btn btn-danger" type="submit" name="delete" value="Delete" >
+    <input class="button btn btn-success" type="submit" name="enable" value="Enable" >
+    <input class="button btn btn-warning" type="submit" name="disable" value="Disable" >
+    <input class="button btn btn-danger" type="submit" name="delete" value="Delete" >
 </p>
 <?php
 endif;

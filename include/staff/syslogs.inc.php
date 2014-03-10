@@ -161,7 +161,7 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="btn btn-danger" type="submit" name="delete" value="Delete Selected Entries">
+    <input class="button btn btn-danger" type="submit" name="delete" value="Delete Selected Entries">
 </p>
 <?php
 endif;
@@ -180,10 +180,10 @@ endif;
     <hr style="margin-top:1em"/>
     <p class="full-width">
         <span class="buttons" style="float:left">
-            <input type="button" value="No, Cancel" class="close">
+            <input type="button" value="No, Cancel" class="close btn btn-danger">
         </span>
         <span class="buttons" style="float:right">
-            <input type="button" value="Yes, Do it!" class="confirm">
+            <input type="button" value="Yes, Do it!" class="confirm btn btn-success">
         </span>
      </p>
     <div class="clear"></div>

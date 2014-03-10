@@ -113,7 +113,7 @@ if($res && $num): //Show options..
     echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
 ?>
 <p class="centered" id="actions">
-    <input class="btn btn-danger" type="submit" name="delete" value="Delete Email(s)" >
+    <input class="button btn btn-danger" type="submit" name="delete" value="Delete Email(s)" >
 </p>
 <?php
 endif;

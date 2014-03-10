@@ -66,7 +66,7 @@ if ($count) //Show options..
 ?>
 
 <p class="centered" id="actions">
-    <input class="btn btn-danger" type="submit" name="delete" value="Delete">
+    <input class="button btn btn-danger" type="submit" name="delete" value="Delete">
 </p>
 </form>
 
