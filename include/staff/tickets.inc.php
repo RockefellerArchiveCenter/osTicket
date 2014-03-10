@@ -367,9 +367,9 @@ if ($results) {
                 $lc='';
                 if($showassigned) {
                     if($row['staff_id'])
-                        $lc=sprintf('<span class="Icon staffAssigned">%s</span>',Format::truncate($row['staff'],40));
+                        $lc=sprintf('<span class="staffAssigned">%s</span>',Format::truncate($row['staff'],40));
                     elseif($row['team_id'])
-                        $lc=sprintf('<span class="Icon teamAssigned">%s</span>',Format::truncate($row['team'],40));
+                        $lc=sprintf('<span class="teamAssigned">%s</span>',Format::truncate($row['team'],40));
                     else
                         $lc=' ';
                 }else{
@@ -411,7 +411,7 @@ if ($results) {
                         $displaystatus="<b>$displaystatus</b>";
                     echo "<td>$displaystatus</td>";
                 } else { ?>
-                <td class="nohover" align="center" style="background-color:<?php echo $row['priority_color']; ?>;">
+                <td class="nohover">
                     <?php echo $row['priority_desc']; ?></td>
                 <?php
                 }
