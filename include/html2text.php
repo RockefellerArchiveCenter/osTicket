@@ -201,7 +201,7 @@ class HtmlInlineElement {
                 case 'normal':
                 default:
                     if ($after_block) $more = ltrim($more);
-                    $more = preg_replace('/\s+/m', ' ', $more);
+                    $more = preg_replace('/[ \r\n\t\f]+/mu', ' ', $more);
                 }
             }
             elseif ($c instanceof HtmlInlineElement) {
@@ -218,8 +218,9 @@ class HtmlInlineElement {
         }
         if ($this->footnotes) {
             $output .= "\n\n" . str_repeat('-', $width/2) . "\n";
+            $id = 1;
             foreach ($this->footnotes as $name=>$content)
-                $output .= "[$name] ".$content."\n";
+                $output .= sprintf("[%d] %s\n", $id++, $content);
         }
         return $output;
     }
@@ -276,7 +277,8 @@ class HtmlInlineElement {
     }
 
     function addFootNote($name, $content) {
-        $this->footnotes[$name] = $content;
+        $this->footnotes[$content] = $content;
+        return count($this->footnotes);
     }
 }
 
@@ -447,8 +449,8 @@ class HtmlAElement extends HtmlInlineElement {
             $output = (($href != $output) ? "$href " : '') . "<$output>";
         } elseif (mb_strwidth($href) > $width / 2) {
             if ($href != $output)
-                $this->getRoot()->addFootnote($output, $href);
-            $output = "[$output]";
+                $id = $this->getRoot()->addFootnote($output, $href);
+            $output = "[$output][$id]";
         } elseif ($href != $output) {
             $output = "[$output]($href)";
         }

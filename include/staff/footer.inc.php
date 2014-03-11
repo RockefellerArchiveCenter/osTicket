@@ -1,4 +1,3 @@
-    </div>
 <?php
 if(is_object($thisstaff) && $thisstaff->isStaff()) { ?>
     <div style="display:none">

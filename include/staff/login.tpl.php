@@ -16,7 +16,7 @@ $info = ($_POST && $errors)?Format::htmlchars($_POST):array();
             <input class="form-control" type="password" name="passwd" id="pass" placeholder="password" autocorrect="off" autocapitalize="off">
         </div>
         </fieldset>
-        <?php if ($_SESSION['_staff']['strikes'] > 1 && $cfg->allowPasswordReset()) { ?>
+        <?php if ($show_reset && $cfg->allowPasswordReset()) { ?>
         <h3 style="display:inline"><a href="pwreset.php">Forgot my password</a></h3>
         <?php } ?>
         <input class="btn btn-primary" type="submit" name="submit" value="Log In">
