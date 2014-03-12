@@ -27,10 +27,10 @@ elseif($msg)
 elseif($warn)
     echo sprintf('<div id="msg_warning">%s</div>',$warn);
 
-echo '<ul class="tabs">';
+echo '<ul class="nav nav-tabs">';
 
 echo '
-        <li><a id="preview_tab" href="#preview" class="active"
+        <li class="active"><a id="preview_tab" href="#preview"
             ><i class="icon-list-alt"></i>&nbsp;Ticket Summary</a></li>';
 if ($ticket->getNumCollaborators()) {
 echo sprintf('
@@ -42,8 +42,7 @@ echo sprintf('
 echo '</ul>';
 
 echo '<div class="tab_content" id="preview">';
-echo '<table border="0" cellspacing="" cellpadding="1" width="100%" class="ticket_info">';
-
+echo '<table border="0" cellspacing="" cellpadding="1" width="100%" class="table table-condensed">';
 $ticket_state=sprintf('<span>%s</span>',ucfirst($ticket->getStatus()));
 if($ticket->isOpen()) {
     if($ticket->isOverdue())
@@ -83,7 +82,7 @@ echo '</table>';
 
 
 echo '<hr>
-    <table border="0" cellspacing="" cellpadding="1" width="100%" class="ticket_info">';
+    <table border="0" cellspacing="" cellpadding="1" width="100%" class="table table-condensed">';
 if($ticket->isOpen()) {
     echo sprintf('
             <tr>

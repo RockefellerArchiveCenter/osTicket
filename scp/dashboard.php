@@ -28,7 +28,7 @@ require(STAFFINC_DIR.'header.inc.php');
 <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
 <link rel="stylesheet" type="text/css" href="css/dashboard.css"/>
 
-<h2>Ticket Activity</h2>
+<!--<h2>Ticket Activity</h2>
 <p>Select the starting time and period for the system activity graph</p>
 <form class="well form-inline" id="timeframe-form">
     <label>
@@ -47,15 +47,15 @@ require(STAFFINC_DIR.'header.inc.php');
         </select>
     </label>
     <button class="btn btn-primary" type="submit">Refresh</button>
-</form>
+</form>-->
 
 <!-- Create a graph and fetch some data to create pretty dashboard -->
-<div style="position:relative">
+<!--<div style="position:relative">
     <div id="line-chart-here" style="height:300px"></div>
     <div style="position:absolute;right:0;top:0" id="line-chart-legend"></div>
 </div>
 
-<hr/>
+<hr/>-->
 <h2 id="table-title">Statistics</h2>
 <p>Statistics of tickets organized by department, help topic, and staff.</p>
 <ul class="nav nav-tabs" id="tabular-navigation"></ul>

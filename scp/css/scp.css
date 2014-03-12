@@ -935,6 +935,7 @@ time {
     top: .5em;
     font-size:2em;
     color:#000;
+    text-decoration:none;
 }
 
 .dialog form {

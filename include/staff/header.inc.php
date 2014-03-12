@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="cache-control" content="no-cache" />
     <meta http-equiv="pragma" content="no-cache" />
-    <title><?php echo ($ost && ($title=$ost->getPageTitle()))?$title:'RAC Research Requests'; ?></title>
+    <title><?php echo ($ost && ($title=$ost->getPageTitle()))?$title:'Research Requests'; ?></title>
     <!--[if IE]>
     <style type="text/css">
         .tip_shadow { display:block !important; }
