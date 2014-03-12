@@ -29,7 +29,7 @@ if($ticket->isAssigned() && (
     $warn.='&nbsp;&nbsp;<span class="Icon assignedTicket">Ticket is assigned to '.implode('/', $ticket->getAssignees()).'</span>';
 if(!$errors['err'] && ($lock && $lock->getStaffId()!=$thisstaff->getId()))
     $errors['err']='This ticket is currently locked by '.$lock->getStaffName();
-if(!$errors['err'] && ($emailBanned=TicketFilter::isBanned($ticket->getEmail())))
+if(!$errors['er r'] && ($emailBanned=TicketFilter::isBanned($ticket->getEmail())))
     $errors['err']='Email is in banlist! Must be removed before any reply/response';
 
 $unbannable=($emailBanned) ? BanList::includes($ticket->getEmail()) : false;
@@ -38,13 +38,13 @@ if($ticket->isOverdue())
     $warn.='&nbsp;&nbsp;<span class="Icon overdueTicket">Marked overdue!</span>';
 
 ?>
-<table class="table" width="100%" cellpadding="2" cellspacing="0" border="0">
+<table width="100%" class="table">
     <tr>
-        <td width="50%">
-             <a class="btn btn-default" href="tickets.php?id=<?php echo $ticket->getId(); ?>" title="Reload"><i class="icon-refresh"></i></a>
-             <h2><?php echo Format::htmlchars($ticket->getSubject()); ?> (#<?php echo $ticket->getExtId(); ?>)</h2>
+        <td width="50%" class="has_bottom_border">
+             <h2><a href="tickets.php?id=<?php echo $ticket->getId(); ?>"
+             title="Reload"><i class="icon-refresh"></i> Ticket #<?php echo $ticket->getNumber(); ?></a></h2>
         </td>
-        <td width="50%" style="text-align:right">
+        <td width="50%" class="right_align has_bottom_border">
             <?php
             if($thisstaff->canBanEmails() || ($dept && $dept->isManager($thisstaff))) { ?>
             <span class="btn btn-sm btn-default" data-dropdown="#action-dropdown-more">
@@ -321,6 +321,7 @@ foreach (DynamicFormEntry::forTicket($ticket->getId()) as $form) {
     </tr>
 </table>
 <div class="clear"></div>
+<h2><?php echo Format::htmlchars($ticket->getSubject()); ?></h2>
 <?php
 $tcount = $ticket->getThreadCount();
 $tcount+= $ticket->getNumNotes();
@@ -338,7 +339,7 @@ $tcount+= $ticket->getNumNotes();
            if ($entry['body'] == '-')
                $entry['body'] = '(EMPTY)';
            ?>
-        <table class="table" cellspacing="0" cellpadding="1" width="100%" border="0">
+        <table cellspacing="0" cellpadding="1" width="100%" border="0">
             <tr class="<?php echo $threadTypes[$entry['thread_type']]; ?>">
                 <th colspan="4" width="100%">
                 <div>
@@ -346,18 +347,9 @@ $tcount+= $ticket->getNumNotes();
                         echo Format::db_datetime($entry['created']);?></span>
                     <span class="faded title"><?php
                         echo Format::truncate($entry['title'], 100); ?></span>
-<<<<<<< HEAD
                     <span>
-                        <span class="textra"></span>
-                        <span class="tmeta faded title"><?php
-                            echo Format::htmlchars($entry['poster']); ?></span>
-=======
-                    <span style="float:right;white-space:no-wrap;display:inline-block">
-                        <span style="vertical-align:middle;" class="textra"></span>
-                        <span style="vertical-align:middle;"
-                            class="tmeta faded title"><?php
+                        <span class="tmeta faded title pull-right"><?php
                             echo Format::htmlchars($entry['name'] ?: $entry['poster']); ?></span>
->>>>>>> 7b445c920f731a3662e1c26218df8ec5138004e9
                     </span>
                 </div>
                 </th>
@@ -388,7 +380,7 @@ $tcount+= $ticket->getNumNotes();
         echo '<p>Error fetching ticket thread - get technical help.</p>';
     }?>
 </div>
-<div class="clear"></div>
+<div class="clear" style="padding-bottom:10px;"></div>
 <?php if($errors['err']) { ?>
     <div class="alert alert-danger"><?php echo $errors['err']; ?></div>
 <?php }elseif($msg) { ?>
@@ -398,7 +390,7 @@ $tcount+= $ticket->getNumNotes();
 <?php } ?>
 
 <div id="response_options">
-    <ul class="nav nav-tabs nav-response">
+    <ul class="nav nav-tabs">
         <?php
         if($thisstaff->canPostReply()) { ?>
         <li id="reply_tab"><a href="#reply">Post Reply</a></li>
@@ -580,7 +572,7 @@ $tcount+= $ticket->getNumNotes();
                             <?php echo $statusChecked; ?>> Reopen on Reply</label>
                    <?php
                     } elseif($thisstaff->canCloseTickets()) { ?>
-                         <label><input type="checkbox" name="reply_ticket_status" id="reply_ticket_status" value="Closed"
+                         <label><input type="checkbox" name="reply_ticket_status" id="reply_ticket_status" value="Closed" checked="checked"
                               <?php echo $statusChecked; ?>> Close on Reply</label>
                    <?php
                     } ?>
@@ -590,7 +582,7 @@ $tcount+= $ticket->getNumNotes();
             } ?>
          </tbody>
         </table>
-        <p class="centered">
+        <p  style="padding-left:165px;">
             <input class="btn btn-sm btn-success" type="submit" value="Post Reply">
             <input class="btn btn-sm btn-danger" type="reset" value="Reset">
         </p>
@@ -704,7 +696,7 @@ $tcount+= $ticket->getNumNotes();
             </div>
         </table>
 
-       <p class="centered">
+       <p  style="padding-left:165px;">
            <input class="btn btn-sm btn-success" type="submit" value="Post Note">
            <input class="btn btn-sm btn-danger" type="reset" value="Reset">
        </p>
@@ -761,7 +753,7 @@ $tcount+= $ticket->getNumNotes();
                 </td>
             </tr>
         </table>
-        <p class="centered">
+        <p style="padding-left:165px;">
            <input class="btn btn-sm btn-success" type="submit" value="Transfer">
            <input class="btn btn-sm btn-danger" type="reset" value="Reset">
         </p>
@@ -848,7 +840,7 @@ $tcount+= $ticket->getNumNotes();
                 </td>
             </tr>
         </table>
-        <p class="centered">
+        <p  style="padding-left:165px;">
             <input class="btn btn-sm btn-success" type="submit" value="<?php echo $ticket->isAssigned()?'Reassign':'Assign'; ?>">
             <input class="btn btn-sm btn-danger" type="reset" value="Reset">
         </p>
@@ -885,11 +877,11 @@ $tcount+= $ticket->getNumNotes();
         <hr style="margin-top:3em"/>
         <p class="full-width">
             <span class="buttons" style="float:left">
-                <input class="btn btn-warning" type="reset" value="Reset">
-                <input type="button" value="Cancel" class="btn btn-danger">
+                <input type="reset" value="Reset" class="btn btn-warning">
+                <input type="button" value="Cancel" class="close btn btn-danger">
             </span>
             <span class="buttons" style="float:right">
-                <input class="btn btn-success" type="submit" value="Print">
+                <input type="submit" value="Print" class="btn btn-success">
             </span>
          </p>
     </form>
@@ -916,11 +908,11 @@ $tcount+= $ticket->getNumNotes();
         <hr style="margin-top:1em"/>
         <p class="full-width">
             <span class="buttons" style="float:left">
-                <input class="btn btn-warning" type="reset" value="Reset">
-                <input class="btn btn-danger" type="button" value="Cancel" class="close">
+                <input type="reset" value="Reset" class="btn btn-warning">
+                <input type="button" value="Cancel" class="close btn btn-danger">
             </span>
             <span class="buttons" style="float:right">
-                <input class="btn btn-success" type="submit" value="<?php echo $ticket->isClosed()?'Reopen':'Close'; ?>">
+                <input type="submit" value="<?php echo $ticket->isClosed()?'Reopen':'Close'; ?>" class="btn btn-success">
             </span>
          </p>
     </form>
@@ -953,7 +945,7 @@ $tcount+= $ticket->getNumNotes();
         Are you sure want to <b>unassign</b> ticket from <b><?php echo $ticket->getAssigned(); ?></b>?
     </p>
     <p class="confirm-action" style="display:none;" id="changeuser-confirm">
-        <span class="alert alert-warning" style="display:block;vertical-align:top">
+        <span id="msg_warning" style="display:block;vertical-align:top">
         <b><?php echo Format::htmlchars($ticket->getName()); ?></b> &lt;<?php echo $ticket->getEmail(); ?>&gt;
         <br> will no longer have access to the ticket.
         </span>
@@ -972,10 +964,10 @@ $tcount+= $ticket->getNumNotes();
         <hr style="margin-top:1em"/>
         <p class="full-width">
             <span class="buttons" style="float:left">
-                <input type="button" value="Cancel" class="btn btn-default">
+                <input type="button" value="Cancel" class="close btn btn-danger">
             </span>
             <span class="buttons" style="float:right">
-                <input type="submit" value="OK" class="btn btn-primary">
+                <input type="submit" value="OK" class="btn btn-success">
             </span>
          </p>
     </form>
