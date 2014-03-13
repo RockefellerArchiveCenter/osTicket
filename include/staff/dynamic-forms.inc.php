@@ -97,7 +97,7 @@ $showing=$pageNav->showing().' forms';
 </table>
 <?php
 if ($count) //Show options..
-    echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
+    echo '<ul class="pagination">'.$pageNav->getPageLinks().'</ul>';
 ?>
 <p class="centered" id="actions">
     <input class="button btn btn-danger" type="submit" name="delete" value="Delete">

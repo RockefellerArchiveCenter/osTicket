@@ -62,7 +62,7 @@ $showing=$pageNav->showing().' custom lists';
 </table>
 <?php
 if ($count) //Show options..
-    echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
+    echo '<ul class="pagination">'.$pageNav->getPageLinks().'</ul>';
 ?>
 
 <p class="centered" id="actions">

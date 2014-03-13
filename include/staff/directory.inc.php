@@ -122,7 +122,7 @@ else
      <tr>
         <td colspan="6">
             <?php if($res && $num) {
-                echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
+                echo '<ul class="pagination">'.$pageNav->getPageLinks().'</ul>';
                 ?>
             <?php } else {
                 echo 'No staff members found!';

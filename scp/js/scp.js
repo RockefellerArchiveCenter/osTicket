@@ -79,6 +79,7 @@ $(document).ready(function(){
     $('#actions input:submit.button').bind('click', function(e) {
 
         var formObj = $(this).closest('form');
+        console.log(formObj);
         e.preventDefault();
         if($('.dialog#confirm-action p#'+this.name+'-confirm').length == 0) {
             alert('Unknown action '+this.name+' - get technical help.');

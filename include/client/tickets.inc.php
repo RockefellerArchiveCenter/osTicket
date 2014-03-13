@@ -186,6 +186,6 @@ $negorder=$order=='DESC'?'ASC':'DESC'; //Negate the sorting
 </table>
 <?php
 if($res && $num>0) {
-    echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
+    echo '<ul class="pagination">'.$pageNav->getPageLinks().'</ul>';
 }
 ?>

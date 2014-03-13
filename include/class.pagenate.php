@@ -110,9 +110,9 @@ class PageNate {
         for ($i=$start_loop; $i <= $stop_loop; $i++) {
             $page = ($i - 1) * $this->limit;
             if ($i == $this_page) {
-                $html .= "\n<b>[$i]</b>";
+                $html .= "\n<li page=\"$i\" class=\"active\"><a href=\"$file&p=$i\" >$i</a></li>";
             } else {
-                $html .= "\n<a href=\"$file&p=$i\" ><b>$i</b></a>";
+                $html .= "\n<li page=\"$i\"><a href=\"$file&p=$i\" >$i</a></li>";
             }
         }
         if($stop_loop<$total_pages){

@@ -111,7 +111,7 @@ else
 </table>
 <?php
 if($res && $num): //Show options..
-    echo '<div>&nbsp;Page:'.$pageNav->getPageLinks().'&nbsp;</div>';
+    echo '<ul class="pagination">'.$pageNav->getPageLinks().'</ul>';
 ?>
 <p class="centered" id="actions">
     <input class="button btn btn-success" type="submit" name="enable" value="Enable" >
