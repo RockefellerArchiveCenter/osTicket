@@ -119,7 +119,7 @@ $(document).ready(function(){
         var fObj = el.closest('form');
         if(!fObj.data('changed')){
             fObj.data('changed', true);
-            $('input[type=submit]', fObj).css('color', 'red');
+            //$('input[type=submit]', fObj).css('color', 'red');
             $(window).bind('beforeunload', function(e) {
                 return 'Are you sure you want to leave? Any changes or info you\'ve entered will be discarded!';
              });
@@ -133,7 +133,7 @@ $(document).ready(function(){
     $("form#save :input[type=reset]").click(function() {
         var fObj = $(this).closest('form');
         if(fObj.data('changed')){
-            $('input[type=submit]', fObj).removeAttr('style');
+            //$('input[type=submit]', fObj).removeAttr('style');
             $('label', fObj).removeAttr('style');
             $('label', fObj).removeClass('strike');
             fObj.data('changed', false);
