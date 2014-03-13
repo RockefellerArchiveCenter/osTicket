@@ -24,8 +24,6 @@ require(STAFFINC_DIR.'header.inc.php');
 <script type="text/javascript" src="js/g.dot-min.js"></script>
 <script type="text/javascript" src="js/bootstrap-tab.js"></script>
 <script type="text/javascript" src="js/dashboard.inc.js"></script>
-
-<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
 <link rel="stylesheet" type="text/css" href="css/dashboard.css"/>
 
 <!--<h2>Ticket Activity</h2>
