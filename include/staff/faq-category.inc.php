@@ -18,9 +18,9 @@ if(!defined('OSTSTAFFINC') || !$category || !$thisstaff) die('Access Denied');
 </div>
 <?php
 if($thisstaff->canManageFAQ()) {
-    echo sprintf('<div class="cat-manage-bar"><a href="categories.php?id=%d" class="Icon editCategory">Edit Category</a>
-             <a href="categories.php" class="Icon deleteCategory">Delete Category</a>
-             <a href="faq.php?cid=%d&a=add" class="Icon newFAQ">Add New FAQ</a></div>',
+    echo sprintf('<div><a href="categories.php?id=%d" class="btn btn-warning editCategory">Edit Category</a>
+             <a href="categories.php" class="btn btn-danger deleteCategory">Delete Category</a>
+             <a href="faq.php?cid=%d&a=add" class="btn btn-success newFAQ">Add New FAQ</a></div>',
             $category->getId(),
             $category->getId());
 } else {
@@ -36,15 +36,14 @@ $sql='SELECT faq.faq_id, question, ispublished, count(attach.file_id) as attachm
     .' WHERE faq.category_id='.db_input($category->getId())
     .' GROUP BY faq.faq_id ORDER BY question';
 if(($res=db_query($sql)) && db_num_rows($res)) {
-    echo '<div id="faq">
-            <ol>';
+    echo '<table class="table table-striped">';
     while($row=db_fetch_array($res)) {
         echo sprintf('
-            <li><a href="faq.php?id=%d" class="previewfaq">%s <span>- %s</span></a></li>',
+            <tr><td><a href="faq.php?id=%d" class="previewfaq">%s <span>- %s</span></a></td>',
             $row['faq_id'],$row['question'],$row['ispublished']?'Published':'Internal');
     }
-    echo '  </ol>
-         </div>';
+    echo '
+         </table>';
 }else {
     echo '<strong>Category does not have FAQs</strong>';
 }

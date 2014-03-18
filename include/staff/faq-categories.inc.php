@@ -26,7 +26,7 @@ if(!defined('OSTSTAFFINC') || !$thisstaff) die('Access Denied');
             }
             ?>
         </select>
-        <input class="btn" id="searchSubmit" type="submit" value="Search">
+        <input class="btn btn-success" id="searchSubmit" type="submit" value="Search">
     </div>
     <div>
         <select class="form-control" name="topicId" style="width:350px;" id="topic-id">

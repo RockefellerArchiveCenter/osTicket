@@ -16,7 +16,7 @@ $category=$faq->getCategory();
 <div style="float:right;text-align:right;padding-top:5px;padding-right:5px;">
 <?php
 if($thisstaff->canManageFAQ()) {
-    echo sprintf('<a href="faq.php?id=%d&a=edit" class="Icon newHelpTopic">Edit FAQ</a>',
+    echo sprintf('<a href="faq.php?id=%d&a=edit" class="btn btn-default newHelpTopic">Edit FAQ</a>',
             $faq->getId());
 }
 ?>
