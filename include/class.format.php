@@ -202,7 +202,7 @@ class Format {
     function safe_html($html) {
         // Remove HEAD and STYLE sections
         $html = preg_replace(
-            array(':<(head|style|script).+</\1>:is',   # <head> and <style> sections
+            array(':<(head|style|script).+?</\1>:is', # <head> and <style> sections
                   ':<!\[[^]<]+\]>:',            # <![if !mso]> and friends
                   ':<!DOCTYPE[^>]+>:',          # <!DOCTYPE ... >
                   ':<\?[^>]+>:',                # <?xml version="1.0" ... >
@@ -218,7 +218,7 @@ class Format {
             'schemes' => 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, telnet; *:file, http, https; src: cid, http, https, data',
             'hook_tag' => function($e, $a=0) { return Format::__html_cleanup($e, $a); },
             'elements' => '*+iframe',
-            'spec' => 'iframe=-*,height,width,type,src(match="`^(https?:)?//(www\.)?(youtube|dailymotion|vimeo)\.com/`i"),frameborder;',
+            'spec' => 'iframe=-*,height,width,type,src(match="`^(https?:)?//(www\.)?(youtube|dailymotion|vimeo)\.com/`i"),frameborder; div=data-mid',
         );
 
         return Format::html($html, $config);
