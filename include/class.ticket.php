@@ -889,7 +889,8 @@ class Ticket {
 
         $options = array(
             'inreplyto'=>$message->getEmailMessageId(),
-            'references'=>$message->getEmailReferences());
+            'references'=>$message->getEmailReferences(),
+            'thread'=>$message);
 
         //Send auto response - if enabled.
         if($autorespond
@@ -902,9 +903,6 @@ class Ticket {
                           'recipient' => $this->getOwner(),
                           'signature' => ($dept && $dept->isPublic())?$dept->getSignature():'')
                     );
-
-            if($cfg->stripQuotedReply() && ($tag=$cfg->getReplySeparator()))
-                $msg['body'] = "<p style=\"display:none\">$tag<p>".$msg['body'];
 
             $email->sendAutoReply($this->getEmail(), $msg['subj'], $msg['body'],
                 null, $options);
@@ -1025,11 +1023,9 @@ class Ticket {
 
         $msg = $this->replaceVars($msg->asArray(), $vars);
 
-        if ($cfg->stripQuotedReply() && ($tag=$cfg->getReplySeparator()))
-            $msg['body'] = "<p style=\"display:none\">$tag<p>".$msg['body'];
-
         $attachments = $cfg->emailAttachments()?$entry->getAttachments():array();
-        $options = array('inreplyto' => $entry->getEmailMessageId());
+        $options = array('inreplyto' => $entry->getEmailMessageId(),
+                         'thread' => $entry);
         foreach ($recipients as $recipient) {
             if ($uid == $recipient->getId()) continue;
             $options['references'] =  $entry->getEmailReferencesForUser($recipient);
@@ -1094,13 +1090,10 @@ class Ticket {
                                 'recipient' => $user,
                                 'signature' => ($dept && $dept->isPublic())?$dept->getSignature():''));
 
-            //Reply separator tag.
-            if($cfg->stripQuotedReply() && ($tag=$cfg->getReplySeparator()))
-                $msg['body'] = "<p style=\"display:none\">$tag<p>".$msg['body'];
-
             $options = array(
-                'inreplyto' => $message->getEmailMessageId(),
-                'references' => $message->getEmailReferencesForUser($user));
+                'inreplyto'=>$message->getEmailMessageId(),
+                'references' => $message->getEmailReferencesForUser($user),
+                'thread'=>$message);
             $email->sendAutoReply($user->getEmail(), $msg['subj'], $msg['body'],
                 null, $options);
         }
@@ -1157,7 +1150,8 @@ class Ticket {
             $sentlist=array();
             $options = array(
                 'inreplyto'=>$note->getEmailMessageId(),
-                'references'=>$note->getEmailReferences());
+                'references'=>$note->getEmailReferences(),
+                'thread'=>$note);
             foreach( $recipients as $k=>$staff) {
                 if(!is_object($staff) || !$staff->isAvailable() || in_array($staff->getEmail(), $sentlist)) continue;
                 $alert = $this->replaceVars($msg, array('recipient' => $staff));
@@ -1408,7 +1402,8 @@ class Ticket {
             $sentlist=array();
             $options = array(
                 'inreplyto'=>$note->getEmailMessageId(),
-                'references'=>$note->getEmailReferences());
+                'references'=>$note->getEmailReferences(),
+                'thread'=>$note);
             foreach( $recipients as $k=>$staff) {
                 if(!is_object($staff) || !$staff->isAvailable() || in_array($staff->getEmail(), $sentlist)) continue;
                 $alert = $this->replaceVars($msg, array('recipient' => $staff));
@@ -1551,6 +1546,7 @@ class Ticket {
 
         //Add email recipients as collaborators...
         if ($vars['recipients']
+                && (strtolower($origin) != 'email' || ($cfg && $cfg->addCollabsViaEmail()))
                 //Only add if we have a matched local address
                 && $vars['to-email-id']) {
             //New collaborators added by other collaborators are disable --
@@ -1580,11 +1576,15 @@ class Ticket {
 
         if(!$alerts) return $message; //Our work is done...
 
-        $autorespond = true;
-        if ($autorespond && $message->isBounceOrAutoReply())
-            $autorespond=false;
+        // Do not auto-respond to bounces and other auto-replies
+        $autorespond = isset($vars['flags']) ? !$vars['flags']['bounce'] : true;
+        if ($autorespond && $message->isAutoReply())
+            $autorespond = false;
 
         $this->onMessage($message, $autorespond); //must be called b4 sending alerts to staff.
+
+        if ($autorespond && $cfg && $cfg->notifyCollabsONNewMessage())
+            $this->notifyCollaborators($message, array('signature' => ''));
 
         $dept = $this->getDept();
 
@@ -1595,7 +1595,8 @@ class Ticket {
                 );
         $options = array(
                 'inreplyto' => $message->getEmailMessageId(),
-                'references' => $message->getEmailReferences());
+                'references' => $message->getEmailReferences(),
+                'thread'=>$message);
         //If enabled...send alert to staff (New Message Alert)
         if($cfg->alertONNewMessage()
                 && ($email = $cfg->getAlertEmail())
@@ -1627,8 +1628,6 @@ class Ticket {
                 $sentlist[] = $staff->getEmail();
             }
         }
-
-        $this->notifyCollaborators($message, array('signature' => ''));
 
         return $message;
     }
@@ -1670,13 +1669,11 @@ class Ticket {
             $msg = $this->replaceVars($msg->asArray(),
                 array('response' => $response, 'signature' => $signature));
 
-            if($cfg->stripQuotedReply() && ($tag=$cfg->getReplySeparator()))
-                $msg['body'] = "<p style=\"display:none\">$tag<p>".$msg['body'];
-
             $attachments =($cfg->emailAttachments() && $files)?$response->getAttachments():array();
             $options = array(
                 'inreplyto'=>$response->getEmailMessageId(),
-                'references'=>$response->getEmailReferences());
+                'references'=>$response->getEmailReferences(),
+                'thread'=>$response);
             $email->sendAutoReply($this->getEmail(), $msg['subj'], $msg['body'], $attachments,
                 $options);
         }
@@ -1727,7 +1724,8 @@ class Ticket {
                 'poster' => $thisstaff);
         $options = array(
                 'inreplyto' => $response->getEmailMessageId(),
-                'references' => $response->getEmailReferences());
+                'references' => $response->getEmailReferences(),
+                'thread'=>$response);
 
         if(($email=$dept->getEmail())
                 && ($tpl = $dept->getTemplate())
@@ -1736,8 +1734,6 @@ class Ticket {
             $msg = $this->replaceVars($msg->asArray(),
                     $variables + array('recipient' => $this->getOwner()));
 
-            if($cfg->stripQuotedReply() && ($tag=$cfg->getReplySeparator()))
-                $msg['body'] = "<p style=\"display:none\">$tag<p>".$msg['body'];
             $attachments = $cfg->emailAttachments()?$response->getAttachments():array();
             $email->send($this->getEmail(), $msg['subj'], $msg['body'], $attachments,
                 $options);
@@ -1818,6 +1814,10 @@ class Ticket {
         if(!($note=$this->getThread()->addNote($vars, $errors)))
             return null;
 
+        if (isset($vars['flags']) && $vars['flags']['bounce'])
+            // No alerts for bounce emails
+            $alert = false;
+
         //Set state: Error on state change not critical!
         if(isset($vars['state']) && $vars['state']) {
             if($this->setState($vars['state']))
@@ -1852,7 +1852,8 @@ class Ticket {
 
             $options = array(
                 'inreplyto'=>$note->getEmailMessageId(),
-                'references'=>$note->getEmailReferences());
+                'references'=>$note->getEmailReferences(),
+                'thread'=>$note);
             $sentlist=array();
             foreach( $recipients as $k=>$staff) {
                 if(!is_object($staff)
@@ -2395,6 +2396,8 @@ class Ticket {
 
         # Messages that are clearly auto-responses from email systems should
         # not have a return 'ping' message
+        if (isset($vars['flags']) && $vars['flags']['bounce'])
+            $autorespond = false;
         if ($autorespond && $message->isAutoReply())
             $autorespond = false;
 
@@ -2433,7 +2436,8 @@ class Ticket {
         return $ticket;
     }
 
-    function open($vars, &$errors) {
+    /* routine used by staff to open a new ticket */
+    static function open($vars, &$errors) {
         global $thisstaff, $cfg;
 
         if(!$thisstaff || !$thisstaff->canCreateTickets()) return false;
@@ -2458,6 +2462,11 @@ class Ticket {
         // post response - if any
         $response = null;
         if($vars['response'] && $thisstaff->canPostReply()) {
+
+            // unpack any uploaded files into vars.
+            if ($_FILES['attachments'])
+                $vars['files'] = AttachmentFile::format($_FILES['attachments']);
+
             $vars['response'] = $ticket->replaceVars($vars['response']);
             if(($response=$ticket->postReply($vars, $errors, false))) {
                 //Only state supported is closed on response
@@ -2512,13 +2521,13 @@ class Ticket {
                         )
                     );
 
-            if($cfg->stripQuotedReply() && ($tag=trim($cfg->getReplySeparator())))
-                $msg['body'] = "<p style=\"display:none\">$tag<p>".$msg['body'];
-
             $references = $ticket->getLastMessage()->getEmailMessageId();
             if (isset($response))
                 $references = array($response->getEmailMessageId(), $references);
-            $options = array('references' => $references);
+            $options = array(
+                'references' => $references,
+                'thread' => $ticket->getLastMessage()
+            );
             $email->send($ticket->getEmail(), $msg['subj'], $msg['body'], $attachments,
                 $options);
         }

@@ -141,7 +141,12 @@ class Validator {
     /*** Functions below can be called directly without class instance.
          Validator::func(var..);  (nolint) ***/
     function is_email($email) {
-        return preg_match('/^([*+!.&#$|\'\\%\/0-9a-z^_`{}=?~:-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})$/i',$email);
+        if (strpos($email, '@') === false)
+            return false;
+
+        require_once 'Mail/RFC822.php';
+        require_once 'PEAR.php';
+        return !PEAR::isError(Mail_RFC822::parseAddressList($email));
     }
     function is_phone($phone) {
         /* We're not really validating the phone number but just making sure it doesn't contain illegal chars and of acceptable len */

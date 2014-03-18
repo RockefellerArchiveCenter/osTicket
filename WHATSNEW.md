@@ -1,3 +1,260 @@
+osTicket v1.8.1.2
+=================
+* All fixes and enhancements from v1.8.0.4, plus *
+
+### Enhancements
+  * Better detection of email loops (#584, #684)
+
+### Bugs
+  * Fix selection of the auto-response email for a department (#666)
+  * Don't require current password when resetting (#671)
+  * Fix incorrect matchup of collaborators to users (#676)
+
+osTicket v1.8.1.1
+=================
+* All fixes and enahncements from v1.8.0.4, plus *
+
+### Enhancements
+  * Add signature to activity notice for staff replies (#605)
+  * Show company name in the copyright footer (#586)
+  * Signature is displayed below the staff response box (#609)
+
+### Bugs
+  * Fix footnotes generated in html2text for same link text but different URLs (5e2f58d)
+  * Fix processing of emails for existing users (#588)
+  * Avoid adding an aliased system email address as a collaborator (#604, #627)
+  * Show current staff / user names where possible (#608)
+  * Fix display of _forgot my password_ link (#611)
+  * Export the value of custom fields (not the ID number) (#610)
+  * Fix saving the backend with file metadata (#595)
+  * Use the database as a failsafe attachment backend (#594)
+  * Avoid a crash when sending some mails (#589)
+  * Fix migrating attachments when upgrading from osTicket 1.6 (#614)
+  * Email templates ship with the ticket number in the subject line (#644)
+  * If inline images are stripped from the email, they are not considered attachments (#649, bcbebd0, 35a23be)
+  * Fix incorrect Content-Id headers generated for inline images (23ce0a0, e37ec74)
+  * New installs have the `Staff` group enabled (c7130c5)
+  * Always show the ticket thread when following an email link (17725ca)
+
+### Security and Performance
+  * Staff can only see closed tickets if they have access via group or primary department (#623, #655)
+  * Fix incorrect honoring of ban list and over limit settings (#660)
+  * Keep existing session after login (c4bfb69)
+  * Fix password reset system (dfaca0d, #664)
+
+osTicket v1.8.0.4
+=================
+### Enhancements
+  * Departments can have a department if there are no members (#618)
+  * Any valid email address can be used throughout the system (#673, e3adfaa)
+
+### Bugs
+  * Preserve inline image floating in ticket thread (#612)
+  * Recover from crash when creating new user accounts (#617)
+  * Fix SQL error for some variable names on custom fields (#620)
+  * Fix canned append in non-HTML mode (#621)
+  * Fix stripping of leading zeros from phone numbers (#622)
+  * Strip `<?xml ... >` processing instructions from html email (#628)
+  * Disable error_reporting for releases (#630)
+  * Fix crash during PDF generation for some PHP installations (#631)
+  * Clicking away from popup tips closes them (#645)
+  * FAQ last-modified time can be something other than midnight (#647)
+  * Fix creeping widget sizes in create-user dialog (#648)
+  * Usernames can have Unicode characters (#650)
+  * If Auto-claim tickets is disabled, reopen tickets unassigned (#651)
+  * New SLA's default to have alerts enabled (#654)
+  * Fix creating ticket by staff without required contact-information fields (#656)
+  * Fix crash viewing ticket in the client portal if no departments are public (#658)
+  * Fix crash for some custom field configurations (#659)
+  * Allow manual update of SLA to a transient SLA (#663, e37ec74)
+  * Fix upgrade crash from some osTicket 1.6 installations (#687)
+  * Fix over-stripping of some HTML element sections (#686)
+  * Better detection of email loops (#584, #684)
+  * Fix attachments from new ticket by staff to be associated with the response (#688)
+
+### Geeky Stuff
+  * Persistent database connections are supported (#693)
+  * Regression testing now tests for JS syntax errors (#669)
+  * Add git version to the deployment script (#630)
+
+### Performance and Security
+  * Staff can only see closed tickets if they have access via group or primary department (#623, #655)
+
+osTicket v1.8.1
+===============
+*All fixes and enhancements from v1.8.0.3, plus*
+
+### Enhancements
+  * Ticket filters support matching on email To and Cc fields (#529)
+  * Popup summary and collaborator list on ticket queue page (#521)
+
+### Bugs
+  * New ticket by staff adds `recipient` and `staff` context to email templates (#527)
+  * Forbid password reset for non-local users (#570)
+  * Allow an administrator to lift the force password change flag (#570)
+  * Locks are released on logout (#522)
+  * Text email footnotes are written as [title][#] (7ccbf0c)
+  * Fix several issues with display and download of attachments (#530)
+  * Fix sending a reply email if requested not to (#531)
+  * Only consider collaborators if the receiving system email is identified (#537)
+  * Do not consider `delivered-to` addresses as collaborators (#544)
+  * Assume `iso-8859-1` MIME body encoding if not specified (#551)
+  * Add new features to the storage API to implement Amazon S3 (#515)
+
+### Performance and Security
+  * Support auditing login attempts (#559)
+  * Avoid auth strikeouts when not attempting a login (#559, #523)
+
+osTicket v1.8.0.3
+=================
+### Enhancements
+  * Much better email bounce detection (#461, #474)
+  * Microsoft® TNEF emails are supported (#555, 0890481, #567)
+  * Handle messages forwarded as `message/rfc822` content type (#482)
+  * [Esc] key cancels popup dialogs (#465)
+  * New ticket by staff workflow is simplified (#543)
+  * Support regex matches in ticket filter (584465c)
+
+### Bugs
+  * 'Priority' column is included in the ticket queue export (#451)
+  * Retry queries on MySQL error 1213 (#493)
+  * Client login email is not case-sensitive (398cbc7)
+  * Drop silly border on text emails if HTML ticket thread is disabled (439a32a)
+  * Fix ticket submission error if client is already logged in (#469)
+  * Fix fetching from more than 10 mail accounts (#468)
+  * Fix clickable links ending with punctuation (#497)
+  * Fix whitespace mangling of Unicode text with non-breaking-spaces (#502)
+  * Fix image size set to zero when images are added to drafts (#504)
+  * Correctly detect php-dom extension (#503)
+  * Fix delivery issue of emails delivered to group mailboxes (#510)
+  * Fix E_STRICT annoyance from class.config.php (#518)
+  * Fix dashboard report timeframe for non-US date formats (#520)
+  * Fix dashboard report ending "period" (#520)
+  * Fixup Message-Id and Delivered-To for encapsulated messages (#528)
+  * Much better compatibility implementation of the `mbstring` module (#517)
+  * Consider the `delivered-to` header in finding the system email (#535)
+  * Ticket variables are available in templates regardless of case (#545)
+  * Allow advanced search on any priority *regression* (#547)
+  * Fix email address list parsing on bad MIME headers (#560)
+  * Automatically detect file MIME type if not specified (ac42e62)
+  * Fix login issue when upgrading from osTicket 1.6 (#571)
+  * Fix attachment corruption on some documents like PDFs (#576)
+
+### Performance and Security
+  * Reuse SMTP connections where possible (#462)
+  * Enforce max file size for attachments sent via API (#568)
+
+osTicket v1.8.1-rc1
+===================
+### Enhancements
+  * Much better email bounce detection (#461, #474)
+  * Handle messages forwarded as `message/rfc822` content type (#482)
+  * [Esc] key cancels popup dialogs (#465)
+  * Support regex matches in ticket filter (584465c)
+
+### Bugs
+  * 'Priority' column is included in the ticket queue export (#451)
+  * Retry queries on MySQL error 1213 (#493)
+  * Client login email is not case-sensitive (398cbc7)
+  * Drop silly border on text emails if HTML ticket thread is disabled (439a32a)
+  * Fix ticket submission error if client is already logged in (#469)
+  * Fix fetching from more than 10 mail accounts (#468)
+  * Fix `deploy` command-line application (#450)
+  * Fix error email on upgrade (#452)
+  * Ship with a `plugins/` folder (90b0a65)
+  * Fix file key not replaced in thread body correctly for de-duplicated files (#492)
+  * Better handling of text and html thread posts (#508)
+  * Fix clickable links ending with punctuation (#497)
+  * Fix whitespace mangling of Unicode text with non-breaking-spaces (#502)
+  * Fix image size set to zero when images are added to drafts (#504)
+  * Correctly detect php-dom extension (#503)
+  * Fix delivery issue of emails delivered to group mailboxes (#510)
+
+### Merged from v1.8.0.2
+  * Log entry for password reset attempts (#435)
+
+osTicket v1.8.1 (Preview)
+=========================
+### Collaborator Support (CC)
+In addition to the ticket owner, other end users can be collaborators on a
+ticket. Responses received from them are integrated automatically into the
+ticket thread, and emails are sent to all collaborators when new messages and
+responses arrive into the system. All collaborators have access to the ticket
+via the client portal and are able to log new messages.
+
+### Plugin management system
+osTicket supports plugins via a (currently undocumented) simple plugin API and
+interface. Plugins can be written and distributed as files or unpacked via ZIP
+archives, or distributed via PHP PHAR files. The plugin system is developed in
+hopes of adding extensibility to osTicket without significant overhead.
+Initially, two "classes" of plugins are supported: authentication, and file
+storage.
+
+### Pluggable authentication
+Staff members can now be authenticated against a backend other than the
+osTicket internal database. Available immediately is integration with LDAP
+(RFC-2307) and Microsoft® Active Directory. The initial authentication system
+also support user lookups, so when browsing for new users when creating
+tickets, your directory server will be queried for users and email addresses.
+
+### Pluggable attachment storage
+Attachments can live outside the database again. You can now write or install a
+plugin to store your attachments somewhere other than in your database, and
+osTicket will use the backend to store and retrieve (or redirect to) your
+attachments. We've initially made a plugin available to store attachments on
+the filesystem and plan on adding an Amazon S3 plugin very soon.
+
+### Internationalization, Phase 1
+Select your default data on installation, and select the language preference,
+as a staff member, for the help tips. You can also now select the language of
+the email templates when creating a new template. The templates for that
+language will be used instead of the English ones where translated versions are
+available.
+
+### Minor Enhancements
+  * Clients can update their profile information on the web portal
+  * Clients can update ticket details (if enabled)
+  * Custom ticket-details fields are included in ticket queue exports
+
+osTicket v1.8.0.2
+=================
+### Enhancements
+  * HTML editor has an underline button (#377)
+  * New ticket form pre-selects default priority (#400)
+  * Help topics do not require an associated priority (#397)
+  * Extra fields associated with help topics are shown above the ticket-details form (#398)
+  * Auto-complete is supported on email address fields (#401)
+  * Choice fields allow specification of a prompt and default value (#427)
+  * Email template page makes templates easier to manage (#417)
+  * New ticket user-lookup popup supports cancel (#434)
+
+### Bugs
+  * Ticket locks are correctly released (#335)
+  * Pages show inline images correctly (8a1f4e6)
+  * Internet Explorer compatibility view is disabled for the scp (#368)
+  * *regression* Staff no longer receive attachments on alerts (#379)
+  * Emails correctly differentiate HTML and text versions (#212, #384)
+  * Ticket queue counts are correct for limited users (#298, #389)
+  * Phone number field might be a text box (#390)
+  * Fix incorrect ticket rejection for new ticket by staff (#425)
+  * Fix crash of cron executions on some platforms (#421)
+  * `realpath` may fail on some Windows® platforms (#424, cff8db8)
+  * Fix incorrect handling of typeahead list fields with leading numeric chars (#422)
+
+### Performance and Security
+  * Ticket queue has significantly better performance (#357, #388, #413, a03dec5, 31bb4ac, e9a3b98)
+  * Remove several unnecessary queries (#415)
+  * Password reset attempts are logged (#435)
+  * Handle garbage username input for password reset (344c95f)
+
+### Upstream 1.7 Commits
+  * Database hostname supports local socket specified as localhost:/path/to/socket (osTicket/osTicket-1.7#864)
+  * Upgrader correct upgrades the ban list from 1.6. Migrator corrects incorrect upgrade (osTicket/osTicket-1.7#869)
+  * Ticket number is detected in subject line without brackets (osTicket/osTicket-1.7#873, 358cdeb)
+  * Fixup redirect headers for modern IIS servers (osTicket/osTicket-1.7#874)
+  * Correctly support PHP 5.5 (5e8e233)
+  * Fix missing parameter to TicketLock::lookup (osTicket/osTicket-1.7#878)
+
 osTicket v1.8.0.1
 =================
 ### Enhancements
