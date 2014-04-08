@@ -1064,7 +1064,7 @@ class ChoicesWidget extends Widget {
         if ($value === null && $have_def)
             $value = $def_key;
         ?> <span style="display:inline-block">
-        <select name="<?php echo $this->name; ?>">
+        <select class="form-control" name="<?php echo $this->name; ?>">
             <?php if (!$have_def) { ?>
             <option value="<?php echo $def_key; ?>">&mdash; <?php
                 echo $def_val; ?> &mdash;</option>

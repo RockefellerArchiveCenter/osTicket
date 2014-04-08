@@ -618,13 +618,13 @@ if ($results) {
                 ?>
             </select>
         </fieldset>
-        <fieldset class="date_range">
+        <fieldset class="date_range form-inline">
             <label>Date Range:</label>
             <input class="form-control" class="dp" type="input" size="20" name="startDate">
             <span>TO</span>
             <input class="form-control" class="dp" type="input" size="20" name="endDate">
         </fieldset>
-        <fieldset>
+        <fieldset class="form-inline">
         <?php
         foreach (TicketForm::getInstance()->getFields() as $f) {
             if (in_array($f->get('type'), array('text', 'memo', 'phone', 'thread')))
@@ -632,8 +632,8 @@ if ($results) {
             elseif (!$f->hasData())
                 continue;
             ?><label><?php echo $f->getLabel(); ?>:</label>
-                <div style="display:inline-block;width: 12.5em;"><?php
-                     $f->render('search'); ?></div>
+                <?php
+                     $f->render('search'); ?>
         <?php } ?>
         </fieldset>
         <p>
