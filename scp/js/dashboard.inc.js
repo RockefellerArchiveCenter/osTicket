@@ -248,7 +248,8 @@
                     .appendTo(p));
 
                 // ------------------------> Export <-----------------------
-                $('<a class="btn btn-primary pull-right">').attr({'href':'ajax.php/report/overview/table/export?group='
+                $('.export').remove();
+                $('<a class="export btn btn-primary pull-right">').attr({'href':'ajax.php/report/overview/table/export?group='
                         +group+'&start='+start+'&stop='+stop}).append('Export')
                     .prependTo($('#tabular-navigation'));
 
