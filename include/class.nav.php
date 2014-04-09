@@ -112,13 +112,14 @@ class StaffNav {
             $subnav=array();
             switch(strtolower($k)){
                 case 'tickets':
-                    $subnav[]=array('desc'=>'Tickets','href'=>'tickets.php','iconclass'=>'Ticket', 'droponly'=>true);
+                    $subnav[]=array('desc'=>'Tickets','href'=>'tickets.php','iconclass'=>'Ticket', 'droponly'=>true,'title'=>'Tickets Home');
                     if($staff) {
                         if(($assigned=$staff->getNumAssignedTickets()))
                             $subnav[]=array('desc'=>"My&nbsp;Tickets ($assigned)",
                                             'href'=>'tickets.php?status=assigned',
                                             'iconclass'=>'assignedTickets',
-                                            'droponly'=>true);
+                                            'droponly'=>true,
+                                            'title'=>'My Tickets');
 
                         if($staff->canCreateTickets())
                             $subnav[]=array('desc'=>'New&nbsp;Ticket',
@@ -130,17 +131,17 @@ class StaffNav {
                     }
                     break;
                 case 'dashboard':
-                    $subnav[]=array('desc'=>'Dashboard','href'=>'dashboard.php','iconclass'=>'logs');
-                    $subnav[]=array('desc'=>'Staff&nbsp;Directory','href'=>'directory.php','iconclass'=>'teams');
-                    $subnav[]=array('desc'=>'My&nbsp;Profile','href'=>'profile.php','iconclass'=>'users');
+                    $subnav[]=array('desc'=>'Dashboard','href'=>'dashboard.php','iconclass'=>'logs','title'=>'Dashboard Home');
+                    $subnav[]=array('desc'=>'Staff&nbsp;Directory','href'=>'directory.php','iconclass'=>'teams','title'=>'Staff Directory');
+                    $subnav[]=array('desc'=>'My&nbsp;Profile','href'=>'profile.php','iconclass'=>'users','title'=>'My Profile');
                     break;
                 case 'kbase':
-                    $subnav[]=array('desc'=>'FAQs','href'=>'kb.php', 'urls'=>array('faq.php'), 'iconclass'=>'kb');
+                    $subnav[]=array('desc'=>'FAQs','href'=>'kb.php', 'urls'=>array('faq.php'), 'iconclass'=>'kb','title'=>'FAQs');
                     if($staff) {
                         if($staff->canManageFAQ())
-                            $subnav[]=array('desc'=>'Categories','href'=>'categories.php','iconclass'=>'faq-categories');
+                            $subnav[]=array('desc'=>'Categories','href'=>'categories.php','iconclass'=>'faq-categories','title'=>'Categories');
                         if($staff->canManageCannedResponses())
-                            $subnav[]=array('desc'=>'Canned&nbsp;Responses','href'=>'canned.php','iconclass'=>'canned');
+                            $subnav[]=array('desc'=>'Canned&nbsp;Responses','href'=>'canned.php','iconclass'=>'canned','title'=>'Canned Responses');
                     }
                    break;
             }

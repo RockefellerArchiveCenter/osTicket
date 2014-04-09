@@ -547,7 +547,7 @@ if($stats['assigned']) {
 
 if($stats['overdue']) {
     $nav->addSubMenu(array('desc'=>'Overdue ('.number_format($stats['overdue']).')',
-                           'title'=>'Stale Tickets',
+                           'title'=>'Overdue Tickets',
                            'href'=>'tickets.php?status=overdue',
                            'iconclass'=>'overdueTickets'),
                         ($_REQUEST['status']=='overdue'));

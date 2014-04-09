@@ -21,6 +21,17 @@
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/bootstrap.js"></script>
     <script type="text/javascript" src="./js/bootstrap-typeahead.js"></script>
     <script type="text/javascript" src="./js/scp.js"></script>
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        
+        ga('create', 'UA-10013579-1', 'rockarch.org');
+        ga('send', 'pageview');
+
+    </script>
     <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/thread.css" media="screen">
     <link rel="stylesheet" href="./css/scp.css" media="screen">
@@ -70,7 +81,7 @@
         <?php
         if(($tabs=$nav->getTabs()) && is_array($tabs)){
             foreach($tabs as $name =>$tab) {
-                echo sprintf('<li class="%s"><a href="%s">%s</a>',$tab['active']?'active':'inactive',$tab['href'],$tab['desc']);
+                echo sprintf('<li class="%s" onClick="_gaq.push([\'_trackEvent\', \'Navigation\', \'Primary\', \'%s\']);"><a href="%s">%s</a>',$tab['active']?'active':'inactive',$tab['desc'],$tab['href'],$tab['desc']);
                 //if(!$tab['active'] && ($subnav=$nav->getSubMenu($name))){
                   //  echo '<ul class="dropdown-menu">';
                     //foreach($subnav as $k => $item) {
@@ -108,8 +119,8 @@
                 if (!($id=$item['id']))
                     $id="subnav$k";
 
-                echo sprintf('<li class="%s"><a href="%s" title="%s" id="%s">%s</a></li>',
-                        $class, $item['href'], $item['title'], $id, $item['desc']);
+                echo sprintf('<li class="%s" onClick="_gaq.push([\'_trackEvent\', \'Navigation\', \'Secondary\', \'%s\']);"><a href="%s" title="%s" id="%s">%s</a></li>',
+                        $class, $item['title'], $item['href'], $item['title'], $id, $item['desc']);
             }
         }
         ?>

@@ -393,18 +393,18 @@ $tcount+= $ticket->getNumNotes();
     <ul class="nav nav-tabs">
         <?php
         if($thisstaff->canPostReply()) { ?>
-        <li id="reply_tab"><a href="#reply">Post Reply</a></li>
+        <li id="reply_tab" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Tab', 'Reply']);"><a href="#reply">Post Reply</a></li>
         <?php
         } ?>
-        <li id="note_tab"><a href="#note">Post Internal Note</a></li>
+        <li id="note_tab" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Tab', 'Internal Note']);"><a href="#note">Post Internal Note</a></li>
         <?php
         if($thisstaff->canTransferTickets()) { ?>
-        <li id="transfer_tab"><a href="#transfer">Dept. Transfer</a></li>
+        <li id="transfer_tab" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Tab', 'Transfer']);"><a href="#transfer">Dept. Transfer</a></li>
         <?php
         }
 
         if($thisstaff->canAssignTickets()) { ?>
-        <li id="assign_tab"><a href="#assign"><?php echo $ticket->isAssigned()?'Reassign Ticket':'Assign Ticket'; ?></a></li>
+        <li id="assign_tab" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Tab', 'Assign']);"><a href="#assign"><?php echo $ticket->isAssigned()?'Reassign Ticket':'Assign Ticket'; ?></a></li>
         <?php
         } ?>
     </ul>
@@ -484,7 +484,7 @@ $tcount+= $ticket->getNumNotes();
                             <option value="0" selected="selected">Select a canned response</option>
                             <?php
                             foreach($cannedResponses as $id =>$title) {
-                                echo sprintf('<option value="%d">%s</option>',$id,$title);
+                                echo sprintf('<option value="%d" onClick="_gaq.push([\'_trackEvent\', \'Ticket\', \'Tab\', \'%s\']);">%s</option>',$id,$title,$title);
                             }
                             ?>
                         </select>
@@ -583,8 +583,8 @@ $tcount+= $ticket->getNumNotes();
          </tbody>
         </table>
         <p  style="padding-left:165px;">
-            <input class="btn btn-sm btn-success" type="submit" value="Post Reply">
-            <input class="btn btn-sm btn-danger" type="reset" value="Reset">
+            <input class="btn btn-sm btn-success" type="submit" value="Post Reply" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Reply', 'Reply']);">
+            <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Reply', 'Cancel']);">
         </p>
     </form>
     <?php
@@ -697,8 +697,8 @@ $tcount+= $ticket->getNumNotes();
         </table>
 
        <p  style="padding-left:165px;">
-           <input class="btn btn-sm btn-success" type="submit" value="Post Note">
-           <input class="btn btn-sm btn-danger" type="reset" value="Reset">
+           <input class="btn btn-sm btn-success" type="submit" value="Post Note" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Internal Note', 'Submit']);">
+           <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Internal Note', 'Cancel']);">
        </p>
    </form>
     <?php
@@ -754,8 +754,8 @@ $tcount+= $ticket->getNumNotes();
             </tr>
         </table>
         <p style="padding-left:165px;">
-           <input class="btn btn-sm btn-success" type="submit" value="Transfer">
-           <input class="btn btn-sm btn-danger" type="reset" value="Reset">
+           <input class="btn btn-sm btn-success" type="submit" value="Transfer" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Transfer', 'Submit']);">
+           <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Transfer', 'Cancel']);">
         </p>
     </form>
     <?php
@@ -841,8 +841,8 @@ $tcount+= $ticket->getNumNotes();
             </tr>
         </table>
         <p  style="padding-left:165px;">
-            <input class="btn btn-sm btn-success" type="submit" value="<?php echo $ticket->isAssigned()?'Reassign':'Assign'; ?>">
-            <input class="btn btn-sm btn-danger" type="reset" value="Reset">
+            <input class="btn btn-sm btn-success" type="submit" value="<?php echo $ticket->isAssigned()?'Reassign':'Assign'; ?>" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Assign', 'Submit']);">
+            <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="_gaq.push(['_trackEvent', 'Ticket', 'Assign', 'Cancel']);">
         </p>
     </form>
     <?php

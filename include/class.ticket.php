@@ -2338,6 +2338,7 @@ class Ticket {
 
         //We are ready son...hold on to the rails.
         $number = Ticket::genRandTicketNumber();
+        // HA TODO This is where I need to change the date...
         $sql='INSERT INTO '.TICKET_TABLE.' SET created=NOW() '
             .' ,lastmessage= NOW()'
             .' ,user_id='.db_input($user->getId())

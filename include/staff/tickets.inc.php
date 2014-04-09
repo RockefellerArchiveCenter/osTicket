@@ -295,7 +295,7 @@ if ($results) {
     <input type="hidden" name="a" value="search">
     <input class="form-control" type="text" id="basic-ticket-search" name="query" size=30 value="<?php echo Format::htmlchars($_REQUEST['query']); ?>"
                 autocomplete="off" autocorrect="off" autocapitalize="off">
-    <input class="btn btn-primary" type="submit" name="basic_search" value="Search">
+    <input class="btn btn-primary" type="submit" name="basic_search" value="Search" onClick="_gaq.push(['_trackEvent', 'Search', 'Basic', '<?php echo $status?>']);">
    <a href="" id="go-advanced">[advanced]</a>
     </form>
 </div>
@@ -545,24 +545,24 @@ if ($results) {
         <fieldset>
             <label for="status">Status:</label>
             <select class="form-control" id="status" name="status">
-                <option value="">&mdash; Any Status &mdash;</option>
+                <option value="" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Status Any']);">&mdash; Any Status &mdash;</option>
                 <option value="open">Open</option>
                 <?php
                 if(!$cfg->showAnsweredTickets()) {?>
-                <option value="answered">Answered</option>
+                <option value="answered" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Status Answered']);">Answered</option>
                 <?php
                 } ?>
-                <option value="overdue">Overdue</option>
-                <option value="closed">Closed</option>
+                <option value="overdue" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Status Overdue']);">Overdue</option>
+                <option value="closed" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Status Closed']);">Closed</option>
             </select>
             <label for="deptId">Dept:</label>
             <select class="form-control" id="deptId" name="deptId">
-                <option value="">&mdash; All Departments &mdash;</option>
+                <option value="" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Department All']);">&mdash; All Departments &mdash;</option>
                 <?php
                 if(($mydepts = $thisstaff->getDepts()) && ($depts=Dept::getDepartments())) {
                     foreach($depts as $id =>$name) {
                         if(!in_array($id, $mydepts)) continue;
-                        echo sprintf('<option value="%d">%s</option>', $id, $name);
+                        echo sprintf('<option value="%d" onClick="_gaq.push([\'_trackEvent\', \'Search\', \'Advanced\', \'Department %s\']);">%s</option>', $id, $name, $name);
                     }
                 }
                 ?>
@@ -571,15 +571,15 @@ if ($results) {
         <fieldset class="owner">
             <label for="assignee">Assigned To:</label>
             <select class="form-control" id="assignee" name="assignee">
-                <option value="">&mdash; Anyone &mdash;</option>
-                <option value="0">&mdash; Unassigned &mdash;</option>
+                <option value="" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Assigned to Anyone']);">&mdash; Anyone &mdash;</option>
+                <option value="0" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Assigned to Unassigned']);">&mdash; Unassigned &mdash;</option>
                 <option value="<?php echo $thisstaff->getId(); ?>">Me</option>
                 <?php
                 if(($users=Staff::getStaffMembers())) {
                     echo '<OPTGROUP label="Staff Members ('.count($users).')">';
                     foreach($users as $id => $name) {
                         $k="s$id";
-                        echo sprintf('<option value="%s">%s</option>', $k, $name);
+                        echo sprintf('<option value="%s" onClick="_gaq.push([\'_trackEvent\', \'Search\', \'Advanced\', \'Assigned to %s\']);">%s</option>', $k, $name, $name);
                     }
                     echo '</OPTGROUP>';
                 }
@@ -588,7 +588,7 @@ if ($results) {
                     echo '<OPTGROUP label="Teams ('.count($teams).')">';
                     foreach($teams as $id => $name) {
                         $k="t$id";
-                        echo sprintf('<option value="%s">%s</option>', $k, $name);
+                        echo sprintf('<option value="%s" onClick="_gaq.push([\'_trackEvent\', \'Search\', \'Advanced\', \'Assigned to team %s\']);">%s</option>', $k, $name, $name);
                     }
                     echo '</OPTGROUP>';
                 }
@@ -596,12 +596,12 @@ if ($results) {
             </select>
             <label for="staffId">Closed By:</label>
             <select class="form-control" id="staffId" name="staffId">
-                <option value="0">&mdash; Anyone &mdash;</option>
-                <option value="<?php echo $thisstaff->getId(); ?>">Me</option>
+                <option value="0" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Closed by Anyone']);">&mdash; Anyone &mdash;</option>
+                <option value="<?php echo $thisstaff->getId(); ?>" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Closed by Me']);">Me</option>
                 <?php
                 if(($users=Staff::getStaffMembers())) {
                     foreach($users as $id => $name)
-                        echo sprintf('<option value="%d">%s</option>', $id, $name);
+                        echo sprintf('<option value="%d" onClick="_gaq.push([\'_trackEvent\', \'Search\', \'Advanced\', \'Closed by %s\']);">%s</option>', $id, $name, $name);
                 }
                 ?>
             </select>
@@ -609,11 +609,11 @@ if ($results) {
         <fieldset>
             <label for="topicId">Help Topic:</label>
             <select class="form-control" id="topicId" name="topicId">
-                <option value="" selected >&mdash; All Help Topics &mdash;</option>
+                <option value="" selected onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Topic All']);">&mdash; All Help Topics &mdash;</option>
                 <?php
                 if($topics=Topic::getHelpTopics()) {
                     foreach($topics as $id =>$name)
-                        echo sprintf('<option value="%d" >%s</option>', $id, $name);
+                        echo sprintf('<option value="%d" onClick="_gaq.push([\'_trackEvent\', \'Search\', \'Advanced\', \'Topic %s\']);">%s</option>', $id, $name, $name);
                 }
                 ?>
             </select>
@@ -638,7 +638,7 @@ if ($results) {
         </fieldset>
         <p>
             <span class="buttons">
-                <input class="btn btn-primary" type="submit" value="Search">
+                <input class="btn btn-primary" type="submit" value="Search" onClick="_gaq.push(['_trackEvent', 'Search', 'Advanced', 'Search']);">
                 <input class="btn btn-default" type="reset" value="Reset">
                 <input class="btn btn-danger" type="button" value="Cancel">
             </span>
