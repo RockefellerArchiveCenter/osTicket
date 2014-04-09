@@ -345,27 +345,6 @@ class TicketsAjaxAPI extends AjaxController {
         return $resp;
     }
 
-        ob_start();
-        echo sprintf(
-                '<div style="width:500px; padding: 2px 2px 0 5px;">
-                 <h2>%s</h2><br>',Format::htmlchars($ticket->getSubject()));
-
-        if($error)
-            echo sprintf('<div class="alert alert-danger">%s</div>',$error);
-        elseif($msg)
-            echo sprintf('<div class="alert alert-info">%s</div>',$msg);
-        elseif($warn)
-            echo sprintf('<div class="alert alert-warning">%s</div>',$warn);
-
-        echo '<table border="0" cellspacing="" cellpadding="1" width="100%" class="ticket_info">';
-
-        $ticket_state=sprintf('<span>%s</span>',ucfirst($ticket->getStatus()));
-        if($ticket->isOpen()) {
-            if($ticket->isOverdue())
-                $ticket_state.=' &mdash; <span>Overdue</span>';
-            else
-                $ticket_state.=sprintf(' &mdash; <span>%s</span>',$ticket->getPriority());
-        }
     function addRemoteCollaborator($tid, $bk, $id) {
         global $thisstaff;
 
