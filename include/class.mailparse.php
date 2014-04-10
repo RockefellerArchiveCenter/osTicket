@@ -235,6 +235,15 @@ class Mail_Parse {
     function getSubject(){
         return $this->struct->headers['subject'];
     }
+    
+    // HA Added getDate function to get date from email header
+    function getDate(){
+        return $this->struct->headers['date'];
+    }
+    
+    function test() {
+        return $this;
+        }
 
     function getReplyTo() {
         if (!($header = @$this->struct->headers['reply-to']))
@@ -504,6 +513,9 @@ class EmailDataParser {
         $data['header'] = $parser->getHeader();
         $data['mid'] = $parser->getMessageId();
         $data['priorityId'] = $parser->getPriority();
+        // HA add to data passed on to mail fetcher
+        $data['date'] = $parser->getDate();
+        
 
         //FROM address: who sent the email.
         if(($fromlist = $parser->getFromAddressList())) {

@@ -2335,12 +2335,15 @@ class Ticket {
         $deptId=$deptId?$deptId:$cfg->getDefaultDeptId();
         $topicId=$vars['topicId']?$vars['topicId']:0;
         $ipaddress=$vars['ip']?$vars['ip']:$_SERVER['REMOTE_ADDR'];
+        // HA grabs date from header of email
+        $date=$vars['date'];
 
         //We are ready son...hold on to the rails.
+        // HA inserting date from header of email rather than when the ticket is retrieved
         $number = Ticket::genRandTicketNumber();
-        // HA TODO This is where I need to change the date...
-        $sql='INSERT INTO '.TICKET_TABLE.' SET created=NOW() '
-            .' ,lastmessage= NOW()'
+        $sql='INSERT INTO '.TICKET_TABLE.' 
+            SET created='.db_input($date)
+            .' ,lastmessage='.db_input($date)
             .' ,user_id='.db_input($user->getId())
             .' ,`number`='.db_input($number)
             .' ,dept_id='.db_input($deptId)

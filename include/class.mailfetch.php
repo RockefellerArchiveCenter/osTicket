@@ -272,6 +272,7 @@ class MailFetcher {
 
         $sender=$headerinfo->from[0];
         //Just what we need...
+        // HA Adding date from email header and converting to the format osTicket expects
         $header=array('name'  => $this->mime_decode(@$sender->personal),
                       'email'  => trim(strtolower($sender->mailbox).'@'.$sender->host),
                       'subject'=> $this->mime_decode(@$headerinfo->subject),
@@ -279,6 +280,7 @@ class MailFetcher {
                       'header' => $this->getHeader($mid),
                       'in-reply-to' => $headerinfo->in_reply_to,
                       'references' => $headerinfo->references,
+                      'date' => date_format(date_create_from_format('D# d F Y H:i:s T', $headerinfo->date), 'Y-m-d H:i:s'),
                       );
 
         if ($replyto = $headerinfo->reply_to) {
@@ -607,6 +609,8 @@ class MailFetcher {
         $vars['subject'] = $mailinfo['subject'] ?: '[No Subject]';
         $vars['emailId'] = $mailinfo['emailId'] ?: $this->getEmailId();
         $vars['to-email-id'] = $mailinfo['emailId'] ?: 0;
+        // HA adding date to variables so it can be used by Ticket class
+        $vars['date'] = $mailinfo['date'];
 
         if ($this->isBounceNotice($mid)) {
             // Fetch the original References and assign to 'references'
