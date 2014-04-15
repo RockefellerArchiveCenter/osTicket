@@ -21,6 +21,26 @@
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/bootstrap.js"></script>
     <script type="text/javascript" src="./js/bootstrap-typeahead.js"></script>
     <script type="text/javascript" src="./js/scp.js"></script>
+    <script type="text/javascript" src="./js/highlight.js"></script>
+    <script>
+        $(document).ready(function() {
+            if (window.location.search) { 
+            $.urlParam = function(name){
+                var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results==null){
+                    return null;
+                } else {
+                    return results[1].replace('+', ' ') || 0;
+                }
+            }
+            if ($.urlParam('query') != null) {
+            $("h2").highlight($.urlParam('query')); 
+            $("td").highlight($.urlParam('query')); 
+            $("td div").highlight($.urlParam('query')); 
+            }
+          } 
+        });
+    </script>
     <!-- Google Analytics -->
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
