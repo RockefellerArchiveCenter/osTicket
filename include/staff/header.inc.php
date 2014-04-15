@@ -26,7 +26,7 @@
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        })(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
         
         ga('create', 'UA-10013579-1', 'rockarch.org');
         ga('send', 'pageview');
@@ -64,7 +64,7 @@
     <div id="header">
         <a href="index.php">
             <!--<img src="images/rac-logo.jpg"></img>-->
-            <h1>Research Requests</h1>
+            <h1 onclick="ga('send', 'event', 'Navigation', 'Primary', 'Logo');">Research Requests</h1>
         </a>
         <p id="info">Welcome, <strong><?php echo $thisstaff->getFirstName(); ?></strong>
            <?php
@@ -81,7 +81,7 @@
         <?php
         if(($tabs=$nav->getTabs()) && is_array($tabs)){
             foreach($tabs as $name =>$tab) {
-                echo sprintf('<li class="%s" onClick="_gaq.push([\'_trackEvent\', \'Navigation\', \'Primary\', \'%s\']);"><a href="%s">%s</a>',$tab['active']?'active':'inactive',$tab['desc'],$tab['href'],$tab['desc']);
+                echo sprintf('<li class="%s"><a href="%s" onClick="ga(\'send\', \'event\', \'Navigation\', \'Primary\', \'%s\');">%s</a>',$tab['active']?'active':'inactive',$tab['href'],$tab['desc'],$tab['desc']);
                 //if(!$tab['active'] && ($subnav=$nav->getSubMenu($name))){
                   //  echo '<ul class="dropdown-menu">';
                     //foreach($subnav as $k => $item) {
@@ -119,8 +119,8 @@
                 if (!($id=$item['id']))
                     $id="subnav$k";
 
-                echo sprintf('<li class="%s" onClick="_gaq.push([\'_trackEvent\', \'Navigation\', \'Secondary\', \'%s\']);"><a href="%s" title="%s" id="%s">%s</a></li>',
-                        $class, $item['title'], $item['href'], $item['title'], $id, $item['desc']);
+                echo sprintf('<li class="%s"><a href="%s" title="%s" id="%s" onClick="ga(\'send\', \'event\', \'Navigation\', \'Secondary\', \'%s\');">%s</a></li>',
+                        $class, $item['href'], $item['title'], $id, $item['title'], $item['desc']);
             }
         }
         ?>
