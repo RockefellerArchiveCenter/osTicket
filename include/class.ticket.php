@@ -2336,7 +2336,10 @@ class Ticket {
         $topicId=$vars['topicId']?$vars['topicId']:0;
         $ipaddress=$vars['ip']?$vars['ip']:$_SERVER['REMOTE_ADDR'];
         // HA grabs date from header of email
-        $date=$vars['date'];
+        if ($vars['date']) 
+            $date=$vars['date'];
+        elseif (!$vars['date'])
+            $date=date('Y-m-d G:i');
 
         //We are ready son...hold on to the rails.
         // HA inserting date from header of email rather than when the ticket is retrieved
