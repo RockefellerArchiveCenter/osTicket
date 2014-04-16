@@ -489,58 +489,8 @@ h2 .reload {
     padding:0 10px;
 }
 
-ul.tabs {
-    padding:4px 0 0 20px;
-    margin:0;
-    margin-bottom: 5px;
-    text-align:center;
-    height:29px;
-    border-bottom:1px solid #aaa;
-    background:#eef3f8;
-}
-
-#response_options ul.tabs {
-    padding-left:190px;
-}
-
-
-ul.tabs li {
-    margin:0;
-    padding:0;
-    display:inline;
-    list-style:none;
-}
-
-ul.tabs li a {
-    width:130px;
-    font-weight:bold;
-    padding:5px;
-    height:18px;
-    color:#444;
-    display:block;
-    float:left;
-    outline:none;
-    position:relative;
-    top:0;
-    background:#fbfbfb;
-    border:1px solid #eee;
-    border-bottom:none;
-}
-
-#response_options .reply_tab.tell {
-    color:#a00 !important;
-    background-image:url(../images/reminder.png);
-    background-position:12px 50%;
-    background-repeat:no-repeat;
-}
-
-ul.tabs li a.active {
-    height:18px;
-    color:#184E81;
+#response_options > .nav-tabs > li.active > a {
     background-color:#f9f9f9;
-    border:1px solid #aaa;
-    border-top:2px solid #81a9d7;
-    border-bottom:none;
 }
 
 #response_options > form {
@@ -603,7 +553,7 @@ ul.tabs li a.active {
 .tip_arrow {
     display:block;
     position:absolute;
-    top:5px;
+    top:150px;
     left:-12px;
     width:12px;
     z-index:4;

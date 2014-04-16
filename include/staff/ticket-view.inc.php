@@ -38,13 +38,12 @@ if($ticket->isOverdue())
     $warn.='&nbsp;&nbsp;<span class="Icon overdueTicket">Marked overdue!</span>';
 
 ?>
-<table width="100%" class="table">
-    <tr>
-        <td width="50%" class="has_bottom_border">
+<div width="100%" class="col-md-12">
+        <div class="col-md-6">
              <h2><a href="tickets.php?id=<?php echo $ticket->getId(); ?>"
              title="Reload"><i class="icon-refresh"></i> Ticket #<?php echo $ticket->getNumber(); ?></a></h2>
-        </td>
-        <td width="50%" class="right_align has_bottom_border">
+        </div>
+        <div class="col-md-6 pull-right">
             <?php
             if($thisstaff->canBanEmails() || ($dept && $dept->isManager($thisstaff))) { ?>
             <span class="btn btn-sm btn-default" data-dropdown="#action-dropdown-more">
@@ -120,12 +119,11 @@ if($ticket->isOverdue())
                 }?>
               </ul>
             </div>
-        </td>
-    </tr>
-</table>
-<table class="table" cellspacing="0" cellpadding="0" width="100%" border="0">
+        </div>
+    </div>
+<table class="table table-condensed" cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
-        <td width="50">
+        <td width="50%">
             <table border="0" cellspacing="" cellpadding="4" width="100%">
                 <tr>
                     <th width="100">Status:</th>
@@ -211,8 +209,7 @@ if($ticket->isOverdue())
         </td>
     </tr>
 </table>
-<br>
-<table class="table" cellspacing="0" cellpadding="0" width="100%" border="0">
+<table class="table table-condensed" cellspacing="0" cellpadding="0" width="100%" border="0">
     <tr>
         <td width="50%">
             <table cellspacing="0" cellpadding="4" width="100%" border="0">
@@ -283,7 +280,6 @@ if($ticket->isOverdue())
         </td>
     </tr>
 </table>
-<br>
 <table class="table" cellspacing="0" cellpadding="0" width="100%" border="0">
 <?php
 $idx = 0;

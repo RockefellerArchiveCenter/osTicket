@@ -2,7 +2,7 @@ jQuery(function() {
     var showtip = function (url, elem,xoffset) {
 
             var pos = elem.offset();
-            var y_pos = pos.top - 12;
+            var y_pos = pos.top - 150;
             var x_pos = pos.left + (xoffset || ((elem.width()/2) + 20));
 
             var tip_arrow = $('<img>').attr('src', './images/tip_arrow.png').addClass('tip_arrow');
