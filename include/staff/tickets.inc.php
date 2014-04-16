@@ -440,10 +440,10 @@ if ($results) {
             <?php
             } //end of while.
         else: //not tickets found!! set fetch error.
-            $ferror='There are no tickets here. (Leave a little early today).';
+            $ferror='There are no tickets here. Senior is pleased (really, he is).';
         endif; ?>
     </tbody>
-    <tfoot>
+    <tfoot class="text-center">
      <tr>
         <td colspan="7">
             <?php if($res && $num && $thisstaff->canManageTickets()){ ?>
@@ -452,9 +452,9 @@ if ($results) {
             <a id="selectNone" href="#ckb">None</a>&nbsp;&nbsp;
             <a id="selectToggle" href="#ckb">Toggle</a>&nbsp;&nbsp;
             <?php }else{
-                echo '<i>';
+                echo '<p>';
                 echo $ferror?Format::htmlchars($ferror):'Query returned 0 results.';
-                echo '</i>';
+                echo $ferror?'</p><img src="images/rockefeller-smile.jpg"></img>':'</p>';
             } ?>
         </td>
      </tr>
