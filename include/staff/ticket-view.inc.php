@@ -395,7 +395,7 @@ $tcount+= $ticket->getNumNotes();
         <li id="note_tab" onClick="ga('send', 'event', 'Ticket', 'Tab', 'Internal Note');"><a href="#note">Post Internal Note</a></li>
         <?php
         if($thisstaff->canTransferTickets()) { ?>
-        <li id="transfer_tab" onClick="ga('send', 'event', 'Ticket', 'Tab', 'Transfer');"><a href="#transfer">Dept. Transfer</a></li>
+        <li id="transfer_tab" onClick="ga('send', 'event', 'Ticket', 'Tab', 'Transfer');"><a href="#transfer">Department Transfer</a></li>
         <?php
         }
 
@@ -538,7 +538,7 @@ $tcount+= $ticket->getNumNotes();
                     <?php
                     $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     ?>
-                    <label><input type="radio" name="signature" value="none" checked="checked"> None</label>
+                    <label><input type="radio" name="signature" value="none"> None</label>
                     <?php
                     if($thisstaff->getSignature()) {?>
                     <label><input type="radio" name="signature" value="mine"
@@ -547,9 +547,8 @@ $tcount+= $ticket->getNumNotes();
                     } ?>
                     <?php
                     if($dept && $dept->canAppendSignature()) { ?>
-                    <label><input type="radio" name="signature" value="dept"
-                        <?php echo ($info['signature']=='dept')?'checked="checked"':''; ?>>
-                        Dept. Signature (<?php echo Format::htmlchars($dept->getName()); ?>)</label>
+                    <label><input type="radio" name="signature" value="dept" checked="checked">
+                        Department Signature (<?php echo Format::htmlchars($dept->getName()); ?>)</label>
                     <?php
                     } ?>
                 </td>
