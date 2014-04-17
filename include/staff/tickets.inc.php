@@ -323,7 +323,7 @@ if ($results) {
                     title="Sort By Ticket ID <?php echo $negorder; ?>">Ticket</a></th>
 	        <th width="70">
                 <a  <?php echo $date_sort; ?> href="tickets.php?sort=date&order=<?php echo $negorder; ?><?php echo $qstr; ?>"
-                    title="Sort By Date <?php echo $negorder; ?>">Date</a></th>
+                    title="Sort By Date <?php echo $negorder; ?>">Date Created</a></th>
 	        <th width="280">
                  <a <?php echo $subj_sort; ?> href="tickets.php?sort=subj&order=<?php echo $negorder; ?><?php echo $qstr; ?>"
                     title="Sort By Subject <?php echo $negorder; ?>">Subject</a></th>
