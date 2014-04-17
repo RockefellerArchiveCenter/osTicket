@@ -23,7 +23,6 @@ $(document).ready(function () {
     }
     
     var number = Math.floor(Math.random() * 50);
-    console.log(number)
     
     //Start logic 
     if ($('.alert-info').length && number === 1) {
@@ -37,17 +36,12 @@ $(document).ready(function () {
         $(window).bind('keydown', function (e) {
             if (animationRunning == false) {
                 keysPressed.push(e.keyCode);
-                
                 //if size > 11, trim to 10 most recent key entries
                 if (keysPressed.length > 10) {
                     //remove first
                     keysPressed.splice(0, 1);
                 }
-                
                 if (keysPressed.toString().indexOf(konamiCode) >= 0) {
-                    if (audioSupported) {
-                        document.getElementById('contraSound').play();
-                    }
                     start();
                 }
             }
@@ -77,16 +71,17 @@ $(document).ready(function () {
         rainbow.css({
             "position": "fixed",
             "bottom": "-" + rHeight + "px",
-            "left": (windowWidth / 2) - (rWidth / 2),
+            "left": ((windowWidth - rWidth) / 2),
             "display": "block",
+            "z-index": 10000,
             opacity: 0.0
         })
         
         
         //Raise the rainbow!!!
         rainbow.animate({
-            bottom: "0px",
-            opacity: 1.0
+            bottom: ((windowHeight-rHeight) / 2),
+            opacity: 1.0,
         },
         1800, function () {
             // Rainbow raise complete. Summon the unicorns!!!
@@ -113,7 +108,8 @@ $(document).ready(function () {
                 "position": "fixed",
                 "top": entryPoint + "px",
                 "left": "-" + unicornImg.width() + "px",
-                "display": "block"
+                "display": "block",
+                "z-index": 20000
             }).animate({
                 "left": windowWidth + "px",
                 "top": exitPoint - unicornImg.height() + "px",
@@ -126,7 +122,8 @@ $(document).ready(function () {
                 "position": "fixed",
                 "top": entryPoint + "px",
                 "left": windowWidth + "px",
-                "display": "block"
+                "display": "block",
+                "z-index": 20000
             }).animate({
                 "left": "-" + unicornImg.width() + "px",
                 "top": exitPoint - unicornImg.height() + "px",
@@ -139,7 +136,8 @@ $(document).ready(function () {
                 "position": "fixed",
                 "top": "-" + unicornImg.height() + "px",
                 "left": entryPoint + "px",
-                "display": "block"
+                "display": "block",
+                "z-index": 20000
             }).animate({
                 "left": exitPoint - unicornImg.width() + "px",
                 "top": windowHeight + "px",
@@ -152,7 +150,8 @@ $(document).ready(function () {
                 "position": "fixed",
                 "top": windowHeight + "px",
                 "left": entryPoint + "px",
-                "display": "block"
+                "display": "block",
+                "z-index": 20000
             }).animate({
                 "left": exitPoint - unicornImg.width() + "px",
                 "top": "-" + unicornImg.height() + "px",
