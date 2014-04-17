@@ -308,6 +308,9 @@ if ($results) {
  <input type="hidden" name="a" value="mass_process" >
  <input type="hidden" name="do" id="action" value="" >
  <input type="hidden" name="status" value="<?php echo Format::htmlchars($_REQUEST['status']); ?>" >
+   <?php
+        echo '<ul class="pagination">'.$pageNav->getPageLinks().'</ul>';
+    ?>
  <table class="table table-striped" border="0" cellspacing="1" cellpadding="2" width="100%">
     <caption><?php echo $showing; ?>&nbsp;&nbsp;&nbsp;<?php echo $results_type; ?></caption>
     <thead>
@@ -400,14 +403,14 @@ if ($results) {
                     if($ids && in_array($row['ticket_id'], $ids))
                         $sel=true;
                     ?>
-                <td align="center" class="nohover">
+                <td class="nohover">
                     <input class="ckb" type="checkbox" name="tids[]" value="<?php echo $row['ticket_id']; ?>" <?php echo $sel?'checked="checked"':''; ?>>
                 </td>
                 <?php } ?>
-                <td align="center" title="<?php echo $row['email']; ?>" nowrap>
+                <td title="<?php echo $row['email']; ?>" nowrap>
                   <a class="Icon <?php echo strtolower($row['source']); ?>Ticket ticketPreview" title="Preview Ticket"
                     href="tickets.php?id=<?php echo $row['ticket_id']; ?>"><?php echo $tid; ?></a></td>
-                <td align="center" nowrap><?php echo Format::db_datetime($row['effective_date']); ?></td>
+                <td nowrap><?php echo Format::db_datetime($row['effective_date']); ?></td>
                 <td><a <?php if ($flag) { ?> class="Icon <?php echo $flag; ?>Ticket" title="<?php echo ucfirst($flag); ?> Ticket" <?php } ?>
                     href="tickets.php?id=<?php echo $row['ticket_id']; 
                     if($searchTerm) echo '&query='.urlencode($searchTerm);
