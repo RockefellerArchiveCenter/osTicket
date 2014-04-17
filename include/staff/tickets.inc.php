@@ -146,7 +146,7 @@ if ($_REQUEST['advsid'] && isset($_SESSION['adv_'.$_REQUEST['advsid']])) {
         db_input($_SESSION['adv_'.$_REQUEST['advsid']])).')';
 }
 
-$sortOptions=array('date'=>'effective_date','ID'=>'ticket.`number`',
+$sortOptions=array('date'=>'created','ID'=>'ticket.`number`',
     'pri'=>'pri.priority_urgency','name'=>'user.name','subj'=>'cdata.subject',
     'status'=>'ticket.status','assignee'=>'assigned','staff'=>'staff',
     'dept'=>'dept_name');
@@ -410,7 +410,7 @@ if ($results) {
                 <td title="<?php echo $row['email']; ?>" nowrap>
                   <a class="Icon <?php echo strtolower($row['source']); ?>Ticket ticketPreview" title="Preview Ticket"
                     href="tickets.php?id=<?php echo $row['ticket_id']; ?>"><?php echo $tid; ?></a></td>
-                <td nowrap><?php echo Format::db_datetime($row['effective_date']); ?></td>
+                <td nowrap><?php echo Format::db_datetime($row['created']); ?></td>
                 <td><a <?php if ($flag) { ?> class="Icon <?php echo $flag; ?>Ticket" title="<?php echo ucfirst($flag); ?> Ticket" <?php } ?>
                     href="tickets.php?id=<?php echo $row['ticket_id']; 
                     if($searchTerm) echo '&query='.urlencode($searchTerm);
