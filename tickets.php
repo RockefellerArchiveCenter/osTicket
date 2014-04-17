@@ -71,6 +71,7 @@ if($_POST && is_object($ticket) && $ticket->getId()):
 
             if(($msgid=$ticket->postMessage($vars, 'Web'))) {
                 $msg='Message Posted Successfully';
+                // Variable for the unicorns
                 // Cleanup drafts for the ticket. If not closed, only clean
                 // for this staff. Else clean all drafts for the ticket.
                 Draft::deleteForNamespace('ticket.client.' . $ticket->getId());
