@@ -579,7 +579,7 @@ Class ThreadEntry {
         return $json;
     }
 
-    function getAttachmentsLinks($file='attachment.php', $target='', $separator=' ') {
+    function getAttachmentsLinks($file='attachment.php', $target='new', $separator=' ') {
 
         $str='';
         foreach($this->getAttachments() as $attachment ) {
