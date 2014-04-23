@@ -7,6 +7,11 @@ a {
     text-decoration:none;
 }
 
+input[type="radio"]:focus, input[type="checkbox"]:focus  
+{  
+    outline: none;  
+}
+
 .centered {
     text-align:center;
 }
