@@ -60,8 +60,8 @@ if ($_POST)
             <td width="160" class="required">
                 Ticket Source:
             </td>
-            <td>
-                <select name="source">
+            <td class="form-inline">
+                <select class="form-control" name="source">
                     <option value="" selected >&mdash; Select Source &mdash;</option>
                     <option value="Phone" <?php echo ($info['source']=='Phone')?'selected="selected"':''; ?>>Phone</option>
                     <option value="Email" <?php echo ($info['source']=='Email')?'selected="selected"':''; ?>>Email</option>
@@ -76,8 +76,8 @@ if ($_POST)
             <td width="160" class="required">
                 Help Topic:
             </td>
-            <td>
-                <select name="topicId">
+            <td class="form-inline">
+                <select class="form-control" name="topicId">
                     <option value="" selected >&mdash; Select Help Topic &mdash;</option>
                     <?php
                     if($topics=Topic::getHelpTopics()) {
@@ -95,8 +95,8 @@ if ($_POST)
             <td width="160">
                 SLA Plan:
             </td>
-            <td>
-                <select name="slaId">
+            <td class="form-inline">
+                <select class="form-control" name="slaId">
                     <option value="0" selected="selected" >&mdash; None &mdash;</option>
                     <?php
                     if($slas=SLA::getSLAs()) {
@@ -114,8 +114,8 @@ if ($_POST)
             <td width="160">
                 Due Date:
             </td>
-            <td>
-                <input class="dp" id="duedate" name="duedate" value="<?php echo Format::htmlchars($info['duedate']); ?>" size="12" autocomplete=OFF>
+            <td class="form-inline">
+                <input class="dp form-control" id="duedate" name="duedate" value="<?php echo Format::htmlchars($info['duedate']); ?>" size="12" autocomplete=OFF>
                 &nbsp;&nbsp;
                 <?php
                 $min=$hr=null;
@@ -143,7 +143,7 @@ if ($_POST)
         </tr>
         <tr>
             <td colspan="2">
-                <textarea class="richtext no-bar" name="note" cols="21"
+                <textarea class="richtext no-bar form-control" name="note" cols="21"
                     rows="6" style="width:80%;"><?php echo $info['note'];
                     ?></textarea>
             </td>

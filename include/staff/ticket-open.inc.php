@@ -62,7 +62,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160" class="required"> Email Address: </td>
             <td>
                 <span style="display:inline-block;">
-                    <input type="text" size=45 name="email" id="user-email"
+                    <input class="form-control" type="text" size=45 name="email" id="user-email"
                         autocomplete="off" autocorrect="off" value="<?php echo $info['email']; ?>" /> </span>
                 <font class="error">* <?php echo $errors['email']; ?></font>
             </td>
@@ -71,7 +71,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160" class="required"> Full Name: </td>
             <td>
                 <span style="display:inline-block;">
-                    <input type="text" size=45 name="name" id="user-name" value="<?php echo $info['name']; ?>" /> </span>
+                    <input class="form-control" type="text" size=45 name="name" id="user-name" value="<?php echo $info['name']; ?>" /> </span>
                 <font class="error">* <?php echo $errors['name']; ?></font>
             </td>
         </tr>
@@ -99,8 +99,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160" class="required">
                 Ticket Source:
             </td>
-            <td>
-                <select name="source">
+            <td class="form-inline">
+                <select name="source" class="form-control">
                     <option value="Phone" <?php echo ($info['source']=='Phone')?'selected="selected"':''; ?> selected="selected">Phone</option>
                     <option value="Email" <?php echo ($info['source']=='Email')?'selected="selected"':''; ?>>Email</option>
                     <option value="Other" <?php echo ($info['source']=='Other')?'selected="selected"':''; ?>>Other</option>
@@ -112,8 +112,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160" class="required">
                 Help Topic:
             </td>
-            <td>
-                <select name="topicId" onchange="javascript:
+            <td class="form-inline">
+                <select class="form-control" name="topicId" onchange="javascript:
                         $('#dynamic-form').load(
                             'ajax.php/form/help-topic/' + this.value);
                         ">
@@ -143,8 +143,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160">
                 Department:
             </td>
-            <td>
-                <select name="deptId">
+            <td class="form-inline">
+                <select class="form-control" name="deptId">
                     <option value="" selected >&mdash; Select Department &mdash;</option>
                     <?php
                     if($depts=Dept::getDepartments()) {
@@ -163,8 +163,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160">
                 SLA Plan:
             </td>
-            <td>
-                <select name="slaId">
+            <td class="form-inline">
+                <select class="form-control" name="slaId">
                     <option value="0" selected="selected" >&mdash; System Default &mdash;</option>
                     <?php
                     if($slas=SLA::getSLAs()) {
@@ -183,8 +183,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160">
                 Due Date:
             </td>
-            <td>
-                <input class="dp" id="duedate" name="duedate" value="<?php echo Format::htmlchars($info['duedate']); ?>" size="12" autocomplete=OFF>
+            <td class="form-inline">
+                <input type="text" class="dp form-control" id="duedate" name="duedate" value="<?php echo Format::htmlchars($info['duedate']); ?>" size="12" autocomplete=OFF>
                 &nbsp;&nbsp;
                 <?php
                 $min=$hr=null;
@@ -202,8 +202,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         if($thisstaff->canAssignTickets()) { ?>
         <tr>
             <td width="160">Assign To:</td>
-            <td>
-                <select id="assignId" name="assignId">
+            <td class="form-inline">
+                <select class="form-control" id="assignId" name="assignId">
                     <option value="0" selected="selected">&mdash; Select Staff Member OR a Team &mdash;</option>
                     <?php
                     if(($users=Staff::getAvailableStaffMembers())) {
@@ -256,9 +256,9 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <?php
             if(($cannedResponses=Canned::getCannedResponses())) {
                 ?>
-                <div style="margin-top:0.3em;margin-bottom:0.5em">
+                <div style="margin-top:0.3em;margin-bottom:0.5em" class="form-inline">
                     Canned Response:&nbsp;
-                    <select id="cannedResp" name="cannedResp">
+                    <select class="form-control" id="cannedResp" name="cannedResp">
                         <option value="0" selected="selected">&mdash; Select a canned response &mdash;</option>
                         <?php
                         foreach($cannedResponses as $id =>$title) {
@@ -274,7 +274,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 $signature = '';
                 if ($thisstaff->getDefaultSignatureType() == 'mine')
                     $signature = $thisstaff->getSignature(); ?>
-                <textarea class="richtext ifhtml draft draft-delete"
+                <textarea class="richtext ifhtml draft draft-delete form-control"
                     data-draft-namespace="ticket.staff.response"
                     data-signature="<?php
                         echo Format::htmlchars(Format::viewableImages($signature)); ?>"
@@ -352,7 +352,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
         <tr>
             <td colspan=2>
-                <textarea class="richtext ifhtml draft draft-delete"
+                <textarea class="richtext ifhtml draft draft-delete form-control"
                     placeholder="Optional internal note (recommended on assignment)"
                     data-draft-namespace="ticket.staff.note" name="note"
                     cols="21" rows="6" style="width:80%;"

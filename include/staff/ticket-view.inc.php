@@ -412,19 +412,19 @@ $tcount+= $ticket->getNumNotes();
         <input type="hidden" name="msgId" value="<?php echo $msgId; ?>">
         <input type="hidden" name="a" value="reply">
         <span class="error"></span>
-        <table style="width:100%" border="0" cellspacing="0" cellpadding="3">
+        <table class="table">
            <tbody id="to_sec">
             <tr>
-                <td width="120">
+                <td class="col-md-2">
                     <label><strong>TO:</strong></label>
                 </td>
-                <td>
+                <td class="form-inline">
                     <?php
                     # XXX: Add user-to-name and user-to-email HTML ID#s
                     $to =sprintf('%s &lt;%s&gt;', $ticket->getName(), $ticket->getReplyToEmail());
                     $emailReply = (!isset($info['emailreply']) || $info['emailreply']);
                     ?>
-                    <select id="emailreply" name="emailreply">
+                    <select id="emailreply" name="emailreply" class="form-control">
                         <option value="1" <?php echo $emailReply ?  'selected="selected"' : ''; ?>><?php echo $to; ?></option>
                         <option value="0" <?php echo !$emailReply ? 'selected="selected"' : ''; ?>
                             >&mdash;Do Not Email Reply&mdash;</option>
@@ -473,10 +473,10 @@ $tcount+= $ticket->getNumNotes();
                 <td width="120" style="vertical-align:top">
                     <label><strong>Response:</strong></label>
                 </td>
-                <td>
+                <td class="form-inline">
                     <?php
                     if(($cannedResponses=Canned::responsesByDeptId($ticket->getDeptId()))) {?>
-                        <select id="cannedResp" name="cannedResp">
+                        <select id="cannedResp" name="cannedResp" class="form-control">
                             <option value="0" selected="selected">Select a canned response</option>
                             <?php
                             foreach($cannedResponses as $id =>$title) {

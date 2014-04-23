@@ -957,7 +957,8 @@ class TextboxWidget extends Widget {
         if (isset($config['length']))
             $maxlength = "maxlength=\"{$config['length']}\"";
         if (isset($config['classes']))
-            $classes = 'class="'.$config['classes'].'"';
+            $classes = 'class="form-control '.$config['classes'].'"';
+            else $classes = 'class="form-control"';
         if (isset($config['autocomplete']))
             $autocomplete = 'autocomplete="'.($config['autocomplete']?'on':'off').'"';
         ?>
@@ -998,7 +999,7 @@ class TextareaWidget extends Widget {
         if (isset($config['length']) && $config['length'])
             $maxlength = "maxlength=\"{$config['length']}\"";
         if (isset($config['html']) && $config['html'])
-            $class = 'class="richtext no-bar small"';
+            $class = 'class="richtext no-bar small form-control"';
         ?>
         <span style="display:inline-block;width:100%">
         <textarea <?php echo $rows." ".$cols." ".$maxlength." ".$class
@@ -1016,13 +1017,15 @@ class PhoneNumberWidget extends Widget {
         $config = $this->field->getConfiguration();
         list($phone, $ext) = explode("X", $this->value);
         ?>
-        <input type="text" name="<?php echo $this->name; ?>" value="<?php
+        <div class="form-inline">
+        <input class="form-control" type="text" name="<?php echo $this->name; ?>" value="<?php
         echo $phone; ?>"/><?php
         // Allow display of extension field even if disabled if the phone
         // number being edited has an extension
         if ($ext || $config['ext']) { ?> Ext:
-            <input type="text" name="<?php
+            <input  class="form-control" type="text" name="<?php
             echo $this->name; ?>-ext" value="<?php echo $ext; ?>" size="5"/>
+            </div>
         <?php }
     }
 
@@ -1126,7 +1129,7 @@ class DatetimePickerWidget extends Widget {
             $this->value = date($cfg->getDateFormat(), $this->value);
         }
         ?>
-        <input type="text" name="<?php echo $this->name; ?>"
+        <input class="form-control" type="text" name="<?php echo $this->name; ?>"
             value="<?php echo Format::htmlchars($this->value); ?>" size="12"
             autocomplete="off" class="dp" />
         <script type="text/javascript">

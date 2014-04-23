@@ -51,7 +51,6 @@ if ($info['error']) {
         if(!$form) $form = UserForm::getInstance();
         $form->render(true, 'Create New User'); ?>
     </table>
-    <hr>
     <p class="full-width">
         <span class="buttons" style="float:left">
             <input class="btn btn-warning" type="reset" value="Reset">
