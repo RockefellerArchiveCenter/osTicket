@@ -43,27 +43,26 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="180" class="required">
                 Name:
             </td>
-            <td>
-                <input type="text" size="30" name="name" value="<?php echo $info['name']; ?>">
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['name']; ?></span>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" size="30" name="name" value="<?php echo $info['name']; ?>">
+                <?php if ($errors['name']) echo '<span class="alert alert-danger">' .$errors['name']. '</span>'; ?></span>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Type:
             </td>
-            <td>
-                <input type="radio" name="ispublic" value="1" <?php echo $info['ispublic']?'checked="checked"':''; ?>><strong>Public</strong>
-                <input type="radio" name="ispublic" value="0" <?php echo !$info['ispublic']?'checked="checked"':''; ?>><strong>Private</strong> (Internal)
-                &nbsp;<span class="error">*&nbsp;</span>
+            <td class="form-group form-inline has-error">
+                <input type="radio" name="ispublic" value="1" <?php echo $info['ispublic']?'checked="checked"':''; ?>><label>Public</label>
+                <input type="radio" name="ispublic" value="0" <?php echo !$info['ispublic']?'checked="checked"':''; ?>><label>Private (Internal)</label>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Email:
             </td>
-            <td>
-                <select name="email_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="email_id">
                     <option value="0">&mdash; Select Department Email &mdash;</option>
                     <?php
                     $sql='SELECT email_id,email,name FROM '.EMAIL_TABLE.' email ORDER by name';
@@ -77,15 +76,15 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['email_id']; ?></span>
+                <?php if ($errors['email_id']) echo '<span class="alert alert-danger">' .$errors['email_id']. '</span>'; ?></span>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Template:
             </td>
-            <td>
-                <select name="tpl_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="tpl_id">
                     <option value="0">&mdash; System Default &mdash;</option>
                     <?php
                     $sql='SELECT tpl_id,name FROM '.EMAIL_TEMPLATE_GRP_TABLE.' tpl WHERE isactive=1 ORDER by name';
@@ -97,15 +96,15 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['tpl_id']; ?></span>
+                <?php if ($errors['tpl_id']) echo '<span class="alert alert-danger">' .$errors['tpl_id']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 SLA:
             </td>
-            <td>
-                <select name="sla_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="sla_id">
                     <option value="0">&mdash; System Default &mdash;</option>
                     <?php
                     if($slas=SLA::getSLAs()) {
@@ -116,15 +115,15 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['sla_id']; ?></span>
+                <?php if ($errors['sla_id']) echo '<span class="alert alert-danger">' .$errors['sla_id']. '</span>'; ?></span>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Manager:
             </td>
-            <td>
-                <select name="manager_id">
+            <td class="form-group form-inline">
+                <select class="form-control" name="manager_id">
                     <option value="0">&mdash; None &mdash;</option>
                     <?php
                     $sql='SELECT staff_id,CONCAT_WS(", ",lastname, firstname) as name '
@@ -138,16 +137,16 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['manager_id']; ?></span>
+                <?php if ($errors['manager_id']) echo '<span class="alert alert-danger">' .$errors['manager_id']. '</span>'; ?></span>
             </td>
         </tr>
         <tr>
             <td width="180">
                 Group Membership:
             </td>
-            <td>
-                <input type="checkbox" name="group_membership" value="0" <?php echo $info['group_membership']?'checked="checked"':''; ?> >
-                Extend membership to groups with access. <i>(Alerts and  notices will include groups)</i>
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="group_membership" value="0" <?php echo $info['group_membership']?'checked="checked"':''; ?> >
+                <label>Extend membership to groups with access. <i>(Alerts and  notices will include groups)</i></label>
             </td>
         </tr>
         <tr>
@@ -159,27 +158,26 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="180">
                 New Ticket:
             </td>
-            <td>
-                <input type="checkbox" name="ticket_auto_response" value="0" <?php echo !$info['ticket_auto_response']?'checked="checked"':''; ?> >
-
-                <strong>Disable</strong> new ticket auto-response for this Dept.
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="ticket_auto_response" value="0" <?php echo !$info['ticket_auto_response']?'checked="checked"':''; ?> >
+                <label>Disable new ticket auto-response for this Dept.</label>
             </td>
         </tr>
         <tr>
             <td width="180">
                 New Message:
             </td>
-            <td>
-                <input type="checkbox" name="message_auto_response" value="0" <?php echo !$info['message_auto_response']?'checked="checked"':''; ?> >
-                    <strong>Disable</strong> new message auto-response for this Dept.
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="message_auto_response" value="0" <?php echo !$info['message_auto_response']?'checked="checked"':''; ?> >
+                    <label>Disable new message auto-response for this Dept.</label>
             </td>
         </tr>
         <tr>
             <td width="180">
                 Auto-Response Email:
             </td>
-            <td>
-                <select name="autoresp_email_id">
+            <td class="form-group form-inline">
+                <select class="form-control" name="autoresp_email_id">
                     <option value="0" selected="selected">&mdash; Department Email &mdash;</option>
                     <?php
                     $sql='SELECT email_id,email,name FROM '.EMAIL_TABLE.' email ORDER by name';
@@ -195,7 +193,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['autoresp_email_id']; ?></span>
+                <?php if ($errors['autoresp_email_id']) echo '<span class="alert alert-danger">' .$errors['autoresp_email_id']. '</span>'; ?></span>
             </td>
         </tr>
         <tr>
@@ -223,12 +221,12 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         ?>
         <tr>
             <th colspan="2">
-                <em><strong>Department Signature</strong>: Optional signature used on outgoing emails. &nbsp;<span class="error">&nbsp;<?php echo $errors['signature']; ?></span></em>
+                <em><strong>Department Signature</strong>: Optional signature used on outgoing emails. <?php if ($errors['signature']) echo '<span class="alert alert-danger">' .$errors['signature']. '</span>'; ?></span></em>
             </th>
         </tr>
         <tr>
             <td colspan=2>
-                <textarea class="richtext no-bar" name="signature" cols="21"
+                <textarea class="richtext no-bar form-control" name="signature" cols="21"
                     rows="5" style="width: 60%;"><?php echo $info['signature']; ?></textarea>
                 <br><em>Signature is made available as a choice, for public departments, on ticket reply.</em>
             </td>

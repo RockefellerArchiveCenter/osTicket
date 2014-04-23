@@ -60,19 +60,18 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             ?>
         <tr>
             <td width="160" class="required"> Email Address: </td>
-            <td>
-                <span style="display:inline-block;">
+            <td class="form-group form-inline has-error">
                     <input class="form-control" type="text" size=45 name="email" id="user-email"
-                        autocomplete="off" autocorrect="off" value="<?php echo $info['email']; ?>" /> </span>
-                <font class="error">* <?php echo $errors['email']; ?></font>
+                        autocomplete="off" autocorrect="off" value="<?php echo $info['email']; ?>" />
+                <?php if($errors['email']) echo '<span class="alert alert-danger">'.$errors['email']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="160" class="required"> Full Name: </td>
-            <td>
+            <td class="form-group form-inline has-error">
                 <span style="display:inline-block;">
                     <input class="form-control" type="text" size=45 name="name" id="user-name" value="<?php echo $info['name']; ?>" /> </span>
-                <font class="error">* <?php echo $errors['name']; ?></font>
+                <?php if($errors['name']) echo '<span class="alert alert-danger">'.$errors['name']. '</span>'; ?>
             </td>
         </tr>
         <?php
@@ -82,8 +81,9 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         if($cfg->notifyONNewStaffTicket()) {  ?>
         <tr>
             <td width="160">Ticket Notice:</td>
-            <td>
-            <input type="checkbox" name="alertuser" <?php echo (!$errors || $info['alertuser'])? 'checked="checked"': ''; ?>>Send alert to user.
+            <td class="form-group form-inline">
+            <input type="checkbox" name="alertuser" <?php echo (!$errors || $info['alertuser'])? 'checked="checked"': ''; ?>>
+            <label>Send alert to user.</label>
             </td>
         </tr>
         <?php
@@ -99,20 +99,20 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160" class="required">
                 Ticket Source:
             </td>
-            <td class="form-inline">
+            <td class="form-group form-inline has-error">
                 <select name="source" class="form-control">
                     <option value="Phone" <?php echo ($info['source']=='Phone')?'selected="selected"':''; ?> selected="selected">Phone</option>
                     <option value="Email" <?php echo ($info['source']=='Email')?'selected="selected"':''; ?>>Email</option>
                     <option value="Other" <?php echo ($info['source']=='Other')?'selected="selected"':''; ?>>Other</option>
                 </select>
-                &nbsp;<font class="error"><b>*</b>&nbsp;<?php echo $errors['source']; ?></font>
+                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['source']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="160" class="required">
                 Help Topic:
             </td>
-            <td class="form-inline">
+            <td class="form-group form-inline has-error">
                 <select class="form-control" name="topicId" onchange="javascript:
                         $('#dynamic-form').load(
                             'ajax.php/form/help-topic/' + this.value);
@@ -136,14 +136,14 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<font class="error"><b>*</b>&nbsp;<?php echo $errors['topicId']; ?></font>
+                <?php if($errors['topicId']) echo '<span class="alert alert-danger">'.$errors['topicId']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="160">
                 Department:
             </td>
-            <td class="form-inline">
+            <td class="form-group form-inline">
                 <select class="form-control" name="deptId">
                     <option value="" selected >&mdash; Select Department &mdash;</option>
                     <?php
@@ -155,7 +155,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<font class="error"><?php echo $errors['deptId']; ?></font>
+                <?php if($errors['deptId']) echo '<span class="alert alert-danger">'.$errors['deptId']. '</span>'; ?>
             </td>
         </tr>
 
@@ -163,7 +163,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160">
                 SLA Plan:
             </td>
-            <td class="form-inline">
+            <td class="form-group form-inline">
                 <select class="form-control" name="slaId">
                     <option value="0" selected="selected" >&mdash; System Default &mdash;</option>
                     <?php
@@ -175,7 +175,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['slaId']; ?></font>
+                <?php if($errors['slaId']) echo '<span class="alert alert-danger">'.$errors['slaId']. '</span>'; ?>
             </td>
          </tr>
 
@@ -183,9 +183,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160">
                 Due Date:
             </td>
-            <td class="form-inline">
+            <td class="form-group form-inline">
                 <input type="text" class="dp form-control" id="duedate" name="duedate" value="<?php echo Format::htmlchars($info['duedate']); ?>" size="12" autocomplete=OFF>
-                &nbsp;&nbsp;
                 <?php
                 $min=$hr=null;
                 if($info['time'])
@@ -193,8 +192,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
 
                 echo Misc::timeDropdown($hr, $min, 'time');
                 ?>
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['duedate']; ?> &nbsp; <?php echo $errors['time']; ?></font>
-                <em>Time is based on your time zone (GMT <?php echo $thisstaff->getTZoffset(); ?>)</em>
+                <?php if($errors['duedate']) echo '<span class="alert alert-danger">'.$errors['duedate']; ?> &nbsp; <?php echo $errors['time']. '</span>'; ?>
+                <label>Time is based on your time zone (GMT <?php echo $thisstaff->getTZoffset(); ?>)</label>
             </td>
         </tr>
 
@@ -202,7 +201,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         if($thisstaff->canAssignTickets()) { ?>
         <tr>
             <td width="160">Assign To:</td>
-            <td class="form-inline">
+            <td class="form-group form-inline">
                 <select class="form-control" id="assignId" name="assignId">
                     <option value="0" selected="selected">&mdash; Select Staff Member OR a Team &mdash;</option>
                     <?php
@@ -226,7 +225,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                         echo '</OPTGROUP>';
                     }
                     ?>
-                </select>&nbsp;<span class='error'>&nbsp;<?php echo $errors['assignId']; ?></span>
+                </select>
+                <?php if($errors['assignId']) echo '<span class="alert alert-danger">'.$errors['assignId']. '</span>'; ?>
             </td>
         </tr>
         <?php } ?>
@@ -256,7 +256,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <?php
             if(($cannedResponses=Canned::getCannedResponses())) {
                 ?>
-                <div style="margin-top:0.3em;margin-bottom:0.5em" class="form-inline">
+                <div style="margin-top:0.3em;margin-bottom:0.5em" class="form-group form-inline">
                     Canned Response:&nbsp;
                     <select class="form-control" id="cannedResp" name="cannedResp">
                         <option value="0" selected="selected">&mdash; Select a canned response &mdash;</option>
@@ -266,8 +266,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                         }
                         ?>
                     </select>
-                    &nbsp;&nbsp;&nbsp;
-                    <label><input type='checkbox' value='1' name="append" id="append" checked="checked">Append</label>
+                    <label><input class="form-control checkbox" type='checkbox' value='1' name="append" id="append" checked="checked">Append</label>
                 </div>
             <?php
             }
@@ -314,27 +313,27 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             if($thisstaff->canCloseTickets()) { ?>
                 <tr>
                     <td width="100">Ticket Status:</td>
-                    <td>
-                        <input type="checkbox" name="ticket_state" value="closed" <?php echo $info['ticket_state']?'checked="checked"':''; ?>>
-                        <b>Close On Response</b>&nbsp;<em>(Only applicable if response is entered)</em>
+                    <td class="form-group form-inline">
+                        <input class="form-control checkbox" type="checkbox" name="ticket_state" value="closed" <?php echo $info['ticket_state']?'checked="checked"':''; ?>>
+                        <label>Close On Response (only applicable if response is entered)</label>
                     </td>
                 </tr>
             <?php
             } ?>
              <tr>
                 <td width="100">Signature:</td>
-                <td>
+                <td class="form-group form-inline">
                     <?php
                     $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     ?>
-                    <label><input type="radio" name="signature" value="none" checked="checked"> None</label>
+                    <label><input class="form-control radio" type="radio" name="signature" value="none" checked="checked"> None</label>
                     <?php
                     if($thisstaff->getSignature()) { ?>
                         <label><input type="radio" name="signature" value="mine"
                             <?php echo ($info['signature']=='mine')?'checked="checked"':''; ?>> My signature</label>
                     <?php
                     } ?>
-                    <label><input type="radio" name="signature" value="dept"
+                    <label><input class="form-control radio" type="radio" name="signature" value="dept"
                         <?php echo ($info['signature']=='dept')?'checked="checked"':''; ?>> Dept. Signature (if set)</label>
                 </td>
              </tr>
@@ -346,8 +345,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         ?>
         <tr>
             <th colspan="2">
-                <em><strong>Internal Note</strong>
-                <font class="error">&nbsp;<?php echo $errors['note']; ?></font></em>
+                <em><strong>Internal Note</strong></em>
+                <?php if($errors['email']) echo '<span class="alert alert-danger">'. $errors['note']. '</span>'; ?>
             </th>
         </tr>
         <tr>

@@ -15,11 +15,11 @@
             else { ?>
                 <td class="multi-line <?php if ($field->get('required')) echo 'required'; ?>" style="min-width:120px;">
                 <?php echo Format::htmlchars($field->get('label')); ?>:</td>
-                <td><?php
+                <td <?php if ($field->get('required')) echo 'class="form-group form-inline has-error"'; ?>><?php
             }
             $field->render(); ?>
             <?php if ($field->get('required')) { ?>
-                <font class="error">*</font>
+                
             <?php
             }
             if ($field->get('hint') && !$field->isBlockLevel()) { ?>

@@ -21,7 +21,7 @@ $config=($errors && $_POST)?Format::input($_POST):$cfg->getConfigInfo();
             <td>
               <input type="checkbox" name="allow_attachments" <?php echo $config['allow_attachments'] ?'checked':''; ?>><b>Allow Attachments</b>
                 &nbsp; (<i>Global Setting</i>)
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['allow_attachments']; ?></font>
+                &nbsp;<span class="alert alert-danger">&nbsp;<?php echo $errors['allow_attachments']; ?></span>
             </td>
           </tr>
           <tr>
@@ -51,13 +51,13 @@ $config=($errors && $_POST)?Format::input($_POST):$cfg->getConfigInfo();
             <th nowrap>Maximum File Size:</th>
             <td>
               <input type="text" name="max_file_size" value="<?php echo $config['max_file_size']; ?>"> <i>bytes</i>
-                <font class="error">&nbsp;<?php echo $errors['max_file_size']; ?></font>
+                <span class="alert alert-danger"><?php echo $errors['max_file_size']; ?></span>
             </td>
           </tr>
           <tr>
             <th>Attachment Folder:</th>
             <td>
-                Web user (e.g apache) must have write access to the folder. &nbsp;<font class="error">&nbsp;<?php echo $errors['upload_dir']; ?></font><br>
+                Web user (e.g apache) must have write access to the folder. &nbsp;<span class="alert alert-danger"><?php echo $errors['upload_dir']; ?></span><br>
               <input type="text" size=60 name="upload_dir" value="<?php echo $config['upload_dir']; ?>"> 
               <font color=red>
               <?php echo $attwarn; ?>

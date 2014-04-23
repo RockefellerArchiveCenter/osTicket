@@ -31,8 +31,8 @@ $pages = Page::getPages();
     <tbody>
         <tr>
             <td width="220" class="required">Landing Page:</td>
-            <td>
-                <select name="landing_page_id">
+            <td class="form-group form-inline">
+                <select class="form-control" name="landing_page_id">
                     <option value="">&mdash; Select Landing Page &mdash;</option>
                     <?php
                     foreach($pages as $page) {
@@ -42,13 +42,14 @@ $pages = Page::getPages();
                                 ($config['landing_page_id']==$page->getId())?'selected="selected"':'',
                                 $page->getName());
                     } ?>
-                </select>&nbsp;<font class="error">*&nbsp;<?php echo $errors['landing_page_id']; ?></font>
+                </select>
+                <?php if($errors['landing_page_id']) echo '<span class="alert alert-danger">' .$errors['landing_page_id']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="220" class="required">Offline Page:</td>
-            <td>
-                <select name="offline_page_id">
+            <td class="form-group form-inline">
+                <select class="form-control" name="offline_page_id">
                     <option value="">&mdash; Select Offline Page &mdash;</option>
                     <?php
                     foreach($pages as $page) {
@@ -58,13 +59,14 @@ $pages = Page::getPages();
                                 ($config['offline_page_id']==$page->getId())?'selected="selected"':'',
                                 $page->getName());
                     } ?>
-                </select>&nbsp;<font class="error">*&nbsp;<?php echo $errors['offline_page_id']; ?></font>
+                </select>
+                <?php if($errors['offline_page_id']) echo '<span class="alert alert-danger">' .$errors['offline_page_id']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="220" class="required">Default Thank-You Page:</td>
-            <td>
-                <select name="thank-you_page_id">
+            <td class="form-group form-inline">
+                <select class="form-control" name="thank-you_page_id">
                     <option value="">&mdash; Select Thank-You Page &mdash;</option>
                     <?php
                     foreach($pages as $page) {
@@ -74,7 +76,8 @@ $pages = Page::getPages();
                                 ($config['thank-you_page_id']==$page->getId())?'selected="selected"':'',
                                 $page->getName());
                     } ?>
-                </select>&nbsp;<font class="error">*&nbsp;<?php echo $errors['thank-you_page_id']; ?></font>
+                </select>
+                <?php if($errors['thank-you_page_id']) echo '<span class="alert alert-danger">' .$errors['thank-you_page_id']. '</span>'; ?>
             </td>
         </tr>
     </tbody>
@@ -90,9 +93,9 @@ $pages = Page::getPages();
     </thead>
     <tbody>
         <tr>
-        <td colspan="2">
+        <td  class="form-group form-inline" colspan="2">
                 <label style="display:block">
-                <input type="radio" name="selected-logo" value="0"
+                <input class="form-control radio" type="radio" name="selected-logo" value="0"
                     style="margin-left: 1em"
                     <?php if (!$ost->getConfig()->getClientLogoId())
                         echo 'checked="checked"'; ?>/>
@@ -105,17 +108,17 @@ $pages = Page::getPages();
         </td></tr>
         <tr>
             <th colspan="2">
-                <em>Use a custom logo &mdash; Use a delete checkbox to
-                remove the logo from the system</em>
+                <p class="help-block">Use a custom logo &mdash; Use a delete checkbox to
+                remove the logo from the system</p>
             </th>
         </tr>
-        <tr><td colspan="2">
+        <tr><td class="form-group form-inline" colspan="2">
             <?php
             $current = $ost->getConfig()->getClientLogoId();
             foreach (AttachmentFile::allLogos() as $logo) { ?>
                 <div>
                 <label>
-                <input type="radio" name="selected-logo"
+                <input class="form-control radio" type="radio" name="selected-logo"
                     style="margin-left: 1em" value="<?php
                     echo $logo->getId(); ?>" <?php
                     if ($logo->getId() == $current)
@@ -128,7 +131,7 @@ $pages = Page::getPages();
                 </label>
                 <?php if ($logo->getId() != $current) { ?>
                 <label>
-                <input type="checkbox" name="delete-logo[]" value="<?php
+                <input class="form-control checkbox" type="checkbox" name="delete-logo[]" value="<?php
                     echo $logo->getId(); ?>"/> Delete
                 </label>
                 <?php } ?>

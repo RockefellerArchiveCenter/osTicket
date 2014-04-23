@@ -411,7 +411,6 @@ $tcount+= $ticket->getNumNotes();
         <input type="hidden" name="id" value="<?php echo $ticket->getId(); ?>">
         <input type="hidden" name="msgId" value="<?php echo $msgId; ?>">
         <input type="hidden" name="a" value="reply">
-        <span class="error"></span>
         <table class="table">
            <tbody id="to_sec">
             <tr>
@@ -466,14 +465,14 @@ $tcount+= $ticket->getNumNotes();
             <tbody id="resp_sec">
             <?php
             if($errors['response']) {?>
-            <tr><td width="120">&nbsp;</td><td class="error"><?php echo $errors['response']; ?>&nbsp;</td></tr>
+            <tr><td class="alert alert-danger"><?php echo $errors['response']; ?>&nbsp;</td></tr>
             <?php
             }?>
             <tr>
                 <td width="120" style="vertical-align:top">
                     <label><strong>Response:</strong></label>
                 </td>
-                <td class="form-inline">
+                <td class="form-group form-inline">
                     <?php
                     if(($cannedResponses=Canned::responsesByDeptId($ticket->getDeptId()))) {?>
                         <select id="cannedResp" name="cannedResp" class="form-control">
@@ -484,8 +483,7 @@ $tcount+= $ticket->getNumNotes();
                             }
                             ?>
                         </select>
-                        &nbsp;&nbsp;&nbsp;
-                        <label><input type='checkbox' value='1' name="append" id="append" checked="checked"> Append</label>
+                        <label><input class="form-control checkbox" type='checkbox' value='1' name="append" id="append" checked="checked"> Append</label>
                         <br>
                     <?php
                     }
@@ -534,20 +532,20 @@ $tcount+= $ticket->getNumNotes();
                 <td width="120">
                     <label for="signature" class="left">Signature:</label>
                 </td>
-                <td>
+                <td class="form-inline form-group">
                     <?php
                     $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     ?>
-                    <label><input type="radio" name="signature" value="none"> None</label>
+                    <label><input class="form-control radio" type="radio" name="signature" value="none"> None</label>
                     <?php
                     if($thisstaff->getSignature()) {?>
-                    <label><input type="radio" name="signature" value="mine"
+                    <label><input class="form-control radio" type="radio" name="signature" value="mine"
                         <?php echo ($info['signature']=='mine')?'checked="checked"':''; ?>> My signature</label>
                     <?php
                     } ?>
                     <?php
                     if($dept && $dept->canAppendSignature()) { ?>
-                    <label><input type="radio" name="signature" value="dept" checked="checked">
+                    <label><input class="form-control radio" type="radio" name="signature" value="dept" checked="checked">
                         Department Signature (<?php echo Format::htmlchars($dept->getName()); ?>)</label>
                     <?php
                     } ?>
@@ -559,15 +557,15 @@ $tcount+= $ticket->getNumNotes();
                 <td width="120">
                     <label><strong>Ticket Status:</strong></label>
                 </td>
-                <td>
+                <td class="form-group form-inline">
                     <?php
                     $statusChecked=isset($info['reply_ticket_status'])?'checked="checked"':'';
                     if($ticket->isClosed()) { ?>
-                        <label><input type="checkbox" name="reply_ticket_status" id="reply_ticket_status" value="Open"
+                        <label><input class="form-control checkbox" type="checkbox" name="reply_ticket_status" id="reply_ticket_status" value="Open"
                             <?php echo $statusChecked; ?>> Reopen on Reply</label>
                    <?php
                     } elseif($thisstaff->canCloseTickets()) { ?>
-                         <label><input type="checkbox" name="reply_ticket_status" id="reply_ticket_status" value="Closed" checked="checked"
+                         <label><input class="form-control checkbox" type="checkbox" name="reply_ticket_status" id="reply_ticket_status" value="Closed" checked="checked"
                               <?php echo $statusChecked; ?>> Close on Reply</label>
                    <?php
                     } ?>
@@ -577,7 +575,7 @@ $tcount+= $ticket->getNumNotes();
             } ?>
          </tbody>
         </table>
-        <p  style="padding-left:165px;">
+        <p class="text-center">
             <input class="btn btn-sm btn-success" type="submit" value="Post Reply" onClick="ga('send', 'event', 'Ticket', 'Reply', 'Reply');">
             <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="ga('send', 'event', 'Ticket', 'Reply', 'Cancel');">
         </p>
@@ -593,22 +591,19 @@ $tcount+= $ticket->getNumNotes();
             <?php
             if($errors['postnote']) {?>
             <tr>
-                <td width="120">&nbsp;</td>
-                <td class="error"><?php echo $errors['postnote']; ?></td>
+                <td colspan="2" class="alert alert-danger"><?php echo $errors['postnote']; ?></td>
             </tr>
             <?php
             } ?>
             <tr>
                 <td width="120" style="vertical-align:top">
-                    <label><strong>Internal Note:</strong><span class='error'>&nbsp;*</span></label>
+                    <label><strong>Internal Note:</strong></label>
                 </td>
                 <td>
                     <div>
-                        <div class="faded" style="padding-left:0.15em">
-                        Note title - summary of the note (optional)</div>
-                        <input type="text" name="title" id="title" size="60" value="<?php echo $info['title']; ?>" >
-                        <br/>
-                        <span class="error"&nbsp;<?php echo $errors['title']; ?></span>
+                        <input class="form-control" type="text" name="title" id="title" size="60" value="<?php echo $info['title']; ?>" >
+                        <p class="help-block">Note title - summary of the note (optional)</p>
+                        <?php if($errors['title']) echo '<span class="alert alert-danger">'.$errors['title'].'</span>'; ?>
                     </div>
                     <br/>
                     <textarea name="note" id="internal_note" cols="80"
@@ -617,7 +612,7 @@ $tcount+= $ticket->getNumNotes();
                         data-draft-object-id="<?php echo $ticket->getId(); ?>"
                         class="richtext ifhtml draft"><?php echo $info['note'];
                         ?></textarea>
-                        <span class="error"><?php echo $errors['note']; ?></span>
+                        <?php if($errors['note']) echo '<span class="alert alert-danger">'.$errors['note'].'</span>'; ?>
                         <br>
                 </td>
             </tr>
@@ -643,9 +638,9 @@ $tcount+= $ticket->getNumNotes();
                 <td width="120">
                     <label>Ticket Status:</label>
                 </td>
-                <td>
+                <td class="form-group form-inline">
                     <div class="faded"></div>
-                    <select name="state">
+                    <select class="form-control" name="state">
                         <option value="" selected="selected">&mdash; unchanged &mdash;</option>
                         <?php
                         $state = $info['state'];
@@ -685,13 +680,13 @@ $tcount+= $ticket->getNumNotes();
                             }
                         }?>
                     </select>
-                    &nbsp;<span class='error'>*&nbsp;<?php echo $errors['state']; ?></span>
+                    <?php if($errors['state']) echo '<span class="alert alert-danger">'.$errors['state'].'</span>'; ?>
                 </td>
             </tr>
             </div>
         </table>
 
-       <p  style="padding-left:165px;">
+       <p class="text-center">
            <input class="btn btn-sm btn-success" type="submit" value="Post Note" onClick="ga('send', 'event', 'Ticket', 'Internal Note', 'Submit');">
            <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="ga('send', 'event', 'Ticket', 'Internal Note', 'Cancel');">
        </p>
@@ -707,8 +702,7 @@ $tcount+= $ticket->getNumNotes();
             if($errors['transfer']) {
                 ?>
             <tr>
-                <td width="120">&nbsp;</td>
-                <td class="error"><?php echo $errors['transfer']; ?></td>
+                <td colspan="2" class="alert alert-danger"><?php echo $errors['transfer']; ?></td>
             </tr>
             <?php
             } ?>
@@ -716,12 +710,8 @@ $tcount+= $ticket->getNumNotes();
                 <td width="120">
                     <label for="deptId"><strong>Department:</strong></label>
                 </td>
-                <td>
-                    <?php
-                        echo sprintf('<span class="faded">Ticket is currently in <b>%s</b> department.</span>', $ticket->getDeptName());
-                    ?>
-                    <br>
-                    <select id="deptId" name="deptId">
+                <td class="form-group has-error">
+                    <select class="form-control" id="deptId" name="deptId">
                         <option value="0" selected="selected">&mdash; Select Target Department &mdash;</option>
                         <?php
                         if($depts=Dept::getDepartments()) {
@@ -732,23 +722,27 @@ $tcount+= $ticket->getNumNotes();
                             }
                         }
                         ?>
-                    </select>&nbsp;<span class='error'>*&nbsp;<?php echo $errors['deptId']; ?></span>
+                    </select>
+                    <?php
+                        echo sprintf('<p class="help-block">Ticket is currently in <b>%s</b> department.</span>', $ticket->getDeptName());
+                    ?>
+                    <?php if($errors['deptId']) echo '<span class="alert alert-danger">'.$errors['deptId'].'</span>'; ?>
                 </td>
             </tr>
             <tr>
                 <td width="120" style="vertical-align:top">
-                    <label><strong>Comments:</strong><span class='error'>&nbsp;*</span></label>
+                    <label><strong>Comments:</strong></label>
                 </td>
                 <td>
                     <textarea name="transfer_comments" id="transfer_comments"
                         placeholder="Enter reasons for the transfer"
                         class="richtext ifhtml no-bar" cols="80" rows="7" wrap="soft"><?php
                         echo $info['transfer_comments']; ?></textarea>
-                    <span class="error"><?php echo $errors['transfer_comments']; ?></span>
+                    <?php if($errors['transfer_comments']) echo '<span class="alert alert-danger">'.$errors['transfer_comments'].'</span>'; ?>
                 </td>
             </tr>
         </table>
-        <p style="padding-left:165px;">
+        <p class="text-center">
            <input class="btn btn-sm btn-success" type="submit" value="Transfer" onClick="ga('send', 'event', 'Ticket', 'Transfer', 'Submit');">
            <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="ga('send', 'event', 'Ticket', 'Transfer', 'Cancel');">
         </p>
@@ -767,8 +761,7 @@ $tcount+= $ticket->getNumNotes();
             if($errors['assign']) {
                 ?>
             <tr>
-                <td width="120">&nbsp;</td>
-                <td class="error"><?php echo $errors['assign']; ?></td>
+                <td colspan="2" class="alert alert-danger"><?php echo $errors['assign']; ?></td>
             </tr>
             <?php
             } ?>
@@ -776,8 +769,8 @@ $tcount+= $ticket->getNumNotes();
                 <td width="120" style="vertical-align:top">
                     <label for="assignId"><strong>Assignee:</strong></label>
                 </td>
-                <td>
-                    <select id="assignId" name="assignId">
+                <td class="form-group form-inline has-error">
+                    <select class="form-control" id="assignId" name="assignId">
                         <option value="0" selected="selected">&mdash; Select Staff Member OR a Team &mdash;</option>
                         <?php
                         if($ticket->isOpen() && !$ticket->isAssigned())
@@ -812,30 +805,31 @@ $tcount+= $ticket->getNumNotes();
                             echo '</OPTGROUP>';
                         }
                         ?>
-                    </select>&nbsp;<span class='error'>*&nbsp;<?php echo $errors['assignId']; ?></span>
+                    </select>
+                    <?php if($errors['assignId']) echo '<span class="alert alert-danger">'.$errors['assignId'].'</span>'; ?>
                     <?php
                     if($ticket->isAssigned() && $ticket->isOpen()) {
-                        echo sprintf('<div class="faded">Ticket is currently assigned to <b>%s</b></div>',
+                        echo sprintf('<p class="help-block">Ticket is currently assigned to <b>%s</b></p>',
                                 $ticket->getAssignee());
                     } elseif ($ticket->isClosed()) { ?>
-                        <div class="faded">Assigning a closed ticket will <b>reopen</b> it!</div>
+                        <p class="help-block">Assigning a closed ticket will <b>reopen</b> it!</p>
                     <?php } ?>
                 </td>
             </tr>
             <tr>
                 <td width="120" style="vertical-align:top">
-                    <label><strong>Comments:</strong><span class='error'>&nbsp;*</span></label>
+                    <label><strong>Comments:</strong></label>
                 </td>
                 <td>
                     <textarea name="assign_comments" id="assign_comments"
                         cols="80" rows="7" wrap="soft"
                         placeholder="Enter reasons for the assignment or instructions for assignee"
                         class="richtext ifhtml no-bar"><?php echo $info['assign_comments']; ?></textarea>
-                    <span class="error"><?php echo $errors['assign_comments']; ?></span><br>
+                    <?php if($errors['assign_comments']) echo '<span class="alert alert-danger">'.$errors['assign_comments'].'</span>'; ?>
                 </td>
             </tr>
         </table>
-        <p  style="padding-left:165px;">
+        <p class="text-center">
             <input class="btn btn-sm btn-success" type="submit" value="<?php echo $ticket->isAssigned()?'Reassign':'Assign'; ?>" onClick="ga('send', 'event', 'Ticket', 'Assign', 'Submit');">
             <input class="btn btn-sm btn-danger" type="reset" value="Reset" onClick="ga('send', 'event', 'Ticket', 'Assign', 'Cancel');">
         </p>

@@ -15,46 +15,46 @@
 
         <tr>
             <td width="160">New Ticket:</td>
-            <td>
-                <input type="checkbox" name="ticket_autoresponder" <?php
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="ticket_autoresponder" <?php
 echo $config['ticket_autoresponder'] ? 'checked="checked"' : ''; ?>/>
-                Ticket Owner&nbsp;
+                <label>Ticket Owner</label>
                 <i class="help-tip icon-question-sign" href="#new_ticket"></i>
             </td>
         </tr>
         <tr>
             <td width="160">New Ticket by Staff:</td>
-            <td>
-                <input type="checkbox" name="ticket_notice_active" <?php
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="ticket_notice_active" <?php
 echo $config['ticket_notice_active'] ? 'checked="checked"' : ''; ?>/>
-                Ticket Owner&nbsp;
+                <label>Ticket Owner</label>
                 <i class="help-tip icon-question-sign" href="#new_staff_ticket"></i>
             </td>
         </tr>
         <tr>
             <td width="160" rowspan="2">New Message:</td>
-            <td>
-                <input type="checkbox" name="message_autoresponder" <?php
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="message_autoresponder" <?php
 echo $config['message_autoresponder'] ? 'checked="checked"' : ''; ?>/>
-                Submitter: Send receipt confirmation&nbsp;
+                <label>Submitter: Send receipt confirmation</label>
                 <i class="help-tip icon-question-sign" href="#new_message"></i>
             </td>
         </tr>
         <tr>
-            <td>
-                <input type="checkbox" name="message_autoresponder_collabs" <?php
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="message_autoresponder_collabs" <?php
 echo $config['message_autoresponder_collabs'] ? 'checked="checked"' : ''; ?>/>
-                Participants: Send new activity notice&nbsp;
+                <label>Participants: Send new activity notice</label>
                 <i class="help-tip icon-question-sign" href="#collaborators"></i>
                 </div>
             </td>
         </tr>
         <tr>
             <td width="160">Overlimit Notice:</td>
-            <td>
-                <input type="checkbox" name="overlimit_notice_active" <?php
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="overlimit_notice_active" <?php
 echo $config['overlimit_notice_active'] ? 'checked="checked"' : ''; ?>/>
-                Ticket Submitter&nbsp;
+                <label>Ticket Submitter</label>
                 <i class="help-tip icon-question-sign" href="#overlimit_notice"></i>
             </td>
         </tr>

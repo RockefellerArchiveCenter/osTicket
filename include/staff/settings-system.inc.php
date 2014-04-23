@@ -20,32 +20,35 @@ $gmtime = Misc::gmtime();
 
         <tr>
             <td width="220" class="required">Helpdesk Status:</td>
-            <td>
-                <input type="radio" name="isonline"  value="1"   <?php echo $config['isonline']?'checked="checked"':''; ?> /><b>Online</b> (Active)
-                <input type="radio" name="isonline"  value="0"   <?php echo !$config['isonline']?'checked="checked"':''; ?> /><b>Offline</b> (Disabled)
-                &nbsp;<font class="error">&nbsp;<?php echo $config['isoffline']?'osTicket offline':''; ?></font>
+            <td class="form-group form-inline">
+                <input class="form-control radio" type="radio" name="isonline"  value="1"   <?php echo $config['isonline']?'checked="checked"':''; ?> />
+                <label>Online (Active)</label>
+                <input class="form-control radio" type="radio" name="isonline"  value="0"   <?php echo !$config['isonline']?'checked="checked"':''; ?> />
+                <label>Offline (Disabled)</label>
+                <?php if($errors['isoffline']) echo '<span class="alert alert-danger">' .$config['isoffline']?'osTicket offline':''. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#helpdesk_status"></i>
             </td>
         </tr>
         <tr>
             <td width="220" class="required">Helpdesk URL:</td>
-            <td>
-                <input type="text" size="40" name="helpdesk_url" value="<?php echo $config['helpdesk_url']; ?>">
-                &nbsp;<font class="error">*&nbsp;<?php echo $errors['helpdesk_url']; ?></font>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" size="40" name="helpdesk_url" value="<?php echo $config['helpdesk_url']; ?>">
+                <?php if($errors['helpdesk_url']) echo '<span class="alert alert-danger">' .$errors['helpdesk_url']. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#helpdesk_url"></i>
         </td>
         </tr>
         <tr>
             <td width="220" class="required">Helpdesk Name/Title:</td>
-            <td><input type="text" size="40" name="helpdesk_title" value="<?php echo $config['helpdesk_title']; ?>">
-                &nbsp;<font class="error">*&nbsp;<?php echo $errors['helpdesk_title']; ?></font>
+            <td class="form-group form-inline has-error">
+            <input class="form-control" type="text" size="40" name="helpdesk_title" value="<?php echo $config['helpdesk_title']; ?>">
+             <?php if($errors['helpdesk_title']) echo '<span class="alert alert-danger">' .$errors['helpdesk_title']. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#helpdesk_name"></i>
             </td>
         </tr>
         <tr>
             <td width="220" class="required">Default Department:</td>
-            <td>
-                <select name="default_dept_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="default_dept_id">
                     <option value="">&mdash; Select Default Department &mdash;</option>
                     <?php
                     $sql='SELECT dept_id,dept_name FROM '.DEPT_TABLE.' WHERE ispublic=1';
@@ -56,14 +59,15 @@ $gmtime = Misc::gmtime();
                         <?php
                         }
                     } ?>
-                </select>&nbsp;<font class="error">*&nbsp;<?php echo $errors['default_dept_id']; ?></font>
+                </select>
+                <?php if($errors['default_dept_id']) echo '<span class="alert alert-danger">' .$errors['default_dept_id'].'</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#default_dept"></i>
             </td>
         </tr>
 
         <tr><td>Default Page Size:</td>
-            <td>
-                <select name="max_page_size">
+            <td class="form-group form-inline">
+                <select class="form-control" name="max_page_size">
                     <?php
                      $pagelimit=$config['max_page_size'];
                     for ($i = 5; $i <= 50; $i += 5) {
@@ -77,21 +81,21 @@ $gmtime = Misc::gmtime();
         </tr>
         <tr>
             <td>Default Log Level:</td>
-            <td>
-                <select name="log_level">
+            <td class="form-group form-inline">
+                <select class="form-control" name="log_level">
                     <option value=0 <?php echo $config['log_level'] == 0 ? 'selected="selected"':''; ?>>None (Disable Logger)</option>
                     <option value=3 <?php echo $config['log_level'] == 3 ? 'selected="selected"':''; ?>> DEBUG</option>
                     <option value=2 <?php echo $config['log_level'] == 2 ? 'selected="selected"':''; ?>> WARN</option>
                     <option value=1 <?php echo $config['log_level'] == 1 ? 'selected="selected"':''; ?>> ERROR</option>
                 </select>
-                <font class="error">&nbsp;<?php echo $errors['log_level']; ?></font>
+                <?php if($errors['log_level']) echo '<span class="alert alert-danger">' .$errors['log_level'] .'</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#log_level"></i>
             </td>
         </tr>
         <tr>
             <td>Purge Logs:</td>
-            <td>
-                <select name="log_graceperiod">
+            <td class="form-group form-inline">
+                <select class="form-control" name="log_graceperiod">
                     <option value=0 selected>Never Purge Logs</option>
                     <?php
                     for ($i = 1; $i <=12; $i++) {
@@ -106,8 +110,8 @@ $gmtime = Misc::gmtime();
         </tr>
         <tr>
             <td width="180">Default Name Formatting:</td>
-            <td>
-                <select name="name_format">
+            <td class="form-group form-inline">
+                <select class="form-control" name="name_format">
 <?php foreach (PersonsName::allFormats() as $n=>$f) {
     list($desc, $func) = $f;
     $selected = ($config['name_format'] == $n) ? 'selected="selected"' : ''; ?>
@@ -124,8 +128,8 @@ $gmtime = Misc::gmtime();
             </th>
         </tr>
         <tr><td>Password Expiration Policy:</th>
-            <td>
-                <select name="passwd_reset_period">
+            <td class="form-group form-inline">
+                <select class="form-control" name="passwd_reset_period">
                    <option value="0"> &mdash; No expiration &mdash;</option>
                   <?php
                     for ($i = 1; $i <= 12; $i++) {
@@ -134,80 +138,78 @@ $gmtime = Misc::gmtime();
                     }
                     ?>
                 </select>
-                <font class="error"><?php echo $errors['passwd_reset_period']; ?></font>
+                <?php if($errors['passwd_reset_period']) echo '<span class="alert alert-danger">' .$errors['passwd_reset_period']. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#password_reset"></i>
             </td>
         </tr>
         <tr><td>Allow Password Resets:</th>
-            <td>
-              <input type="checkbox" name="allow_pw_reset" <?php echo $config['allow_pw_reset']?'checked="checked"':''; ?>>
-              <em>Enables the <u>Forgot my password</u> link on the staff
-              control panel</em>
+            <td class="form-group form-inline">
+              <input class="form-control checkbox" type="checkbox" name="allow_pw_reset" <?php echo $config['allow_pw_reset']?'checked="checked"':''; ?>>
+              <label>Enables the Forgot my password link on the staff control panel</label>
             </td>
         </tr>
         <tr><td>Password Reset Window:</th>
-            <td>
-              <input type="text" name="pw_reset_window" size="6" value="<?php
+            <td class="form-group form-inline">
+              <input class="form-control" type="text" name="pw_reset_window" size="6" value="<?php
                     echo $config['pw_reset_window']; ?>">
-                Maximum time <em>in minutes</em> a password reset token can
-                be valid.
+                <label>Maximum time <em>in minutes</em> a password reset token can be valid.</label>
                 &nbsp;<font class="error">&nbsp;<?php echo $errors['pw_reset_window']; ?></font>
             </td>
         </tr>
         <tr><td>Staff Excessive Logins:</td>
-            <td>
-                <select name="staff_max_logins">
+            <td class="form-group form-inline">
+                <select class="form-control" name="staff_max_logins">
                   <?php
                     for ($i = 1; $i <= 10; $i++) {
                         echo sprintf('<option value="%d" %s>%d</option>', $i,(($config['staff_max_logins']==$i)?'selected="selected"':''), $i);
                     }
                     ?>
-                </select> failed login attempt(s) allowed before a
-                <select name="staff_login_timeout">
+                </select><label> failed login attempt(s) allowed before a </label>
+                <select class="form-control" name="staff_login_timeout">
                   <?php
                     for ($i = 1; $i <= 10; $i++) {
                         echo sprintf('<option value="%d" %s>%d</option>', $i,(($config['staff_login_timeout']==$i)?'selected="selected"':''), $i);
                     }
                     ?>
-                </select> minute lock-out is enforced.
+                </select><label> minute lock-out is enforced.</label>
             </td>
         </tr>
         <tr><td>Staff Session Timeout:</td>
-            <td>
-              <input type="text" name="staff_session_timeout" size=6 value="<?php echo $config['staff_session_timeout']; ?>">
-                Maximum idle time in minutes before a staff member must log in again (enter 0 to disable).
+            <td class="form-group form-inline">
+              <input class="form-control" type="text" name="staff_session_timeout" size=6 value="<?php echo $config['staff_session_timeout']; ?>">
+              <label> Maximum idle time in minutes before a staff member must log in again (enter 0 to disable).</label>
             </td>
         </tr>
         <tr><td>Client Excessive Logins:</td>
-            <td>
-                <select name="client_max_logins">
+            <td class="form-group form-inline">
+                <select class="form-control" name="client_max_logins">
                   <?php
                     for ($i = 1; $i <= 10; $i++) {
                         echo sprintf('<option value="%d" %s>%d</option>', $i,(($config['client_max_logins']==$i)?'selected="selected"':''), $i);
                     }
 
                     ?>
-                </select> failed login attempt(s) allowed before a
-                <select name="client_login_timeout">
+                </select><label> failed login attempt(s) allowed before a </label>
+                <select  class="form-control" name="client_login_timeout">
                   <?php
                     for ($i = 1; $i <= 10; $i++) {
                         echo sprintf('<option value="%d" %s>%d</option>', $i,(($config['client_login_timeout']==$i)?'selected="selected"':''), $i);
                     }
                     ?>
-                </select> minute lock-out is enforced.
+                </select><label> minute lock-out is enforced.</label>
             </td>
         </tr>
 
         <tr><td>Client Session Timeout:</td>
-            <td>
-              <input type="text" name="client_session_timeout" size=6 value="<?php echo $config['client_session_timeout']; ?>">
-                &nbsp;Maximum idle time in minutes before a client must log in again (enter 0 to disable).
+            <td class="form-group form-inline">
+              <input class="form-control" type="text" name="client_session_timeout" size=6 value="<?php echo $config['client_session_timeout']; ?>">
+              <label> Maximum idle time in minutes before a client must log in again (enter 0 to disable).</label>
             </td>
         </tr>
         <tr><td>Bind Staff Session to IP:</td>
-            <td>
-              <input type="checkbox" name="staff_ip_binding" <?php echo $config['staff_ip_binding']?'checked="checked"':''; ?>>
-              <em>(binds staff session to originating IP address upon login)</em>
+            <td class="form-group form-inline">
+              <input class="form-control checkbox" type="checkbox" name="staff_ip_binding" <?php echo $config['staff_ip_binding']?'checked="checked"':''; ?>>
+              <label>(binds staff session to originating IP address upon login)</label>
             </td>
         </tr>
         <tr>
@@ -217,33 +219,41 @@ $gmtime = Misc::gmtime();
                 </em>
             </th>
         </tr>
-        <tr><td width="220" class="required">Time Format:</td>
-            <td>
-                <input type="text" name="time_format" value="<?php echo $config['time_format']; ?>">
-                    &nbsp;<font class="error">*&nbsp;<?php echo $errors['time_format']; ?></font>
-                    <em><?php echo Format::date($config['time_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></em></td>
+        <tr>
+            <td width="220" class="required">Time Format:</td>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" name="time_format" value="<?php echo $config['time_format']; ?>">
+                    <?php if($errors['time_format']) echo '<span class="alert alert-danger">' .$errors['time_format'] . '</span>'; ?>
+                    <label><?php echo Format::date($config['time_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></label>
+             </td>
         </tr>
-        <tr><td width="220" class="required">Date Format:</td>
-            <td><input type="text" name="date_format" value="<?php echo $config['date_format']; ?>">
-                        &nbsp;<font class="error">*&nbsp;<?php echo $errors['date_format']; ?></font>
-                        <em><?php echo Format::date($config['date_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></em>
+        <tr>
+            <td width="220" class="required">Date Format:</td>
+            <td class="form-group form-inline has-error">
+            <input class="form-control" type="text" name="date_format" value="<?php echo $config['date_format']; ?>">
+                        <?php if($errors['date_format']) echo '<span class="alert alert-danger">' .$errors['date_format']. '</span>'; ?>
+                        <label><?php echo Format::date($config['date_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></label>
             </td>
         </tr>
-        <tr><td width="220" class="required">Date &amp; Time Format:</td>
-            <td><input type="text" name="datetime_format" value="<?php echo $config['datetime_format']; ?>">
-                        &nbsp;<font class="error">*&nbsp;<?php echo $errors['datetime_format']; ?></font>
-                        <em><?php echo Format::date($config['datetime_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></em>
+        <tr>
+            <td width="220" class="required">Date &amp; Time Format:</td>
+            <td class="form-group form-inline has-error">
+            <input class="form-control" type="text" name="datetime_format" value="<?php echo $config['datetime_format']; ?>">
+                        <?php if($errors['datetime_format']) echo '<span class="alert alert-danger">' .$errors['datetime_format']. '</span>'; ?>
+                        <label><?php echo Format::date($config['datetime_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></label>
             </td>
         </tr>
-        <tr><td width="220" class="required">Day, Date &amp; Time Format:</td>
-            <td><input type="text" name="daydatetime_format" value="<?php echo $config['daydatetime_format']; ?>">
-                        &nbsp;<font class="error">*&nbsp;<?php echo $errors['daydatetime_format']; ?></font>
-                        <em><?php echo Format::date($config['daydatetime_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></em>
+        <tr>
+            <td width="220" class="required">Day, Date &amp; Time Format:</td>
+            <td class="form-group form-inline has-error">
+            <input class="form-control" type="text" name="daydatetime_format" value="<?php echo $config['daydatetime_format']; ?>">
+                        <?php if($errors['daydatetime_format']) echo '<span class="alert alert-danger">' .$errors['daydatetime_format']. '</span>'; ?>
+                        <label><?php echo Format::date($config['daydatetime_format'], $gmtime, $config['tz_offset'], $config['enable_daylight_saving']); ?></label>
             </td>
         </tr>
         <tr><td width="220" class="required">Default Time Zone:</td>
-            <td>
-                <select name="default_timezone_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="default_timezone_id">
                     <option value="">&mdash; Select Default Time Zone &mdash;</option>
                     <?php
                     $sql='SELECT id, offset,timezone FROM '.TIMEZONE_TABLE.' ORDER BY id';
@@ -255,13 +265,14 @@ $gmtime = Misc::gmtime();
                     }
                     ?>
                 </select>
-                &nbsp;<font class="error">*&nbsp;<?php echo $errors['default_timezone_id']; ?></font>
+                <?php if($errors['default_timezone_id']) echo '<span class="alert alert-danger">' .$errors['default_timezone_id'].'</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="220">Daylight Saving:</td>
-            <td>
-                <input type="checkbox" name="enable_daylight_saving" <?php echo $config['enable_daylight_saving'] ? 'checked="checked"': ''; ?>>Observe daylight savings
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="enable_daylight_saving" <?php echo $config['enable_daylight_saving'] ? 'checked="checked"': ''; ?>>
+                <label> Observe daylight savings</label>
             </td>
         </tr>
     </tbody>

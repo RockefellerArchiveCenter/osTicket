@@ -32,18 +32,18 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class="form-group form-inline has-error">
             <td width="180" class="required">Name:</td>
-            <td><input size="50" type="text" name="name" value="<?php echo $info['name']; ?>"/>
-            <span class="error">*<br/><?php echo $errors['name']; ?></td>
+            <td><input class="form-control" size="50" type="text" name="name" value="<?php echo $info['name']; ?>"/>
+            <?php if($errors['name']) echo '<span class="alert alert-danger">' .$errors['name']. '</span>'; ?></td>
         </tr>
         <tr>
             <td width="180">Plural Name:</td>
-            <td><input size="50" type="text" name="name_plural" value="<?php echo $info['name_plural']; ?>"/></td>
+            <td><input class="form-control" size="50" type="text" name="name_plural" value="<?php echo $info['name_plural']; ?>"/></td>
         </tr>
         <tr>
             <td width="180">Sort Order:</td>
-            <td><select name="sort_mode">
+            <td><select class="form-control" name="sort_mode">
                 <?php foreach (DynamicList::getSortModes() as $key=>$desc) { ?>
                 <option value="<?php echo $key; ?>" <?php
                     if ($key == $info['sort_mode']) echo 'selected="selected"';
@@ -53,7 +53,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
     </tbody>
     </table>
-    <table class="form_table" width="100%" border="0" cellspacing="0" cellpadding="2">
+    <table class="table form_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
     <?php if ($list) {
         $page = ($_GET['p'] && is_numeric($_GET['p'])) ? $_GET['p'] : 1;
@@ -89,12 +89,12 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td><?php echo $icon; ?>
                 <input type="hidden" name="sort-<?php echo $id; ?>"
                 value="<?php echo $i->get('sort'); ?>"/></td>
-            <td><input type="text" size="40" name="value-<?php echo $id; ?>"
+            <td><input class="form-control" type="text" size="40" name="value-<?php echo $id; ?>"
                 value="<?php echo $i->get('value'); ?>"/></td>
-            <td><input type="text" size="30" name="extra-<?php echo $id; ?>"
+            <td><input class="form-control" type="text" size="30" name="extra-<?php echo $id; ?>"
                 value="<?php echo $i->get('extra'); ?>"/></td>
             <td>
-                <input type="checkbox" name="delete-<?php echo $id; ?>"/></td>
+                <input class="form-control checkbox" type="checkbox" name="delete-<?php echo $id; ?>"/></td>
         </tr>
     <?php }
     }
@@ -102,8 +102,8 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         <tr>
             <td><?php echo $icon; ?> <em>+</em>
                 <input type="hidden" name="sort-new-<?php echo $i; ?>"/></td>
-            <td><input type="text" size="40" name="value-new-<?php echo $i; ?>"/></td>
-            <td><input type="text" size="30" name="extra-new-<?php echo $i; ?>"/></td>
+            <td><input class="form-control" type="text" size="40" name="value-new-<?php echo $i; ?>"/></td>
+            <td><input class="form-control" type="text" size="30" name="extra-new-<?php echo $i; ?>"/></td>
             <td></td>
         </tr>
     <?php } ?>

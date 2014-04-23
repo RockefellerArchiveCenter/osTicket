@@ -34,16 +34,16 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
     <tbody style="vertical-align:top">
         <tr>
             <td width="180" class="required">Title:</td>
-            <td><input type="text" name="title" size="40" value="<?php
+            <td class="form-group has-error form-inline"><input class="form-control" type="text" name="title" size="40" value="<?php
                 echo $info['title']; ?>"/>
                 <i class="help-tip icon-question-sign" href="#form_title"></i>
-                <font class="error"><?php
-                    if ($errors['title']) echo '<br/>'; echo $errors['title']; ?></font>
+                <?php
+                    if ($errors['title']) echo '<span class="alert alert-danger">' .$errors['title']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">Instructions:</td>
-            <td><textarea name="instructions" rows="3" cols="40"><?php
+            <td><textarea class="form-control" name="instructions" rows="3" cols="40"><?php
                 echo $info['instructions']; ?></textarea>
                 <i class="help-tip icon-question-sign" href="#form_instructions"></i>
             </td>
@@ -79,11 +79,11 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td></td>
             <td><?php echo $f->get('label'); ?></td>
             <td><?php $t=FormField::getFieldType($f->get('type')); echo $t[0]; ?></td>
-            <td><input type="checkbox" disabled="disabled"/></td>
-            <td><input type="checkbox" disabled="disabled"
+            <td><input class="form-control checkbox" type="checkbox" disabled="disabled"/></td>
+            <td><input class="form-control checkbox" type="checkbox" disabled="disabled"
                 <?php echo $f->get('required') ? 'checked="checked"' : ''; ?>/></td>
             <td><?php echo $f->get('name'); ?></td>
-            <td><input type="checkbox" disabled="disabled"/></td></tr>
+            <td><input class="form-control checkbox" type="checkbox" disabled="disabled"/></td></tr>
 
         <?php } ?>
     </tbody>
@@ -122,12 +122,12 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         $ferrors = $f->errors(); ?>
         <tr>
             <td><i class="icon-sort"></i></td>
-            <td><input type="text" size="32" name="label-<?php echo $id; ?>"
+            <td><input class="form-control" type="text" size="32" name="label-<?php echo $id; ?>"
                 value="<?php echo Format::htmlchars($f->get('label')); ?>"/>
-                <font class="error"><?php
-                    if ($ferrors['label']) echo '<br/>'; echo $ferrors['label']; ?>
+                <?php
+                    if ($ferrors['label']) echo '<span class="alert alert-danger' .$ferrors['label']. '</span>'; ?>
             </td>
-            <td nowrap><select name="type-<?php echo $id; ?>" <?php
+            <td nowrap><select class="form-control" name="type-<?php echo $id; ?>" <?php
                 if (!$fi->isChangeable()) echo 'disabled="disabled"'; ?>>
                 <?php foreach (FormField::allTypes() as $group=>$types) {
                         ?><optgroup label="<?php echo Format::htmlchars($group); ?>"><?php
@@ -152,22 +152,22 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                         return false;
                     "><i class="icon-edit"></i> Config</a>
             <?php } ?></td>
-            <td><input type="checkbox" name="private-<?php echo $id; ?>"
+            <td><input class="form-control checkbox" type="checkbox" name="private-<?php echo $id; ?>"
                 <?php if ($f->get('private')) echo 'checked="checked"'; ?>
                 <?php echo $force_privacy ?>/></td>
-            <td><input type="checkbox" name="required-<?php echo $id; ?>"
+            <td><input class="form-control checkbox" type="checkbox" name="required-<?php echo $id; ?>"
                 <?php if ($f->get('required')) echo 'checked="checked"'; ?>
                 <?php echo $force_required ?>/>
             </td>
             <td>
-                <input type="text" size="20" name="name-<?php echo $id; ?>"
+                <input class="form-control" type="text" size="20" name="name-<?php echo $id; ?>"
                     value="<?php echo Format::htmlchars($f->get('name'));
                     ?>" <?php echo $force_name ?>/>
-                <font class="error"><?php
-                    if ($ferrors['name']) echo '<br/>'; echo $ferrors['name'];
-                ?></font>
+                <?php
+                    if ($ferrors['name']) echo '<span class="alert alert-danger">' .$ferrors['name']. '</span>';
+                ?>
                 </td>
-            <td><input type="checkbox" name="delete-<?php echo $id; ?>"
+            <td><input class="form-control checkbox" type="checkbox" name="delete-<?php echo $id; ?>"
                     <?php echo $deletable; ?>/>
                 <input type="hidden" name="sort-<?php echo $id; ?>"
                     value="<?php echo $f->get('sort'); ?>"/>
@@ -179,9 +179,9 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td><em>+</em>
                 <input type="hidden" name="sort-new-<?php echo $i; ?>"
                     value="<?php echo $info["sort-new-$i"]; ?>"/></td>
-            <td><input type="text" size="32" name="label-new-<?php echo $i; ?>"
+            <td><input class="form-control" type="text" size="32" name="label-new-<?php echo $i; ?>"
                 value="<?php echo $info["label-new-$i"]; ?>"/></td>
-            <td><select name="type-new-<?php echo $i; ?>">
+            <td><select class="form-control" name="type-new-<?php echo $i; ?>">
                 <?php foreach (FormField::allTypes() as $group=>$types) {
                     ?><optgroup label="<?php echo Format::htmlchars($group); ?>"><?php
                     foreach ($types as $type=>$nfo) {
@@ -194,17 +194,17 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 </optgroup>
                 <?php } ?>
             </select></td>
-            <td><input type="checkbox" name="private-new-<?php echo $i; ?>"
+            <td><input class="form-control checkbox" type="checkbox" name="private-new-<?php echo $i; ?>"
             <?php if ($info["private-new-$i"]
                 || (!$_POST && $form && $form->get('type') == 'U'))
                     echo 'checked="checked"'; ?>/></td>
-            <td><input type="checkbox" name="required-new-<?php echo $i; ?>"
+            <td><input class="form-control checkbox" type="checkbox" name="required-new-<?php echo $i; ?>"
                 <?php if ($info["required-new-$i"]) echo 'checked="checked"'; ?>/></td>
-            <td><input type="text" size="20" name="name-new-<?php echo $i; ?>"
+            <td><input class="form-control" type="text" size="20" name="name-new-<?php echo $i; ?>"
                 value="<?php echo $info["name-new-$i"]; ?>"/>
-                <font class="error"><?php
-                    if ($errors["new-$i"]['name']) echo '<br/>'; echo $errors["new-$i"]['name'];
-                ?></font>
+                <?php
+                    if ($errors["new-$i"]['name']) echo '<span class="alert alert-danger">' .$errors["new-$i"]['name']. '</span>';
+                ?>
             <td></td>
         </tr>
     <?php } ?>

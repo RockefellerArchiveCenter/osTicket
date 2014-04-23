@@ -46,15 +46,16 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             </th>
         </tr>
         <tr>
-            <td colspan=2>
-                <div style="padding-top:3px;"><b>Question</b>&nbsp;<span class="error">*&nbsp;<?php echo $errors['question']; ?></span></div>
-                    <input type="text" size="70" name="question" value="<?php echo $info['question']; ?>">
+            <td colspan="2" class="form-group form-inline has-error">
+                <b>Question</b>
+                <input class="form-control" type="text" size="70" name="question" value="<?php echo $info['question']; ?>">
+                <?php if($errors['question']) echo '<span class="alert alert-danger">' .$errors['question']. '</span>'; ?>
             </td>
         </tr>
         <tr>
-            <td colspan=2>
+            <td colspan="2" class="form-group form-inline has-error">
                 <div><b>Category Listing</b>:&nbsp;<span class="faded">FAQ category the question belongs to.</span></div>
-                <select name="category_id" style="width:350px;">
+                <select class="form-control" name="category_id" style="width:350px;">
                     <option value="0">Select FAQ Category </option>
                     <?php
                     $sql='SELECT category_id, name, ispublic FROM '.FAQ_CATEGORY_TABLE;
@@ -69,25 +70,25 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                    ?>
                 </select>
-                <span class="error">*&nbsp;<?php echo $errors['category_id']; ?></span>
+                <?php if($errors['category_id']) echo '<span class="alert alert-danger">' .$errors['category_id']. '</span>'; ?>
             </td>
         </tr>
         <tr>
-            <td colspan=2>
+            <td colspan="2" class="form-group form-inline has-error">
                 <div><b>Listing Type</b>:&nbsp;
-                    <span class="faded">Published questions are listed on public knowledgebase if the parent category is public.</span></div>
-                <input type="radio" name="ispublished" value="1" <?php echo $info['ispublished']?'checked="checked"':''; ?>>Public (publish)
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="ispublished" value="0" <?php echo !$info['ispublished']?'checked="checked"':''; ?>>Internal (private)
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['ispublished']; ?></span>
+                <span class="faded">Published questions are listed on public knowledgebase if the parent category is public.</span></div>
+                <input class="form-control radio" type="radio" name="ispublished" value="1" <?php echo $info['ispublished']?'checked="checked"':''; ?>><label>Public (publish)</label>
+                <input type="radio" name="ispublished" value="0" <?php echo !$info['ispublished']?'checked="checked"':''; ?>><label>Internal (private)</label>
+                <?php if($errors['ispublished']) echo '<span class="alert alert-danger">' .$errors['ispublished']. '</span>'; ?>
             </td>
         </tr>
         <tr>
-            <td colspan=2>
-                <div style="margin-bottom:0.5em;margin-top:0.5em">
-                    <b>Answer</b>&nbsp;<font class="error">*&nbsp;<?php echo $errors['answer']; ?></font>
+            <td colspan="2" class="form-group form-inline has-error">
+                <div>
+                    <b>Answer</b>
+                    <?php if($errors['answer']) echo '<span class="alert alert-danger">' .$errors['answer']. '</span>'; ?>
                 </div>
-                <textarea name="answer" cols="21" rows="12"
+                <textarea class="form-control" name="answer" cols="21" rows="12"
                     style="width:98%;" class="richtext draft"
                     data-draft-namespace="faq"
                     data-draft-object-id="<?php if (isset($faq)) echo $faq->getId(); ?>"
@@ -96,7 +97,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
         <tr>
             <td colspan=2>
-                <div><b>Attachments</b> (optional) <font class="error">&nbsp;<?php echo $errors['files']; ?></font></div>
+                <div><b>Attachments</b> (optional) <?php if($errors['files']) echo '<span class="alert alert-danger">' .$errors['files']. '</span>'; ?></div>
                 <?php
                 if($faq && ($files=$faq->attachments->getSeparates())) {
                     echo '<div class="faq_attachments"><span class="faded">Uncheck to delete the attachment on submit</span><br>';
@@ -126,10 +127,10 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 <em><strong>Help Topics</strong>: Check all help topics related to this FAQ.</em>
             </th>
         </tr>
-        <tr><td colspan="2">
+        <tr><td  class="form-group form-inline" colspan="2">
             <?php
             while(list($topicId,$topic)=db_fetch_row($res)) {
-                echo sprintf('<input type="checkbox" name="topics[]" value="%d" %s>%s<br>',
+                echo sprintf('<input class="form-control checkbox" type="checkbox" name="topics[]" value="%d" %s><label>&nbsp;%s</label><br/>',
                         $topicId,
                         (($info['topics'] && in_array($topicId,$info['topics']))?'checked="checked"':''),
                         $topic);

@@ -41,23 +41,20 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
         <tr>
             <td width="180" class="required">Category Type:</td>
-            <td>
-                <input type="radio" name="ispublic" value="1" <?php echo $info['ispublic']?'checked="checked"':''; ?>><b>Public</b> (publish)
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="ispublic" value="0" <?php echo !$info['ispublic']?'checked="checked"':''; ?>>Private (internal)
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['ispublic']; ?></span>
+            <td class="form-group form-inline">
+                <input class="form-control radio" type="radio" name="ispublic" value="1" <?php echo $info['ispublic']?'checked="checked"':''; ?>><label>Public (publish)</label>
+                <input class="form-control radio" type="radio" name="ispublic" value="0" <?php echo !$info['ispublic']?'checked="checked"':''; ?>><label>Private (internal)</label>
+                <?php if($errors['ispublic']) echo '<span class="alert alert-danger">' .$errors['ispublic']. '</span>'; ?>
             </td>
         </tr>
         <tr>
-            <td colspan=2>
-                <div style="padding-top:3px;"><b>Category Name</b>:&nbsp;<span class="faded">Short descriptive name.</span></div>
-                    <input type="text" size="70" name="name" value="<?php echo $info['name']; ?>">
-                    &nbsp;<span class="error">*&nbsp;<?php echo $errors['name']; ?></span>
-                <br>
-                <div style="padding-top:5px;">
+            <td class="form-group form-inline has-error" colspan=2>
+                <div><b>Category Name</b>:&nbsp;<span class="faded">Short descriptive name.</span></div>
+                    <input class="form-control" type="text" size="70" name="name" value="<?php echo $info['name']; ?>">
+                    <?php if($errors['name']) echo '<span class="alert alert-danger">' .$errors['name']. '</span>'; ?>
+                <div>
                     <b>Category Description</b>:&nbsp;<span class="faded">Summary of the category.</span>
-                    &nbsp;
-                    <font class="error">*&nbsp;<?php echo $errors['description']; ?></font></div>
+                    <?php if($errors['description']) echo '<span class="alert alert-danger">' .$errors['description']. '</span>'; ?></div>
                     <textarea class="richtext" name="description" cols="21" rows="12" style="width:98%;"><?php echo $info['description']; ?></textarea>
             </td>
         </tr>

@@ -1230,7 +1230,7 @@ class ThreadEntryWidget extends Widget {
         <div class="uploads" style="display:block"></div>
         <input type="file" class="multifile" name="attachments[]" id="attachments" size="30" value="" />
         </div>
-        <font class="error">&nbsp;<?php echo $errors['attachments']; ?></font>
+        <span class="alert alert-danger"><?php echo $errors['attachments']; ?></span>
         </div>
         <hr/>
         <?php

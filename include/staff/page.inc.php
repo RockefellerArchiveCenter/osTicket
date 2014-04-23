@@ -47,17 +47,17 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="180" class="required">
               Name:
             </td>
-            <td>
-                <input type="text" size="40" name="name" value="<?php echo $info['name']; ?>">
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['name']; ?></span>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" size="40" name="name" value="<?php echo $info['name']; ?>">
+                <?php if($error['name']) echo '<span class="alert alert-danger">' .$errors['name'].'</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Type:
             </td>
-            <td>
-                <select name="type">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="type">
                     <option value="" selected="selected">Select Page Type</option>
                     <?php
                     foreach($pageTypes as $k => $v)
@@ -65,7 +65,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                                 $k, (($info['type']==$k)?'selected="selected"':''), $v);
                     ?>
                 </select>
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['type']; ?></span>
+                <?php if($error['type']) echo '<span class="alert alert-danger">' .$errors['type'].'</span>'; ?>
             </td>
         </tr>
         <?php if ($info['name'] && $info['type'] == 'other') { ?>
@@ -83,20 +83,23 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="180" class="required">
                 Status:
             </td>
-            <td>
-                <input type="radio" name="isactive" value="1" <?php echo $info['isactive']?'checked="checked"':''; ?>><strong>Active</strong>
-                <input type="radio" name="isactive" value="0" <?php echo !$info['isactive']?'checked="checked"':''; ?>>Disabled
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['isactive']; ?></span>
+            <td class="form-group form-inline has-error">
+                <input class="form-control radio" type="radio" name="isactive" value="1" <?php echo $info['isactive']?'checked="checked"':''; ?>>
+                <label>Active</label>
+                <input class="form-control radio" type="radio" name="isactive" value="0" <?php echo !$info['isactive']?'checked="checked"':''; ?>>
+                <label>Disabled</label>
+                <?php if($error['isactive']) echo '<span class="alert alert-danger">' .$errors['isactive'].'</span>'; ?>
             </td>
         </tr>
         <tr>
             <th colspan="2">
-                <em><b>Page body</b>: Ticket variables are only supported in thank-you pages.<font class="error">*&nbsp;<?php echo $errors['body']; ?></font></em>
+                <em><b>Page body</b>: Ticket variables are only supported in thank-you pages.</em>
+                <?php if($error['body']) echo '<span class="alert alert-danger">' .$errors['body'].'</span>'; ?>
             </th>
         </tr>
          <tr>
-            <td colspan=2 style="padding-left:3px;">
-                <textarea name="body" cols="21" rows="12" style="width:98%;" class="richtext draft"
+            <td colspan="2">
+                <textarea class="form-control" name="body" cols="21" rows="12" style="width:98%;" class="richtext draft"
                     data-draft-namespace="page" data-draft-object-id="<?php echo $info['id']; ?>"
                     ><?php echo $info['body']; ?></textarea>
             </td>

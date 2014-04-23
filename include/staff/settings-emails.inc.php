@@ -17,8 +17,8 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
     <tbody>
         <tr>
             <td width="180" class="required">Default Email Templates:</td>
-            <td>
-                <select name="default_template_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="default_template_id">
                     <option value="">&mdash; Select Default Template &mdash;</option>
                     <?php
                     $sql='SELECT tpl_id,name FROM '.EMAIL_TEMPLATE_GRP_TABLE.' WHERE isactive=1 ORDER BY name';
@@ -29,14 +29,15 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
                         <?php
                         }
                     } ?>
-                </select>&nbsp;<font class="error">*&nbsp;<?php echo $errors['default_template_id']; ?></font>
+                </select>
+                <?php if($errors['default_template_id']) echo '<span class="alert alert-danger">' .$errors['default_template_id']. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#default_templates"></i>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">Default System Email:</td>
-            <td>
-                <select name="default_email_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="default_email_id">
                     <option value=0 disabled>Select One</option>
                     <?php
                     $sql='SELECT email_id,email,name FROM '.EMAIL_TABLE;
@@ -49,14 +50,14 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
                         }
                     } ?>
                  </select>
-                 &nbsp;<font class="error">*&nbsp;<?php echo $errors['default_email_id']; ?></font>
+                 <?php if($errors['default_email_id']) echo '<span class="alert alert-danger">' .$errors['default_email_id']. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#default_email"></i>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">Default Alert Email:</td>
-            <td>
-                <select name="alert_email_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="alert_email_id">
                     <option value="0" selected="selected">Use Default System Email (above)</option>
                     <?php
                     $sql='SELECT email_id,email,name FROM '.EMAIL_TABLE.' WHERE email_id != '.db_input($config['default_email_id']);
@@ -69,15 +70,15 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
                         }
                     } ?>
                  </select>
-                 &nbsp;<font class="error">*&nbsp;<?php echo $errors['alert_email_id']; ?></font>
+                 <?php if($errors['alert_email_id']) echo '<span class="alert alert-danger">' .$errors['alert_email_id']. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#default_alert_email"></i>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">Admin's Email Address:</td>
-            <td>
-                <input type="text" size=40 name="admin_email" value="<?php echo $config['admin_email']; ?>">
-                    &nbsp;<font class="error">*&nbsp;<?php echo $errors['admin_email']; ?></font>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" size=40 name="admin_email" value="<?php echo $config['admin_email']; ?>">
+                 <?php if($errors['admin_email']) echo '<span class="alert alert-danger">' .$errors['admin_email']. '</span>'; ?>
                 <i class="help-tip icon-question-sign" href="#admin_email"></i>
             </td>
         </tr>
@@ -86,48 +87,50 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
             </em></th>
         <tr>
             <td width="180">Email Polling:</td>
-            <td><input type="checkbox" name="enable_mail_polling" value=1 <?php echo $config['enable_mail_polling']? 'checked="checked"': ''; ?>  > Enable POP/IMAP polling
-                &nbsp;
+            <td class="form-group form-inline">
+            <input class="form-control checkbox" type="checkbox" name="enable_mail_polling" value=1 <?php echo $config['enable_mail_polling']? 'checked="checked"': ''; ?>  > 
+            <label>Enable POP/IMAP polling</label>
                 <i class="help-tip icon-question-sign" href="#enable_email_poll"></i>
-                &nbsp;
                  <input type="checkbox" name="enable_auto_cron" <?php echo $config['enable_auto_cron']?'checked="checked"':''; ?>>
-                 Poll on auto-cron&nbsp;
+                 <label>Poll on auto-cron</label>
                 <i class="help-tip icon-question-sign" href="#enable_autocron_poll"></i>
             </td>
         </tr>
         <tr>
             <td width="180">Strip Quoted Reply:</td>
-            <td>
-                <input type="checkbox" name="strip_quoted_reply" <?php echo $config['strip_quoted_reply'] ? 'checked="checked"':''; ?>>
-                <em>(depends on the reply separator tag set below)</em>
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['strip_quoted_reply']; ?></font>
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="strip_quoted_reply" <?php echo $config['strip_quoted_reply'] ? 'checked="checked"':''; ?>>
+                <label>(depends on the reply separator tag set below)</label>
+                <?php if($errors['strip_quoted_reply']) echo '<span class="alert alert-danger">' .$errors['strip_quoted_reply']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">Reply Separator Tag:</td>
-            <td><input type="text" name="reply_separator" value="<?php echo $config['reply_separator']; ?>">
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['reply_separator']; ?></font>
+            <td class="form-group form-inline">
+            <input class="form-control" type="text" name="reply_separator" value="<?php echo $config['reply_separator']; ?>">
+                <?php if($errors['reply_separator']) echo '<span class="alert alert-danger">' .$errors['reply_separator']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">Emailed Tickets Priority:</td>
-            <td>
-                <input type="checkbox" name="use_email_priority" value="1" <?php echo $config['use_email_priority'] ?'checked="checked"':''; ?> >
-                <em>(Use email priority when available)</em>
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="use_email_priority" value="1" <?php echo $config['use_email_priority'] ?'checked="checked"':''; ?> >
+                <label>Use email priority when available</label>
                 <i class="help-tip icon-question-sign" href="#use_email_priority"></i>
             </td>
         </tr>
         <tr>
             <td width="180">Accept Email Collaborators:</td>
-            <td><input type="checkbox" name="add_email_collabs" <?php
+            <td class="form-group form-inline">
+            <input class="form-control checkbox" type="checkbox" name="add_email_collabs" <?php
     echo $config['add_email_collabs'] ? 'checked="checked"' : ''; ?>/>
-            Automatically add collaborators from email fields&nbsp;
+            <label>Automatically add collaborators from email fields&nbsp;</label>
             <i class="help-tip icon-question-sign" href="#add_email_collabs"></i>
         </tr>
         <tr><th colspan=2><em><strong>Outgoing Emails</strong>: Default email only applies to outgoing emails without SMTP setting.</em></th></tr>
         <tr><td width="180">Default Outgoing Email:</td>
-            <td>
-                <select name="default_smtp_id">
+            <td class="form-group form-inline">
+                <select class="form-control" name="default_smtp_id">
                     <option value=0 selected="selected">None: Use PHP mail function</option>
                     <?php
                     $sql='SELECT email_id,email,name,smtp_host FROM '.EMAIL_TABLE.' WHERE smtp_active=1';
@@ -140,7 +143,8 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config)
                         <?php
                         }
                     } ?>
-                 </select>&nbsp;&nbsp;<font class="error">&nbsp;<?php echo $errors['default_smtp_id']; ?></font>
+                 </select>
+                 <?php if($errors['default_smtp_id']) echo '<span class="alert alert-danger">' .$errors['default_smtp_id']. '</span>'; ?>
            </td>
        </tr>
     </tbody>

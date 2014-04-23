@@ -32,47 +32,47 @@ $info['id']=$staff->getId();
             <td width="180" class="required">
                 First Name:
             </td>
-            <td>
-                <input type="text" size="34" name="firstname" value="<?php echo $info['firstname']; ?>">
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['firstname']; ?></span>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" size="34" name="firstname" value="<?php echo $info['firstname']; ?>">
+                <?php if($errors['firstname']) echo '<span class="alert alert-danger">' .$errors['firstname']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Last Name:
             </td>
-            <td>
-                <input type="text" size="34" name="lastname" value="<?php echo $info['lastname']; ?>">
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['lastname']; ?></span>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" size="34" name="lastname" value="<?php echo $info['lastname']; ?>">
+                <?php if($errors['lastname']) echo '<span class="alert alert-danger">' .$errors['lastname']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Email Address:
             </td>
-            <td>
-                <input type="text" size="34" name="email" value="<?php echo $info['email']; ?>">
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['email']; ?></span>
+            <td class="form-group form-inline has-error">
+                <input class="form-control" type="text" size="34" name="email" value="<?php echo $info['email']; ?>">
+                <?php if($errors['email']) echo '<span class="alert alert-danger">' .$errors['email']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">
                 Phone Number:
             </td>
-            <td>
-                <input type="text" size="22" name="phone" value="<?php echo $info['phone']; ?>">
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['phone']; ?></span>
-                Ext <input type="text" size="5" name="phone_ext" value="<?php echo $info['phone_ext']; ?>">
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['phone_ext']; ?></span>
+            <td class="form-group form-inline">
+                <input class="form-control" type="text" size="22" name="phone" value="<?php echo $info['phone']; ?>">
+                <?php if($errors['phone']) echo '<span class="alert alert-danger">' .$errors['phone']. '</span>'; ?>
+                <label>Extension</label> <input class="form-control" type="text" size="5" name="phone_ext" value="<?php echo $info['phone_ext']; ?>">
+                <?php if($errors['phone_ext']) echo '<span class="alert alert-danger">' .$errors['phone_ext']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">
                 Mobile Number:
             </td>
-            <td>
-                <input type="text" size="22" name="mobile" value="<?php echo $info['mobile']; ?>">
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['mobile']; ?></span>
+            <td class="form-group form-inline">
+                <input class="form-control" type="text" size="22" name="mobile" value="<?php echo $info['mobile']; ?>">
+                <?php if($errors['mobile']) echo '<span class="alert alert-danger">' .$errors['mobile']. '</span>'; ?>
             </td>
         </tr>
         <tr>
@@ -84,8 +84,8 @@ $info['id']=$staff->getId();
             <td width="180" class="required">
                 Time Zone:
             </td>
-            <td>
-                <select name="timezone_id" id="timezone_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="timezone_id" id="timezone_id">
                     <option value="0">&mdash; Select Time Zone &mdash;</option>
                     <?php
                     $sql='SELECT id, offset,timezone FROM '.TIMEZONE_TABLE.' ORDER BY id';
@@ -97,17 +97,17 @@ $info['id']=$staff->getId();
                     }
                     ?>
                 </select>
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['timezone_id']; ?></span>
+                <?php if($errors['timezone_id']) echo '<span class="alert alert-danger">' . $errors['timezone_id']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">
                 Preferred Language:
             </td>
-            <td>
+            <td class="form-group form-inline">
         <?php
         $langs = Internationalization::availableLanguages(); ?>
-                <select name="lang">
+                <select class="form-control" name="lang">
                     <option value="">&mdash; Use Browser Preference &mdash;</option>
 <?php foreach($langs as $l) {
     $selected = ($info['lang'] == $l['code']) ? 'selected="selected"' : ''; ?>
@@ -115,23 +115,23 @@ $info['id']=$staff->getId();
                         ?>><?php echo $l['desc']; ?></option>
 <?php } ?>
                 </select>
-                <span class="error">&nbsp;<?php echo $errors['lang']; ?></span>
+                <?php if($errors['lang']) echo '<span class="alert alert-danger">'  .$errors['lang']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">
                Daylight Saving:
             </td>
-            <td>
-                <input type="checkbox" name="daylight_saving" value="1" <?php echo $info['daylight_saving']?'checked="checked"':''; ?>>
-                Observe daylight saving
-                <em>(Current Time: <strong><?php echo Format::date($cfg->getDateTimeFormat(),Misc::gmtime(),$info['tz_offset'],$info['daylight_saving']); ?></strong>)</em>
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="daylight_saving" value="1" <?php echo $info['daylight_saving']?'checked="checked"':''; ?>>
+                <label>Observe daylight saving</label>
+                <p class="help-block">Current Time: <?php echo Format::date($cfg->getDateTimeFormat(),Misc::gmtime(),$info['tz_offset'],$info['daylight_saving']); ?></p>
             </td>
         </tr>
         <tr>
             <td width="180">Maximum Page size:</td>
-            <td>
-                <select name="max_page_size">
+            <td class="form-group form-inline">
+                <select class="form-control" name="max_page_size">
                     <option value="0">&mdash; system default &mdash;</option>
                     <?php
                     $pagelimit=$info['max_page_size']?$info['max_page_size']:$cfg->getPageSize();
@@ -139,13 +139,13 @@ $info['id']=$staff->getId();
                         $sel=($pagelimit==$i)?'selected="selected"':'';
                          echo sprintf('<option value="%d" %s>show %s records</option>',$i,$sel,$i);
                     } ?>
-                </select> per page.
+                </select><label> per page.</label>
             </td>
         </tr>
         <tr>
             <td width="180">Auto Refresh Rate:</td>
-            <td>
-                <select name="auto_refresh_rate">
+            <td class="form-group form-inline">
+                <select class="form-control" name="auto_refresh_rate">
                   <option value="0">&mdash; disable &mdash;</option>
                   <?php
                   $y=1;
@@ -156,13 +156,13 @@ $info['id']=$staff->getId();
                         $y=2;
                    } ?>
                 </select>
-                <em>(Tickets page refresh rate in minutes.)</em>
+                <p class="help-block">Tickets page refresh rate in minutes.</p>
             </td>
         </tr>
         <tr>
             <td width="180">Default Signature:</td>
-            <td>
-                <select name="default_signature_type">
+            <td class="form-group form-inline">
+                <select class="form-control" name="default_signature_type">
                   <option value="none" selected="selected">&mdash; None &mdash;</option>
                   <?php
                   $options=array('mine'=>'My Signature','dept'=>'Dept. Signature (if set)');
@@ -172,14 +172,14 @@ $info['id']=$staff->getId();
                   }
                   ?>
                 </select>
-                <em>(You can change selection on ticket page)</em>
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['default_signature_type']; ?></span>
+                <p class="help-block">(You can change selection on ticket page)</p>
+                <?php if($errors['default_signature_type']) echo '<span class="alert alert-danger">' .$errors['default_signature_type']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">Default Paper Size:</td>
-            <td>
-                <select name="default_paper_size">
+            <td class="form-group form-inline">
+                <select class="form-control" name="default_paper_size">
                   <option value="none" selected="selected">&mdash; None &mdash;</option>
                   <?php
                   $options=array('Letter', 'Legal', 'A4', 'A3');
@@ -189,8 +189,8 @@ $info['id']=$staff->getId();
                   }
                   ?>
                 </select>
-                <em>Paper size used when printing tickets to PDF</em>
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['default_paper_size']; ?></span>
+                <p class="help-block">Paper size used when printing tickets to PDF</p>
+                <?php if($errors['default_paper_size']) echo '<span class="alert alert-danger">' . $errors['default_paper_size']. '</span>'; ?>
             </td>
         </tr>
         <?php
@@ -198,9 +198,9 @@ $info['id']=$staff->getId();
         if($staff->isAdmin() || $staff->isManager()){ ?>
         <tr>
             <td>Show Assigned Tickets:</td>
-            <td>
-                <input type="checkbox" name="show_assigned_tickets" <?php echo $info['show_assigned_tickets']?'checked="checked"':''; ?>>
-                <em>Show assigned tickets on open queue.</em>
+            <td class="form-group form-inline">
+                <input class="form-control checkbox" type="checkbox" name="show_assigned_tickets" <?php echo $info['show_assigned_tickets']?'checked="checked"':''; ?>>
+                <label>Show assigned tickets on open queue.</label>
             </td>
         </tr>
         <?php } ?>
@@ -214,9 +214,9 @@ $info['id']=$staff->getId();
             <td width="180">
                 Current Password:
             </td>
-            <td>
-                <input type="password" size="18" name="cpasswd" value="<?php echo $info['cpasswd']; ?>">
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['cpasswd']; ?></span>
+            <td class="form-group form-inline">
+                <input class="form-control" type="password" size="18" name="cpasswd" value="<?php echo $info['cpasswd']; ?>">
+                <?php if($errors['cpasswd']) echo '<span class="alert alert-danger">' .$errors['cpasswd']. '</span>'; ?>
             </td>
         </tr>
         <?php } ?>
@@ -224,24 +224,24 @@ $info['id']=$staff->getId();
             <td width="180">
                 New Password:
             </td>
-            <td>
-                <input type="password" size="18" name="passwd1" value="<?php echo $info['passwd1']; ?>">
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['passwd1']; ?></span>
+            <td class="form-group form-inline">
+                <input class="form-control" type="password" size="18" name="passwd1" value="<?php echo $info['passwd1']; ?>">
+                <?php if($errors['passwd1']) echo '<span class="alert alert-danger">' .$errors['passwd1']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <td width="180">
                 Confirm New Password:
             </td>
-            <td>
-                <input type="password" size="18" name="passwd2" value="<?php echo $info['passwd2']; ?>">
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['passwd2']; ?></span>
+            <td class="form-group form-inline">
+                <input class="form-control" type="password" size="18" name="passwd2" value="<?php echo $info['passwd2']; ?>">
+                <?php if($errors['passwd2']) echo '<span class="alert alert-danger">' .$errors['passwd2']. '</span>'; ?>
             </td>
         </tr>
         <tr>
             <th colspan="2">
-                <em><strong>Signature</strong>: Optional signature used on outgoing emails.
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['signature']; ?></span></em>
+                <em><strong>Signature</strong>: Optional signature used on outgoing emails.</em>
+                <?php if($errors['signature']) echo '<span class="alert alert-danger">' .$errors['signature']. '</span>'; ?>
             </th>
         </tr>
         <tr>

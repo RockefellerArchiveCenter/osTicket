@@ -41,16 +41,15 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
     <tbody>
         <tr>
             <td width="180" class="required">Status:</td>
-            <td>
-                <input type="radio" name="isenabled" value="1" <?php echo $info['isenabled']?'checked="checked"':''; ?>>Active
-                <input type="radio" name="isenabled" value="0" <?php echo !$info['isenabled']?'checked="checked"':''; ?>>Disabled
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['isenabled']; ?></span>
+            <td class="form-group form-inline">
+                <input class="form-control radio" type="radio" name="isenabled" value="1" <?php echo $info['isenabled']?'checked="checked"':''; ?>><label>Active</label>
+                <input class="form-control radio" type="radio" name="isenabled" value="0" <?php echo !$info['isenabled']?'checked="checked"':''; ?>><label>Disabled</label>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">Department:</td>
-            <td>
-                <select name="dept_id">
+            <td class="form-group form-inline has-error">
+                <select class="form-control" name="dept_id">
                     <option value="0">&mdash; All Departments &mdash;</option>
                     <?php
                     $sql='SELECT dept_id, dept_name FROM '.DEPT_TABLE.' dept ORDER by dept_name';
@@ -62,7 +61,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                &nbsp;<span class="error">*&nbsp;<?php echo $errors['dept_id']; ?></span>
+                <?php if($errors['dept_id']) echo '<span class="alert alert-danger">' .$errors['dept_id']. '</span>'; ?>
             </td>
         </tr>
         <tr>
@@ -71,18 +70,18 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             </th>
         </tr>
         <tr>
-            <td colspan=2>
-                <div><b>Title</b><span class="error">*&nbsp;<?php echo $errors['title']; ?></span></div>
-                <input type="text" size="70" name="title" value="<?php echo $info['title']; ?>">
-                <br><br><div style="margin-bottom:0.5em"><b>Canned Response</b> <font class="error">*&nbsp;<?php echo $errors['response']; ?></font>
-                    &nbsp;&nbsp;&nbsp;(<a class="tip" href="ticket_variables">Supported Variables</a>)
+            <td colspan="2" class="form-group has-error">
+                <div><b>Title</b></div>
+                <input class="form-control" type="text" size="70" name="title" value="<?php echo $info['title']; ?>"><?php if($errors['title']) echo '<span class="alert alert-danger">' .$errors['title']. '</span>'; ?>
+                <div style="margin-bottom:0.5em"><b>Canned Response</b><?php if($errors['response']) echo '<span class="alert alert-danger">' .$errors['response']. '</span>'; ?>
+                    &nbsp;(<a class="tip" href="ticket_variables">Supported Variables</a>)
                     </div>
                 <textarea name="response" class="richtext draft draft-delete" cols="21" rows="12"
                     data-draft-namespace="canned"
                     data-draft-object-id="<?php if (isset($canned)) echo $canned->getId(); ?>"
                     style="width:98%;" class="richtext draft"><?php
                         echo $info['response']; ?></textarea>
-                <br><br><div><b>Canned Attachments</b> (optional) <font class="error">&nbsp;<?php echo $errors['files']; ?></font></div>
+               <div><b>Canned Attachments</b> (optional) <?php if($errors['files']) echo '<span class="alert alert-danger">' .$errors['files']. '</span>'; ?></div>
                 <?php
                 if($canned && ($files=$canned->attachments->getSeparates())) {
                     echo '<div id="canned_attachments"><span class="faded">Uncheck to delete the attachment on submit</span><br>';

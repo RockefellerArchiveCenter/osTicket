@@ -60,7 +60,7 @@ if ($_POST)
             <td width="160" class="required">
                 Ticket Source:
             </td>
-            <td class="form-inline">
+            <td class="form-group has-error form-inline">
                 <select class="form-control" name="source">
                     <option value="" selected >&mdash; Select Source &mdash;</option>
                     <option value="Phone" <?php echo ($info['source']=='Phone')?'selected="selected"':''; ?>>Phone</option>
@@ -69,14 +69,14 @@ if ($_POST)
                     <option value="API"   <?php echo ($info['source']=='API')?'selected="selected"':''; ?>>API</option>
                     <option value="Other" <?php echo ($info['source']=='Other')?'selected="selected"':''; ?>>Other</option>
                 </select>
-                &nbsp;<font class="error"><b>*</b>&nbsp;<?php echo $errors['source']; ?></font>
+                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['source'].'</span>';?>
             </td>
         </tr>
         <tr>
             <td width="160" class="required">
                 Help Topic:
             </td>
-            <td class="form-inline">
+            <td class="form-group has-error form-inline">
                 <select class="form-control" name="topicId">
                     <option value="" selected >&mdash; Select Help Topic &mdash;</option>
                     <?php
@@ -88,14 +88,14 @@ if ($_POST)
                     }
                     ?>
                 </select>
-                &nbsp;<font class="error"><b>*</b>&nbsp;<?php echo $errors['topicId']; ?></font>
+                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['topicId'].'</span>';?>
             </td>
         </tr>
         <tr>
             <td width="160">
                 SLA Plan:
             </td>
-            <td class="form-inline">
+            <td class="form-group form-inline">
                 <select class="form-control" name="slaId">
                     <option value="0" selected="selected" >&mdash; None &mdash;</option>
                     <?php
@@ -107,14 +107,14 @@ if ($_POST)
                     }
                     ?>
                 </select>
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['slaId']; ?></font>
+                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['slaId'].'</span>';?>
             </td>
         </tr>
         <tr>
             <td width="160">
                 Due Date:
             </td>
-            <td class="form-inline">
+            <td class="form-group form-inline">
                 <input class="dp form-control" id="duedate" name="duedate" value="<?php echo Format::htmlchars($info['duedate']); ?>" size="12" autocomplete=OFF>
                 &nbsp;&nbsp;
                 <?php
@@ -124,7 +124,7 @@ if ($_POST)
 
                 echo Misc::timeDropdown($hr, $min, 'time');
                 ?>
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['duedate']; ?>&nbsp;<?php echo $errors['time']; ?></font>
+                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['duedate'].'&nbsp;'.$errors['time'].'</span>';?>
                 <em>Time is based on your time zone (GMT <?php echo $thisstaff->getTZoffset(); ?>)</em>
             </td>
         </tr>
@@ -138,13 +138,14 @@ if ($_POST)
         <tbody>
         <tr>
             <th colspan="2">
-                <em><strong>Internal Note</strong>: Reason for editing the ticket (required) <font class="error">&nbsp;<?php echo $errors['note'];?></font></em>
+                <em><strong>Internal Note</strong>: Reason for editing the ticket</em>
+                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['note'].'</span>';?>
             </th>
         </tr>
         <tr>
-            <td colspan="2">
-                <textarea class="richtext no-bar form-control" name="note" cols="21"
-                    rows="6" style="width:80%;"><?php echo $info['note'];
+            <td colspan="2" class="form-group has-error">
+                <textarea class="form-control textarea" name="note" cols="21"
+                    rows="6"><?php echo $info['note'];
                     ?></textarea>
             </td>
         </tr>

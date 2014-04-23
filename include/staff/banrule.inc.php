@@ -46,18 +46,17 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 Ban Status:
             </td>
             <td>
-                <input type="radio" name="isactive" value="1" <?php echo $info['isactive']?'checked="checked"':''; ?>><strong>Active</strong>
-                <input type="radio" name="isactive" value="0" <?php echo !$info['isactive']?'checked="checked"':''; ?>>Disabled
-                &nbsp;<span class="error">*&nbsp;</span>
+                <input type="radio" name="isactive" value="1" <?php echo $info['isactive']?'checked="checked"':''; ?>><label>Active</label>
+                <input type="radio" name="isactive" value="0" <?php echo !$info['isactive']?'checked="checked"':''; ?>><label>Disabled</label>
             </td>
         </tr>
         <tr>
             <td width="180" class="required">
                 Email Address:
             </td>
-            <td>
-                <input name="val" type="text" size="24" value="<?php echo $info['val']; ?>">
-                 &nbsp;<span class="error">*&nbsp;<?php echo $errors['val']; ?></span>
+            <td class="form-inline form-group has-error">
+                <input class="form-control" name="val" type="text" size="24" value="<?php echo $info['val']; ?>">
+                 <?php if($errors['val']) print '<span class="alert alert-danger">' .$errors['val']. '</span>'; ?>
             </td>
         </tr>
         <tr>
