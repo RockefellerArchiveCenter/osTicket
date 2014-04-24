@@ -130,14 +130,15 @@ RedactorPlugins.signature = {
             if ($el.data('signature'))
                 inner.html($el.data('signature'));
             else
-                this.$signatureBox.hide();
+             inner.load('ajax.php/content/signature/dept/4').parent().show();
+
             $('input[name='+$el.data('signatureField')+']', $el.closest('form'))
                 .on('change', false, false, $.proxy(this.updateSignature, this))
             if ($el.data('deptField'))
                 $(':input[name='+$el.data('deptField')+']', $el.closest('form'))
                     .on('change', false, false, $.proxy(this.updateSignature, this))
             // Expand on hover
-            var outer = this.$signatureBox,
+            /*var outer = this.$signatureBox,
                 inner = $('.inner', this.$signatureBox).get(0),
                 originalHeight = outer.height(),
                 hoverTimeout = undefined,
@@ -156,7 +157,7 @@ RedactorPlugins.signature = {
                     'height': Math.min(inner.offsetHeight, originalHeight)
                 }, 'fast');
                 $(this).css('box-shadow', originalShadow);
-            });
+            });*/
         }
     },
     updateSignature: function(e) {
@@ -167,6 +168,7 @@ RedactorPlugins.signature = {
             url = 'ajax.php/content/signature/',
             inner = $('.inner', this.$signatureBox);
         e.preventDefault && e.preventDefault();
+        console.log($el)
         if (selected == 'dept' && $el.data('deptId'))
             url += 'dept/' + $el.data('deptId');
         else if (selected == 'dept' && $el.data('deptField')) {
@@ -180,6 +182,7 @@ RedactorPlugins.signature = {
         else
             url += selected
 
+        console.log(url);
         inner.load(url).parent().show();
     }
 };
@@ -213,7 +216,7 @@ $(function() {
                     'file', 'table', 'link', '|', 'alignment', '|',
                     'horizontalrule'],
                 'autoresize': !el.hasClass('no-bar'),
-                'minHeight': el.hasClass('small') ? 75 : 150,
+                'minHeight': el.hasClass('small') ? 75 : 200,
                 'focus': false,
                 'plugins': ['fontcolor','fontfamily', 'signature'],
                 'imageGetJson': 'ajax.php/draft/images/browse',
