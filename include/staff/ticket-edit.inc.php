@@ -145,8 +145,8 @@ if ($_POST)
         <tr>
             <td colspan="2" class="form-group has-error">
                 <textarea class="form-control textarea" name="note" cols="21"
-                    rows="6"><?php echo $info['note'];
-                    ?></textarea>
+                    rows="6">Ticket edited by <?php echo $thisstaff->getName(); ?>.
+                    </textarea>
             </td>
         </tr>
     </tbody>
