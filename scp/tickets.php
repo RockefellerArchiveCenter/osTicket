@@ -144,7 +144,8 @@ if($_POST && !$errors):
                  if($claim && !$_POST['assign_comments'])
                      $_POST['assign_comments'] = 'Ticket claimed by '.$thisstaff->getName();
                  elseif(!$_POST['assign_comments'])
-                     $errors['assign_comments'] = 'Assignment comments required';
+                     $_POST['assign_comments'] = 'Ticket assigned to '.$thisstaff->getName();
+                     //$errors['assign_comments'] = 'Assignment comments required';
                  elseif(strlen($_POST['assign_comments'])<5)
                          $errors['assign_comments'] = 'Comment too short';
 
