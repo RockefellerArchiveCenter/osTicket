@@ -16,19 +16,8 @@ if(!defined('OSTSTAFFINC') || !$category || !$thisstaff) die('Access Denied');
 <div class="cat-desc">
 <?php echo Format::display($category->getDescription()); ?>
 </div>
-<?php
-if($thisstaff->canManageFAQ()) {
-    echo sprintf('<div><a href="categories.php?id=%d" class="btn btn-warning editCategory">Edit Category</a>
-             <a href="categories.php" class="btn btn-danger deleteCategory">Delete Category</a>
-             <a href="faq.php?cid=%d&a=add" class="btn btn-success newFAQ">Add New FAQ</a></div>',
-            $category->getId(),
-            $category->getId());
-} else {
-?>
-<hr>
-<?php
-}
 
+<?php
 $sql='SELECT faq.faq_id, question, ispublished, count(attach.file_id) as attachments '
     .' FROM '.FAQ_TABLE.' faq '
     .' LEFT JOIN '.ATTACHMENT_TABLE.' attach
@@ -46,5 +35,14 @@ if(($res=db_query($sql)) && db_num_rows($res)) {
          </table>';
 }else {
     echo '<strong>Category does not have FAQs</strong>';
+}
+?>
+<?php
+if($thisstaff->canManageFAQ()) {
+    echo sprintf('<div class="text-center"><a href="categories.php?id=%d" class="btn btn-warning editCategory">Edit Category</a>
+             <a href="categories.php" class="btn btn-danger deleteCategory">Delete Category</a>
+             <a href="faq.php?cid=%d&a=add" class="btn btn-success newFAQ">Add New FAQ</a></div>',
+            $category->getId(),
+            $category->getId());
 }
 ?>
