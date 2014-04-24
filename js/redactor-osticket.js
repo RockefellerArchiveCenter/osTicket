@@ -22,7 +22,7 @@ RedactorPlugins.draft = {
         if (this.opts.draft_object_id)
             autosave_url += '.' + this.opts.draft_object_id;
         this.opts.autosave = autosave_url;
-        this.opts.autosaveInterval = 10;
+        this.opts.autosaveInterval = 5;
         this.opts.autosaveCallback = this.setupDraftUpdate;
         this.opts.initCallback = this.recoverDraft;
     },
@@ -232,12 +232,12 @@ $(function() {
             });
         }
         if (el.hasClass('draft')) {
-            var draft_saved = $('<span>')
-                .addClass("pull-right draft-saved faded")
-                .css({'position':'relative','top':'-1.8em','right':'1em'})
+            var draft_saved = $('<div>')
+                .addClass("pull-right draft-saved")
+                .css({'position':'relative','top':'-1.8em','right':'0em'})
                 .hide()
                 .append($('<span>')
-                    .css({'position':'relative', 'top':'0.17em'})
+                    .addClass("label label-success")
                     .text('Draft Saved'));
             el.closest('form').append($('<input type="hidden" name="draft_id"/>'));
             if (el.hasClass('draft-delete')) {
