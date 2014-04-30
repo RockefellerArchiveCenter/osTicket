@@ -2,10 +2,10 @@
 if(!defined('OSTSTAFFINC') || !$thisstaff) die('Access Denied');
 
 ?>
-<h2>Frequently Asked Questions</h2>
+<h2 class="pull-left">Frequently Asked Questions</h2>
 <form id="kbSearch" action="kb.php" method="get">
     <input type="hidden" name="a" value="search">
-    <div>
+    <div class="form-inline pull-right">
         <input class="form-control" id="query" type="text" size="20" name="q" value="<?php echo Format::htmlchars($_REQUEST['q']); ?>">
         <select class="form-control" name="cid" id="cid">
             <option value="">&mdash; All Categories &mdash;</option>
@@ -28,7 +28,7 @@ if(!defined('OSTSTAFFINC') || !$thisstaff) die('Access Denied');
         </select>
         <input class="btn btn-success" id="searchSubmit" type="submit" value="Search">
     </div>
-    <div>
+    <!--<div>
         <select class="form-control" name="topicId" style="width:350px;" id="topic-id">
             <option value="">&mdash; All Help Topics &mdash;</option>
             <?php
@@ -48,9 +48,8 @@ if(!defined('OSTSTAFFINC') || !$thisstaff) die('Access Denied');
             }
             ?>
         </select>
-    </div>
+    </div>-->
 </form>
-<hr>
 <div>
 <?php
 if($_REQUEST['q'] || $_REQUEST['cid'] || $_REQUEST['topicId']) { //Search.
@@ -100,13 +99,12 @@ if($_REQUEST['q'] || $_REQUEST['cid'] || $_REQUEST['topicId']) { //Search.
         .' GROUP BY cat.category_id '
         .' ORDER BY cat.name';
     if(($res=db_query($sql)) && db_num_rows($res)) {
-        echo '<div>Click on the category to browse FAQs.</div>
-                <ul id="kb">';
+        echo '<ul id="kb">';
         while($row=db_fetch_array($res)) {
 
             echo sprintf('
                 <li>
-                    <h4><a href="kb.php?cid=%d">%s (%d)</a> - <span>%s</span></h4>
+                    <h4><a href="kb.php?cid=%d">%s (%d)</a><small> - %s</small></h4>
                     %s
                 </li>',$row['category_id'],$row['name'],$row['faqs'],
                 ($row['ispublic']?'Public':'Internal'),

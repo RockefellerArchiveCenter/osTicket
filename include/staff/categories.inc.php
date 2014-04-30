@@ -43,8 +43,8 @@ else
 <div style="width:700px;padding-top:5px; float:left;">
  <h2>FAQ Categories</h2>
  </div>
-<div style="float:right;text-align:right;padding-top:5px;padding-right:5px;">
-    <b><a href="categories.php?a=add" class="btn btn-default pull-right">Add New Category</a></b></div>
+<div>
+    <a href="categories.php?a=add" class="btn btn-primary pull-right">Add New Category</a></div>
 <div class="clear"></div>
 <form action="categories.php" method="POST" name="cat">
  <?php csrf_token(); ?>
