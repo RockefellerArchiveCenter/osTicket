@@ -176,15 +176,15 @@
                                 size = 16 * scale;
                             }
                             tr.append($('<td>')
-                                .append($('<div>').append(
-                                    $('<div>').css(val ? {
-                                        'background-color': color,
-                                        'width': size,
-                                        'height': size,
-                                        'top': 9 - (size / 2),
-                                        'right': 10 - (size / 2)
-                                    } : {})
-                                    .append("&nbsp;")))
+                                //.append($('<div>').append(
+                                    //$('<div>').css(val ? {
+                                      //  'background-color': color,
+                                      //  'width': size,
+                                      //  'height': size,
+                                      //  'top': 9 - (size / 2),
+                                      //  'right': 10 - (size / 2)
+                                    //} : {})
+                                    //.append("&nbsp;")
                                 .append(row[j]));
                         }
                     }
