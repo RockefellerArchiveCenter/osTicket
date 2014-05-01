@@ -210,7 +210,7 @@ class Ticket2PDF extends mPDF
         }
 
         $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Help Topic', 1, 0, 'L', true);
+        $this->WriteCell($l, 7, 'Collection', 1, 0, 'L', true);
         $this->SetFont('');
         $this->WriteCell($c, 7, $ticket->getHelpTopic(), 1, 1, 'L', true);
         $this->SetFont('Arial', 'B', 11);

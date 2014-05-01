@@ -42,16 +42,16 @@ $qstr.='&order='.($order=='DESC'?'ASC':'DESC');
 $query="$sql GROUP BY topic.topic_id ORDER BY $order_by LIMIT ".$pageNav->getStart().",".$pageNav->getLimit();
 $res=db_query($query);
 if($res && ($num=db_num_rows($res)))
-    $showing=$pageNav->showing().' help topics';
+    $showing=$pageNav->showing().' collections';
 else
     $showing='No help topic found!';
 
 ?>
 <div style="width:700px;padding-top:5px; float:left;">
- <h2>Help Topics</h2>
+ <h2>Collections</h2>
  </div>
 <div style="float:right;text-align:right;padding-top:5px;padding-right:5px;">
-    <b><a href="helptopics.php?a=add" class="btn btn-default pull-right">Add New Help Topic</a></b></div>
+    <b><a href="helptopics.php?a=add" class="btn btn-default pull-right">Add New Collection</a></b></div>
 <div class="clear"></div>
 <form action="helptopics.php" method="POST" name="topics">
  <?php csrf_token(); ?>
@@ -62,7 +62,7 @@ else
     <thead>
         <tr>
             <th width="7">&nbsp;</th>        
-            <th width="320"><a <?php echo $name_sort; ?> href="helptopics.php?<?php echo $qstr; ?>&sort=name">Help Topic</a></th>
+            <th width="320"><a <?php echo $name_sort; ?> href="helptopics.php?<?php echo $qstr; ?>&sort=name">Collection</a></th>
             <th width="80"><a  <?php echo $status_sort; ?> href="helptopics.php?<?php echo $qstr; ?>&sort=status">Status</a></th>
             <th width="100"><a  <?php echo $type_sort; ?> href="helptopics.php?<?php echo $qstr; ?>&sort=type">Type</a></th>
             <th width="100"><a  <?php echo $priority_sort; ?> href="helptopics.php?<?php echo $qstr; ?>&sort=priority">Priority</a></th>

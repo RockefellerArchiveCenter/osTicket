@@ -3,7 +3,7 @@ if(!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin()) die('Access
 $info=array();
 $qstr='';
 if($topic && $_REQUEST['a']!='add') {
-    $title='Update Help Topic';
+    $title='Update Collection';
     $action='update';
     $submit_text='Save Changes';
     $info=$topic->getInfo();
@@ -11,7 +11,7 @@ if($topic && $_REQUEST['a']!='add') {
     $info['pid']=$topic->getPid();
     $qstr.='&id='.$topic->getId();
 } else {
-    $title='Add New Help Topic';
+    $title='Add New Collection';
     $action='create';
     $submit_text='Add Topic';
     $info['isactive']=isset($info['isactive'])?$info['isactive']:1;
@@ -25,20 +25,20 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
  <input type="hidden" name="do" value="<?php echo $action; ?>">
  <input type="hidden" name="a" value="<?php echo Format::htmlchars($_REQUEST['a']); ?>">
  <input type="hidden" name="id" value="<?php echo $info['id']; ?>">
- <h2>Help Topic</h2>
+ <h2>Collection</h2>
  <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
                 <h4><?php echo $title; ?></h4>
-                <em>Help Topic Information</em>
+                <em>Collection Information</em>
             </th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td width="180" class="required">
-               Topic:
+               Name:
             </td>
             <td class="form-group form-inline has-error">
                 <input class="form-control" type="text" size="30" name="topic" value="<?php echo $info['topic']; ?>">

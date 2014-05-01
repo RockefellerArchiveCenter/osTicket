@@ -64,7 +64,7 @@ class Export {
                 'email' =>          'From Email',
                 'priority_desc' =>  'Priority',
                 'dept_name' =>      'Department',
-                'helptopic' =>      'Help Topic',
+                'helptopic' =>      'Collection',
                 'source' =>         'Source',
                 'status' =>         'Current Status',
                 'effective_date' => 'Last Updated',

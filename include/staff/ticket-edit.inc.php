@@ -74,11 +74,11 @@ if ($_POST)
         </tr>
         <tr>
             <td width="160" class="required">
-                Help Topic:
+                Collection:
             </td>
             <td class="form-group has-error form-inline">
                 <select class="form-control" name="topicId">
-                    <option value="" selected >&mdash; Select Help Topic &mdash;</option>
+                    <option value="" selected >&mdash; Select Collection &mdash;</option>
                     <?php
                     if($topics=Topic::getHelpTopics()) {
                         foreach($topics as $id =>$name) {

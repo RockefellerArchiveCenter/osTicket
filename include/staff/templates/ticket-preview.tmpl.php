@@ -101,7 +101,7 @@ echo sprintf(
             <td>%s</td>
         </tr>
         <tr>
-            <th>Help Topic:</th>
+            <th>Collection:</th>
             <td>%s</td>
         </tr>',
     Format::htmlchars($ticket->getName()),

@@ -29,7 +29,7 @@ if($thisstaff->canManageFAQ()) {
 <div class="clear"></div>
 <p>
  <div><span class="faded"><b>Attachments:</b></span> <?php echo $faq->getAttachmentsLinks(); ?></div>
- <div><span class="faded"><b>Help Topics:</b></span>
+ <div><span class="faded"><b>Collections:</b></span>
     <?php echo ($topics=$faq->getHelpTopics())?implode(', ',$topics):' '; ?>
     </div>
 </p>

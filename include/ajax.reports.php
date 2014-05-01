@@ -55,7 +55,7 @@ class OverviewReportAjaxAPI extends AjaxController {
                 "fields" => "CONCAT_WS(' / ',"
                     ."(SELECT P.topic FROM ".TOPIC_TABLE." P WHERE P.topic_id = T1.topic_pid),"
                     ."T1.topic) as name ",
-                "headers" => array('Help Topic'),
+                "headers" => array('Collection'),
                 "filter" => '1'
             ),
             "staff" => array(

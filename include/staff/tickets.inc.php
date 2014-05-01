@@ -612,9 +612,9 @@ if ($results) {
             </select>
         </fieldset>
         <fieldset>
-            <label for="topicId">Help Topic:</label>
+            <label for="topicId">Collection:</label>
             <select class="form-control" id="topicId" name="topicId">
-                <option value="" selected onClick="ga('send', 'event', 'Search', 'Advanced', 'Topic All');">&mdash; All Help Topics &mdash;</option>
+                <option value="" selected onClick="ga('send', 'event', 'Search', 'Advanced', 'Topic All');">&mdash; All Collections &mdash;</option>
                 <?php
                 if($topics=Topic::getHelpTopics()) {
                     foreach($topics as $id =>$name)

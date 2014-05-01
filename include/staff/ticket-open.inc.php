@@ -110,7 +110,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         </tr>
         <tr>
             <td width="160" class="required">
-                Help Topic:
+                Collection:
             </td>
             <td class="form-group form-inline has-error">
                 <select class="form-control" name="topicId" onchange="javascript:
@@ -122,7 +122,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                         if (count($topics) == 1)
                             $selected = 'selected="selected"';
                         else { ?>
-                <option value="" selected >&mdash; Select Help Topic &mdash;</option>
+                <option value="" selected >&mdash; Select Collection &mdash;</option>
 <?php                   }
                         foreach($topics as $id =>$name) {
                             echo sprintf('<option value="%d" %s %s>%s</option>',

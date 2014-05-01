@@ -124,7 +124,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         if(($res=db_query($sql)) && db_num_rows($res)) { ?>
         <tr>
             <th colspan="2">
-                <em><strong>Help Topics</strong>: Check all help topics related to this FAQ.</em>
+                <em><strong>Collections</strong>: Check all help topics related to this FAQ.</em>
             </th>
         </tr>
         <tr><td  class="form-group form-inline" colspan="2">
