@@ -479,7 +479,7 @@ $tcount+= $ticket->getNumNotes();
                             <option value="0" selected="selected">Select a canned response</option>
                             <?php
                             foreach($cannedResponses as $id =>$title) {
-                                echo sprintf('<option value="%d" onClick="ga(\'send\', \'event\', \'Ticket\', \'Tab\', \'%s\');">%s</option>',$id,$title,$title);
+                                echo sprintf('<option value="%d" onClick="ga(\'send\', \'event\', \'Ticket\', \'Canned Response\', \'%s\');">%s</option>',$id,$title,$title);
                             }
                             ?>
                         </select>
