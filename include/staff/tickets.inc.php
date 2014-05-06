@@ -645,7 +645,7 @@ if ($results) {
             <span class="buttons">
                 <input class="btn btn-primary" type="submit" value="Search" onClick="ga('send', 'event', 'Search', 'Advanced', 'Search');">
                 <input class="btn btn-default" type="reset" value="Reset">
-                <input class="btn btn-danger" type="button" value="Cancel">
+                <!--<input class="btn btn-danger" type="button" value="Cancel">-->
             </span>
             <span class="spinner">
                 <img src="./images/ajax-loader.gif" width="16" height="16">
