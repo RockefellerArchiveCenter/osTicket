@@ -310,15 +310,6 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 } ?>
 
             <?php
-            if($thisstaff->canCloseTickets()) { ?>
-                <tr>
-                    <td width="100">Ticket Status:</td>
-                    <td class="form-group form-inline">
-                        <input class="form-control checkbox" type="checkbox" name="ticket_state" value="closed" <?php echo $info['ticket_state']?'checked="checked"':''; ?>>
-                        <label>Close On Response (only applicable if response is entered)</label>
-                    </td>
-                </tr>
-            <?php
             } ?>
              <tr>
                 <td width="100">Signature:</td>
@@ -326,17 +317,27 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     <?php
                     $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     ?>
-                    <label><input class="form-control radio" type="radio" name="signature" value="none" checked="checked"> None</label>
+                    <label><input class="form-control radio" type="radio" name="signature" value="none"> None</label>
                     <?php
                     if($thisstaff->getSignature()) { ?>
                         <label><input type="radio" name="signature" value="mine"
                             <?php echo ($info['signature']=='mine')?'checked="checked"':''; ?>> My signature</label>
                     <?php
                     } ?>
-                    <label><input class="form-control radio" type="radio" name="signature" value="dept"
+                    <label><input class="form-control radio" type="radio" name="signature" value="dept" checked="checked"
                         <?php echo ($info['signature']=='dept')?'checked="checked"':''; ?>> Dept. Signature (if set)</label>
                 </td>
              </tr>
+             <?php
+            if($thisstaff->canCloseTickets()) { ?>
+                <tr>
+                    <td width="100">Ticket Status:</td>
+                    <td class="form-group form-inline">
+                        <input class="form-control checkbox" type="checkbox" checked="checked" name="ticket_state" value="closed" <?php echo $info['ticket_state']?'checked="checked"':''; ?>>
+                        <label>Close On Response (only applicable if response is entered)</label>
+                    </td>
+                </tr>
+             
             </table>
             </td>
         </tr>
