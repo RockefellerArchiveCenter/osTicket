@@ -317,7 +317,7 @@ foreach (DynamicFormEntry::forTicket($ticket->getId()) as $form) {
     </tr>
 </table>
 <div class="clear"></div>
-<h2><?php echo Format::htmlchars($ticket->getSubject()); ?></h2>
+<h2 id="subject"><?php echo Format::htmlchars($ticket->getSubject()); ?></h2>
 <?php
 $tcount = $ticket->getThreadCount();
 $tcount+= $ticket->getNumNotes();
@@ -471,6 +471,8 @@ $tcount+= $ticket->getNumNotes();
             <tr>
                 <td width="120" style="vertical-align:top">
                     <label><strong>Response:</strong></label>
+                    <br>
+                    <input class="btn btn-sm btn-primary" type="button" onclick="printTextArea()" value="Print Draft"/>
                 </td>
                 <td class="form-group form-inline">
                     <?php

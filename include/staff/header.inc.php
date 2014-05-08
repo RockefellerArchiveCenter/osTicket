@@ -43,6 +43,19 @@
     </script>
     <!-- unicornblast.js -->
     <script src="./js/jquery.unicornblast.js"></script>
+    <script type="text/javascript">
+      function printTextArea() {
+        childWindow = window.open();
+        childWindow.document.write('<html><head></head><body><h2>');
+        childWindow.document.write(document.getElementById('subject').innerHTML);
+        childWindow.document.write('</h2><p>');
+        childWindow.document.write(document.getElementById('response').value.replace(/\n/gi,'<br>'));
+        childWindow.document.write('</p></body></html>');
+        childWindow.print();
+        childWindow.document.close();
+        childWindow.close();
+      }
+    </script>
     <!-- Google Analytics -->
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
