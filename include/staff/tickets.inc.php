@@ -147,7 +147,7 @@ if ($_REQUEST['advsid'] && isset($_SESSION['adv_'.$_REQUEST['advsid']])) {
 }
 
 $sortOptions=array('date'=>'created','ID'=>'ticket.`number`',
-    'pri'=>'pri.priority_urgency','name'=>'user.name','subj'=>'cdata.subject',
+    'topic'=>'helptopic','name'=>'user.name','subj'=>'cdata.subject',
     'status'=>'ticket.status','assignee'=>'assigned','staff'=>'staff',
     'dept'=>'dept_name');
 
@@ -300,17 +300,13 @@ if ($results) {
     </form>
 </div>
 <!-- SEARCH FORM END -->
-<div class="clear"></div>
-<div style="margin-bottom:20px">
+<div>
 <form action="tickets.php" method="POST" name='tickets'>
 <?php csrf_token(); ?>
  <a class="btn btn-default pull-right" href="<?php echo $_SERVER['REQUEST_URI']; ?>">Refresh</a>
  <input type="hidden" name="a" value="mass_process" >
  <input type="hidden" name="do" id="action" value="" >
  <input type="hidden" name="status" value="<?php echo Format::htmlchars($_REQUEST['status']); ?>" >
-   <?php
-        echo '<ul class="pagination">'.$pageNav->getPageLinks().'</ul>';
-    ?>
  <table class="table table-striped" border="0" cellspacing="1" cellpadding="2" width="100%">
     <caption><?php echo $showing; ?>&nbsp;&nbsp;&nbsp;<?php echo $results_type; ?></caption>
     <thead>
@@ -337,9 +333,9 @@ if ($results) {
                         title="Sort By Status <?php echo $negorder; ?>">Status</a></th>
             <?php
             } else { ?>
-                <th width="60" <?php echo $pri_sort;?>>
-                    <a <?php echo $pri_sort; ?> href="tickets.php?sort=pri&order=<?php echo $negorder; ?><?php echo $qstr; ?>"
-                        title="Sort By Priority <?php echo $negorder; ?>">Priority</a></th>
+                <th width="60" <?php echo $topic_sort;?>>
+                    <a <?php echo $topic_sort; ?> href="tickets.php?sort=topic&order=<?php echo $negorder; ?><?php echo $qstr; ?>"
+                        title="Sort By Collection <?php echo $negorder; ?>">Collection</a></th>
             <?php
             }
 
@@ -434,7 +430,8 @@ if ($results) {
                     echo "<td>$displaystatus</td>";
                 } else { ?>
                 <td class="nohover">
-                    <?php echo $row['priority_desc']; ?></td>
+                <?php if ($row['helptopic']) echo "<span class='label label-default'>".$row['helptopic']."</span>"; ?>
+                </td>
                 <?php
                 }
                 ?>
