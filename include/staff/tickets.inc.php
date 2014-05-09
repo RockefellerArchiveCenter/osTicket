@@ -303,7 +303,7 @@ if ($results) {
 <div>
 <form action="tickets.php" method="POST" name='tickets'>
 <?php csrf_token(); ?>
- <a class="btn btn-default pull-right" href="<?php echo $_SERVER['REQUEST_URI']; ?>">Refresh</a>
+ <a class="btn btn-success pull-right" href="<?php echo $_SERVER['REQUEST_URI']; ?>">Refresh</a>
  <input type="hidden" name="a" value="mass_process" >
  <input type="hidden" name="do" id="action" value="" >
  <input type="hidden" name="status" value="<?php echo Format::htmlchars($_REQUEST['status']); ?>" >
