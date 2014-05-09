@@ -22,25 +22,7 @@
     <script type="text/javascript" src="./js/bootstrap-typeahead.js"></script>
     <script type="text/javascript" src="./js/scp.js"></script>
     <script type="text/javascript" src="./js/highlight.js"></script>
-    <script>
-        $(document).ready(function() {
-            if (window.location.search) { 
-            $.urlParam = function(name){
-                var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
-                if (results==null){
-                    return null;
-                } else {
-                    return results[1].replace('+', ' ') || 0;
-                }
-            }
-            if ($.urlParam('query') != null) {
-            $("h2").highlight($.urlParam('query')); 
-            $("td").highlight($.urlParam('query')); 
-            $("td div").highlight($.urlParam('query')); 
-            }
-          } 
-        });
-    </script>
+    <script type="text/javascript" src="./js/highlight-function.js"></script>
     <!-- unicornblast.js -->
     <script src="./js/jquery.unicornblast.js"></script>
     <script type="text/javascript">
