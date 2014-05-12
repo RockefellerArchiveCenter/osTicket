@@ -70,24 +70,25 @@ class Ticket2PDF extends mPDF
 	//report header...most stuff are hard coded for now...
 	function Header() {
         global $cfg;
+        global $ticket;
 
 		//Common header
-        $logo = $this->getLogoFile();
-		$this->Image($logo, $this->lMargin, $this->tMargin, 0, 20);
-        if (strpos($logo, INCLUDE_DIR) === false)
-            unlink($logo);
-		$this->SetFont('Arial', 'B', 16);
-		$this->SetY($this->tMargin + 20);
-        $this->SetX($this->lMargin);
-        $this->WriteCell(0, 0, '', "B", 2, 'L');
-		$this->Ln(1);
-        $this->SetFont('Arial', 'B',10);
-        $this->WriteCell(0, 5, $cfg->getTitle(), 0, 0, 'L');
-        $this->SetFont('Arial', 'I',10);
-        $this->WriteCell(0, 5, Format::date($cfg->getDateTimeFormat(), Misc::gmtime(),
-            $_SESSION['TZ_OFFSET'], $_SESSION['TZ_DST'])
-            .' GMT '.$_SESSION['TZ_OFFSET'], 0, 1, 'R');
-		$this->Ln(5);
+        //$logo = $this->getLogoFile();
+		//$this->Image($logo, $this->lMargin, $this->tMargin, 0, 20);
+        //if (strpos($logo, INCLUDE_DIR) === false)
+        //    unlink($logo);
+		//$this->SetFont('Arial', 'B', 16);
+		//$this->SetY($this->tMargin + 20);
+        //$this->SetX($this->lMargin);
+        //$this->WriteCell(0, 0, '', "B", 2, 'L');
+		//$this->Ln(1);
+        $this->SetFont('Arial', 'B',16);
+        $this->MultiCell(0, 5, $ticket->getSubject(), 0, 0, 'L');
+        //$this->SetFont('Arial', 'I',10);
+        //$this->WriteCell(0, 5, Format::date($cfg->getDateTimeFormat(), Misc::gmtime(),
+        //    $_SESSION['TZ_OFFSET'], $_SESSION['TZ_DST'])
+        //    .' GMT '.$_SESSION['TZ_OFFSET'], 0, 1, 'R');
+		$this->Ln(2);
 	}
 
 	//Page footer baby
@@ -148,95 +149,95 @@ class Ticket2PDF extends mPDF
         $this->SetFont('Arial', 'B', 11);
         $this->cMargin = 0;
         $this->SetFont('Arial', 'B', 11);
-        $this->SetTextColor(10, 86, 142);
+        $this->SetTextColor(0);
         $this->WriteCell($w, 7,'Ticket #'.$ticket->getNumber(), 0, 0, 'L');
-        $this->Ln(7);
+        $this->Ln(8);
         $this->cMargin = 3;
         $this->SetTextColor(0);
-        $this->SetDrawColor(220, 220, 220);
-        $this->SetFillColor(244, 250, 255);
+        //$this->SetDrawColor(220, 220, 220);
+        //$this->SetFillColor(244, 250, 255);
         $this->SetX($this->lMargin);
         $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Status', 1, 0, 'L', true);
+        //$this->WriteCell($l, 7, 'Status', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, $ticket->getStatus(), 1, 0, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        $this->WriteCell($l, 7, 'Name', 0, 0, 'L', true);
         $this->SetFont('');
-        $this->WriteCell($c, 7, $ticket->getStatus(), 1, 0, 'L', true);
+        $this->WriteCell($c, 7, (string)$ticket->getName(), 0, 1, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Priority', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, $ticket->getPriority(), 1, 0, 'L', true);
         $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Name', 1, 0, 'L', true);
+        $this->WriteCell($l, 7, 'Email', 0, 0, 'L', true);
         $this->SetFont('');
-        $this->WriteCell($c, 7, (string)$ticket->getName(), 1, 1, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Priority', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, $ticket->getPriority(), 1, 0, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Email', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, $ticket->getEmail(), 1, 1, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Department', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, $ticket->getDeptName(), 1, 0, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Phone', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, $ticket->getPhoneNumber(), 1, 1, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Create Date', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, Format::db_datetime($ticket->getCreateDate()), 1, 0, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Source', 1, 0, 'L', true);
-        $this->SetFont('');
-        $source = ucfirst($ticket->getSource());
-        if($ticket->getIP())
-            $source.='  ('.$ticket->getIP().')';
-        $this->WriteCell($c, 7, $source, 1, 0, 'L', true);
-        $this->Ln(12);
+        $this->WriteCell($c, 7, $ticket->getEmail(), 0, 1, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Department', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, $ticket->getDeptName(), 1, 0, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Phone', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, $ticket->getPhoneNumber(), 1, 1, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Create Date', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, Format::db_datetime($ticket->getCreateDate()), 1, 0, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Source', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$source = ucfirst($ticket->getSource());
+        //if($ticket->getIP())
+        //    $source.='  ('.$ticket->getIP().')';
+        //$this->WriteCell($c, 7, $source, 1, 0, 'L', true);
+        //$this->Ln(12);
 
-        $this->SetFont('Arial', 'B', 11);
-        if($ticket->isOpen()) {
-            $this->WriteCell($l, 7, 'Assigned To', 1, 0, 'L', true);
-            $this->SetFont('');
-            $this->WriteCell($c, 7, $ticket->isAssigned()?$ticket->getAssigned():' -- ', 1, 0, 'L', true);
-        } else {
+        //$this->SetFont('Arial', 'B', 11);
+        //if($ticket->isOpen()) {
+        //    $this->WriteCell($l, 7, 'Assigned To', 1, 0, 'L', true);
+        //    $this->SetFont('');
+        //    $this->WriteCell($c, 7, $ticket->isAssigned()?$ticket->getAssigned():' -- ', 1, 0, 'L', true);
+        //} else {
 
-            $closedby = 'unknown';
-            if(($staff = $ticket->getStaff()))
-                $closedby = (string) $staff->getName();
+        //    $closedby = 'unknown';
+        //    if(($staff = $ticket->getStaff()))
+        //        $closedby = (string) $staff->getName();
 
-            $this->WriteCell($l, 7, 'Closed By', 1, 0, 'L', true);
-            $this->SetFont('');
-            $this->WriteCell($c, 7, $closedby, 1, 0, 'L', true);
-        }
+            //$this->WriteCell($l, 7, 'Closed By', 1, 0, 'L', true);
+            //$this->SetFont('');
+            //$this->WriteCell($c, 7, $closedby, 1, 0, 'L', true);
+        //}
 
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Collection', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, $ticket->getHelpTopic(), 1, 1, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'SLA Plan', 1, 0, 'L', true);
-        $this->SetFont('');
-        $sla = $ticket->getSLA();
-        $this->WriteCell($c, 7, $sla?$sla->getName():' -- ', 1, 0, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Last Response', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, Format::db_datetime($ticket->getLastRespDate()), 1, 1, 'L', true);
-        $this->SetFont('Arial', 'B', 11);
-        if($ticket->isOpen()) {
-            $this->WriteCell($l, 7, 'Due Date', 1, 0, 'L', true);
-            $this->SetFont('');
-            $this->WriteCell($c, 7, Format::db_datetime($ticket->getEstDueDate()), 1, 0, 'L', true);
-        } else {
-            $this->WriteCell($l, 7, 'Close Date', 1, 0, 'L', true);
-            $this->SetFont('');
-            $this->WriteCell($c, 7, Format::db_datetime($ticket->getCloseDate()), 1, 0, 'L', true);
-        }
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Collection', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, $ticket->getHelpTopic(), 1, 1, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'SLA Plan', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$sla = $ticket->getSLA();
+        //$this->WriteCell($c, 7, $sla?$sla->getName():' -- ', 1, 0, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Last Response', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, Format::db_datetime($ticket->getLastRespDate()), 1, 1, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //if($ticket->isOpen()) {
+        //    $this->WriteCell($l, 7, 'Due Date', 1, 0, 'L', true);
+        //    $this->SetFont('');
+        //    $this->WriteCell($c, 7, Format::db_datetime($ticket->getEstDueDate()), 1, 0, 'L', true);
+        //} else {
+        //    $this->WriteCell($l, 7, 'Close Date', 1, 0, 'L', true);
+        //    $this->SetFont('');
+        //    $this->WriteCell($c, 7, Format::db_datetime($ticket->getCloseDate()), 1, 0, 'L', true);
+        //}
 
-        $this->SetFont('Arial', 'B', 11);
-        $this->WriteCell($l, 7, 'Last Message', 1, 0, 'L', true);
-        $this->SetFont('');
-        $this->WriteCell($c, 7, Format::db_datetime($ticket->getLastMsgDate()), 1, 1, 'L', true);
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->WriteCell($l, 7, 'Last Message', 1, 0, 'L', true);
+        //$this->SetFont('');
+        //$this->WriteCell($c, 7, Format::db_datetime($ticket->getLastMsgDate()), 1, 1, 'L', true);
 
         $this->SetFillColor(255, 255, 255);
         foreach (DynamicFormEntry::forTicket($ticket->getId()) as $form) {
@@ -262,15 +263,15 @@ class Ticket2PDF extends mPDF
             }
         }
         $this->SetFillColor(244, 250, 255);
-        $this->Ln(10);
+        $this->Ln(3);
 
-        $this->SetFont('Arial', 'B', 11);
-        $this->cMargin = 0;
-        $this->SetTextColor(10, 86, 142);
-        $this->WriteCell($w, 7,trim($ticket->getSubject()), 0, 0, 'L');
-        $this->Ln(7);
-        $this->SetTextColor(0);
-        $this->cMargin = 3;
+        //$this->SetFont('Arial', 'B', 11);
+        //$this->cMargin = 0;
+        //$this->SetTextColor(10, 86, 142);
+        //$this->WriteCell($w, 7,trim($ticket->getSubject()), 0, 0, 'L');
+        //$this->Ln(7);
+        //$this->SetTextColor(0);
+        //$this->cMargin = 3;
 
         //Table header colors (RGB)
         $colors = array('M'=>array(195, 217, 255),
