@@ -28,7 +28,7 @@ include_once(INCLUDE_DIR.'class.ticket.php');
  */
 class OverviewReportAjaxAPI extends AjaxController {
     function enumTabularGroups() {
-        return $this->encode(array("dept"=>"Department", "topic"=>"Topics",
+        return $this->encode(array("dept"=>"Department", "topic"=>"Collections",
             # XXX: This will be relative to permissions based on the
             # logged-in-staff. For basic staff, this will be 'My Stats'
             "staff"=>"Staff"));
