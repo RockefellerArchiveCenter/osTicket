@@ -11,9 +11,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr><th><em><b>New Ticket Alert</b>:
-            <i class="help-tip icon-question-sign" href="#new_ticket"></i>
-            </em></th></tr>
+        <tr><th class="bg-info"><h4>New Ticket Alert <i class="help-tip icon-question-sign" href="#new_ticket"></i></h4>
+            </th></tr>
         <tr>
             <td class="form-group form-inline">
             <em><b>Status:</b></em>
@@ -42,9 +41,7 @@
                 <label> Department Members (spammy)<label>
             </td>
         </tr>
-        <tr><th><em><b>New Message Alert</b>:
-            <i class="help-tip icon-question-sign" href="#new_message"></i>
-            </em></th></tr>
+        <tr><th class="bg-info"><h4>New Message Alert <i class="help-tip icon-question-sign" href="#new_message"></i></h4></th></tr>
         <tr>
             <td class="form-group form-inline">
             <em><b>Status:</b></em>
@@ -72,9 +69,7 @@
               <label> Department Manager (spammy)<label>
             </td>
         </tr>
-        <tr><th><em><b>New Internal Note Alert</b>:
-            <i class="help-tip icon-question-sign" href="#new_activity"></i>
-            </em></th></tr>
+        <tr><th class="bg-info"><h4>New Internal Note Alert <i class="help-tip icon-question-sign" href="#new_activity"></i></h4></th></tr>
         <tr>
             <td class="form-group form-inline">
             <em><b>Status:</b></em>
@@ -104,10 +99,8 @@
             </td>
         </tr>
         <tr>
-        <th>
-        <em><b>Ticket Assignment Alert</b>:
-            <i class="help-tip icon-question-sign" href="#assign_alert"></i>
-            </em></th></tr>
+        <th class="bg-info">
+        <h4>Ticket Assignment Alert <i class="help-tip icon-question-sign" href="#assign_alert"></i></h4></th></tr>
         <tr>
             <td class="form-group form-inline">
             <em><b>Status: </b></em> &nbsp;
@@ -136,9 +129,7 @@
               <label> Team Members (spammy)</label>
             </td>
         </tr>
-        <tr><th><em><b>Ticket Transfer Alert</b>:
-            <i class="help-tip icon-question-sign" href="#transfer_alert"></i>
-            </em></th></tr>
+        <tr><th class="bg-info"><h4>Ticket Transfer Alert <i class="help-tip icon-question-sign" href="#transfer_alert"></i></h4></th></tr>
         <tr>
             <td class="form-group form-inline">
             <em><b>Status:</b></em>
@@ -167,9 +158,8 @@
               <label> Department Members (spammy)</label>
             </td>
         </tr>
-        <tr><th><em><b>Overdue Ticket Alert</b>:
-            <i class="help-tip icon-question-sign" href="#stale_alert"></i>
-            </em></th></tr>
+        <tr><th class="bg-info"><h4>Overdue Ticket Alert <i class="help-tip icon-question-sign" href="#stale_alert"></i></h4>
+            </th></tr>
         <tr>
             <td class="form-group form-inline">
             <em><b>Status:</b></em>
@@ -198,9 +188,8 @@
               <label> Department Members (spammy)</label>
             </td>
         </tr>
-        <tr><th><em><b>System Alerts</b>:
-            <i class="help-tip icon-question-sign" href="#meltdowns"></i>
-            </em></th></tr>
+        <tr><th class="bg-info"><h4>System Alerts <i class="help-tip icon-question-sign" href="#meltdowns"></i></h4>
+            </th></tr>
         <tr>
             <td class="form-group form-inline">
               <input class="form-control checkbox" type="checkbox" name="send_sys_errors" checked="checked" disabled="disabled">
