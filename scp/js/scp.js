@@ -31,7 +31,7 @@ function checkbox_checker(formObj, min, max) {
 
 $(document).ready(function(){
 
-    $("input:not(.dp):visible:enabled:first").focus();
+    //$("input:not(.dp):visible:enabled:first").focus();
     $('table.list tbody tr:odd').addClass('odd');
     $('table.list input:checkbox').bind('click, change', function() {
         $(this)
