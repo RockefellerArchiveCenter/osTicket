@@ -334,6 +334,7 @@ $tcount+= $ticket->getNumNotes();
 <div id="ticket_thread">
     <?php
     $threadTypes=array('M'=>'success','R'=>'warning', 'N'=>'info');
+    $threadTypeLabels=array('M'=>'Email Message', 'R'=>'Email Response', 'N'=>'Internal Note');
     /* -------- Messages & Responses & Notes (if inline)-------------*/
     $types = array('M', 'R', 'N');
     if(($thread=$ticket->getThreadEntries($types))) {
@@ -350,7 +351,7 @@ $tcount+= $ticket->getNumNotes();
                     <span class="faded title"><?php
                         echo Format::truncate($entry['title'], 100); ?></span>
                     <span>
-                        <span class="tmeta faded title pull-right"><?php
+                        <span class="tmeta faded title pull-right"><?php echo $threadTypeLabels[$entry['thread_type']]; ?> created by <?php
                             echo Format::htmlchars($entry['name'] ?: $entry['poster']); ?></span>
                     </span>
                 </div>
