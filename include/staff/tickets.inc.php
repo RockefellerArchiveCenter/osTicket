@@ -391,7 +391,11 @@ if ($results) {
                     $tid=sprintf('<b>%s</b>',$tid);
                 }
                 ?>
-            <tr id="<?php echo $row['ticket_id']; ?>">
+            <tr id="<?php echo $row['ticket_id']; ?>" 
+                <?php 
+                if($row['dept_id']==5) 
+                {echo 'class="warning"';} ?>
+                >
                 <?php if($thisstaff->canManageTickets()) {
 
                     $sel=false;
