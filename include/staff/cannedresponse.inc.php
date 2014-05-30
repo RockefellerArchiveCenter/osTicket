@@ -102,7 +102,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 </div>
                 <?php
                 }?>
-                <div class="faded">You can upload up to 10 attachments per canned response.</div>
+                <p class="help-block">Attachments must have a valid file extension (.doc, .pdf, .jpg, .jpeg, .gif, .png, .xls, .docx, .xlsx, pptx, .txt, .htm, .html) and total attachment size must be less than 16MB. You can upload 10 attachments per canned response</p>
             </td>
         </tr>
         <tr>

@@ -532,6 +532,7 @@ $tcount+= $ticket->getNumNotes();
                     <div class="file_input">
                         <input type="file" class="multifile" name="attachments[]" size="30" value="" />
                     </div>
+                    <p class="help-block">Attachments must have a valid file extension (.doc, .pdf, .jpg, .jpeg, .gif, .png, .xls, .docx, .xlsx, pptx, .txt, .htm, .html) and total attachment size must be less than 16MB.</p> 
                 </td>
             </tr>
             <?php
@@ -636,6 +637,7 @@ $tcount+= $ticket->getNumNotes();
                     <div class="file_input">
                         <input type="file" class="multifile" name="attachments[]" size="30" value="" />
                     </div>
+                    <p class="help-block">Attachments must have a valid file extension (.doc, .pdf, .jpg, .jpeg, .gif, .png, .xls, .docx, .xlsx, pptx, .txt, .htm, .html) and total attachment size must be less than 16MB.</p>
                 </td>
             </tr>
             <?php

@@ -1230,6 +1230,7 @@ class ThreadEntryWidget extends Widget {
         <div class="uploads" style="display:block"></div>
         <input type="file" class="multifile" name="attachments[]" id="attachments" size="30" value="" />
         </div>
+        <p class="help-block">Attachments must have a valid file extension (.doc, .pdf, .jpg, .jpeg, .gif, .png, .xls, .docx, .xlsx, pptx, .txt, .htm, .html) and total attachment size must be less than 16MB.</p>
         <span class="alert alert-danger"><?php echo $errors['attachments']; ?></span>
         </div>
         <hr/>
