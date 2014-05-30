@@ -73,23 +73,29 @@ if ($_POST)
             </td>
         </tr>
         <tr>
-            <td width="160" class="required">
-                Collection:
+            <td width="160">
+                Collections:
             </td>
+            <?php
+                $sql='SELECT coll.collection_id, CONCAT_WS(" / ", pcoll.collection, coll.collection) as name, coll.color as color '
+                 .' FROM '.COLLECTION_TABLE.' coll '
+                  .' LEFT JOIN '.COLLECTION_TABLE.' pcoll ON(pcoll.collection_id=coll.collection_pid) ';
+               if(($res=db_query($sql)) && db_num_rows($res)) { ?>
             <td class="form-group has-error form-inline">
-                <select class="form-control" name="topicId">
-                    <option value="" selected >&mdash; Select Collection &mdash;</option>
-                    <?php
-                    if($topics=Topic::getHelpTopics()) {
-                        foreach($topics as $id =>$name) {
-                            echo sprintf('<option value="%d" %s>%s</option>',
-                                    $id, ($info['topicId']==$id)?'selected="selected"':'',$name);
-                        }
-                    }
-                    ?>
-                </select>
-                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['topicId'].'</span>';?>
+                <?php
+                $info['collections']=$ticket->getCollectionsIds();
+                while(list($collectionId,$collection,$color)=db_fetch_row($res)) {
+                echo sprintf('<input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span>',
+                        $collectionId,
+                        (($info['collections'] && in_array($collectionId,$info['collections']))?'checked="checked"':''),
+                        $color,
+                        $collection);
+                }
+                ?>
+                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['collectionId'].'</span>';?>
             </td>
+                    <?php
+        } ?>
         </tr>
         <tr>
             <td width="160">

@@ -79,32 +79,37 @@ class FAQ {
         return $this->category;
     }
 
-    function getHelpTopicsIds() {
+    function getCollectionsIds() {
 
-        if (!isset($this->ht['topics']) && ($topics=$this->getHelpTopics())) {
-            $this->ht['topics'] = array_keys($topics);
+        if (!isset($this->ht['collections']) && ($collections=$this->getCollections())) {
+            $this->ht['collections'] = array_keys($collections);
         }
 
-        return $this->ht['topics'];
+        return $this->ht['collections'];
     }
 
-    function getHelpTopics() {
+    function getCollections() {
         //XXX: change it to obj (when needed)!
 
-        if (!isset($this->topics)) {
-            $this->topics = array();
-            $sql='SELECT t.topic_id, CONCAT_WS(" / ", pt.topic, t.topic) as name  FROM '.TOPIC_TABLE.' t '
-                .' INNER JOIN '.FAQ_TOPIC_TABLE.' ft ON(ft.topic_id=t.topic_id AND ft.faq_id='.db_input($this->id).') '
-                .' LEFT JOIN '.TOPIC_TABLE.' pt ON(pt.topic_id=t.topic_pid) '
-                .' ORDER BY t.topic';
+        if (!isset($this->collections)) {
+            $this->collections = array();
+            $sql='SELECT t.collection_id, CONCAT_WS(" / ", pt.collection, t.collection) as name, t.color as color  FROM '.COLLECTION_TABLE.' t '
+                .' INNER JOIN '.FAQ_COLLECTION_TABLE.' ft ON(ft.collection_id=t.collection_id AND ft.faq_id='.db_input($this->id).') '
+                .' LEFT JOIN '.COLLECTION_TABLE.' pt ON(pt.collection_id=t.collection_pid) '
+                .' ORDER BY t.collection';
             if (($res=db_query($sql)) && db_num_rows($res)) {
-                while(list($id,$name) = db_fetch_row($res))
-                    $this->topics[$id]=$name;
+                while(list($id,$name,$color) = db_fetch_row($res))
+                    $this->collections[$id]=array(
+                    'name' => $name,
+                    'color'=> $color);
             }
         }
 
-        return $this->topics;
+        return $this->collections;
     }
+    
+    
+    
 
     /* ------------------> Setter methods <--------------------- */
     function setPublished($val) { $this->ht['ispublished'] = !!$val; }
@@ -136,22 +141,22 @@ class FAQ {
         return $this->update($this->ht, $errors);
     }
 
-    function updateTopics($ids){
+    function updateCollections($ids){
 
         if($ids) {
-            $topics = $this->getHelpTopicsIds();
+            $collections = $this->getCollectionsIds();
             foreach($ids as $id) {
-                if($topics && in_array($id,$topics)) continue;
-                $sql='INSERT IGNORE INTO '.FAQ_TOPIC_TABLE
+                if($collections && in_array($id,$collections)) continue;
+                $sql='INSERT IGNORE INTO '.FAQ_COLLECTION_TABLE
                     .' SET faq_id='.db_input($this->getId())
-                    .', topic_id='.db_input($id);
+                    .', collection_id='.db_input($id);
                 db_query($sql);
             }
         }
 
-        $sql='DELETE FROM '.FAQ_TOPIC_TABLE.' WHERE faq_id='.db_input($this->getId());
+        $sql='DELETE FROM '.FAQ_COLLECTION_TABLE.' WHERE faq_id='.db_input($this->getId());
         if($ids)
-            $sql.=' AND topic_id NOT IN('.implode(',', db_input($ids)).')';
+            $sql.=' AND collection_id NOT IN('.implode(',', db_input($ids)).')';
 
         db_query($sql);
 
@@ -163,7 +168,7 @@ class FAQ {
         if(!$this->save($this->getId(), $vars, $errors))
             return false;
 
-        $this->updateTopics($vars['topics']);
+        $this->updateCollections($vars['collections']);
 
         //Delete removed attachments.
         $keepers = $vars['files']?$vars['files']:array();
@@ -215,8 +220,8 @@ class FAQ {
         if(!db_query($sql) || !db_affected_rows())
             return false;
 
-        //Cleanup help topics.
-        db_query('DELETE FROM '.FAQ_TOPIC_TABLE.' WHERE faq_id='.db_input($this->id));
+        //Cleanup collections.
+        db_query('DELETE FROM '.FAQ_COLLECTION_TABLE.' WHERE faq_id='.db_input($this->id));
         //Cleanup attachments.
         $this->attachments->deleteAll();
 
@@ -230,7 +235,7 @@ class FAQ {
             return false;
 
         if(($faq=self::lookup($id))) {
-            $faq->updateTopics($vars['topics']);
+            $faq->updateCollections($vars['collections']);
 
             if($_FILES['attachments'] && ($files=AttachmentFile::format($_FILES['attachments'])))
                 $faq->attachments->upload($files);

@@ -472,8 +472,8 @@ if($_POST && !$errors):
                 break;
             case 'open':
                 $ticket=null;
-                if ($topic=Topic::lookup($_POST['topicId'])) {
-                    if ($form = DynamicForm::lookup($topic->ht['form_id'])) {
+                if ($collection=Collection::lookup($_POST['collectionId'])) {
+                    if ($form = DynamicForm::lookup($collection->ht['form_id'])) {
                         $form = $form->instanciate();
                         if (!$form->getForm()->isValid())
                             $errors = array_merge($errors, $form->getForm()->errors());

@@ -12,6 +12,14 @@ input[type="radio"]:focus, input[type="checkbox"]:focus
     outline: none;  
 }
 
+input[type="radio"], input[type="checkbox"]  
+    {    
+    box-shadow:none !important;
+    -webkit-box-shadow:none !important;
+    }
+    
+.label {margin:0 2px;display:inline-block}
+
 .centered {
     text-align:center;
 }

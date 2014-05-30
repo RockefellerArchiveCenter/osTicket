@@ -49,12 +49,12 @@ class OverviewReportAjaxAPI extends AjaxController {
                 "filter" => ('T1.dept_id IN ('.implode(',', db_input($thisstaff->getDepts())).')')
             ),
             "topic" => array(
-                "table" => TOPIC_TABLE,
-                "pk" => "topic_id",
+                "table" => COLLECTION_TABLE,
+                "pk" => "collection_id",
                 "sort" => 'name',
                 "fields" => "CONCAT_WS(' / ',"
-                    ."(SELECT P.topic FROM ".TOPIC_TABLE." P WHERE P.topic_id = T1.topic_pid),"
-                    ."T1.topic) as name ",
+                    ."(SELECT P.collection FROM ".COLLECTION_TABLE." P WHERE P.collection_id = T1.collection_pid),"
+                    ."T1.collection) as name ",
                 "headers" => array('Collection'),
                 "filter" => '1'
             ),

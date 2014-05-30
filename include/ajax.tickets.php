@@ -104,7 +104,9 @@ class TicketsAjaxAPI extends AjaxController {
 
         $result=array();
         $select = 'SELECT ticket.ticket_id';
-        $from = ' FROM '.TICKET_TABLE.' ticket ';
+        $from = ' FROM '.TICKET_TABLE.' ticket '
+                .' LEFT JOIN '.TICKET_COLLECTION_TABLE.' collection ON(ticket.ticket_id=collection.ticket_id) ';
+                
         //Access control.
         $where = ' WHERE ( (ticket.staff_id='.db_input($thisstaff->getId())
                     .' AND ticket.status="open" )';
@@ -125,6 +127,10 @@ class TicketsAjaxAPI extends AjaxController {
         //Help topic
         if($req['topicId'])
             $where.=' AND ticket.topic_id='.db_input($req['topicId']);
+            
+        //Collection
+        if($req['collectionId'])
+            $where.=' AND collection.collection_id='.db_input($req['collectionId']);
 
         //Status
         switch(strtolower($req['status'])) {
@@ -206,6 +212,7 @@ class TicketsAjaxAPI extends AjaxController {
                 'where' =>
                     "uemail.address LIKE '%$queryterm%' OR user.name LIKE '%$queryterm%' OR uans.value LIKE '%$queryterm%'",
             );
+            
         }
 
         // Dynamic fields

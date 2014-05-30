@@ -147,7 +147,7 @@ if ($_REQUEST['advsid'] && isset($_SESSION['adv_'.$_REQUEST['advsid']])) {
 }
 
 $sortOptions=array('date'=>'created','ID'=>'ticket.`number`',
-    'topic'=>'helptopic','name'=>'user.name','subj'=>'cdata.subject',
+    'collection'=>'collection','name'=>'user.name','subj'=>'cdata.subject',
     'status'=>'ticket.status','assignee'=>'assigned','staff'=>'staff',
     'dept'=>'dept_name');
 
@@ -232,7 +232,7 @@ $qselect.=' ,IF(ticket.duedate IS NULL,IF(sla.id IS NULL, NULL, DATE_ADD(ticket.
          .' ,CAST(GREATEST(IFNULL(ticket.lastmessage, 0), IFNULL(ticket.reopened, 0), ticket.created) as datetime) as effective_date '
          .' ,CONCAT_WS(" ", staff.firstname, staff.lastname) as staff, team.name as team '
          .' ,IF(staff.staff_id IS NULL,team.name,CONCAT_WS(" ", staff.lastname, staff.firstname)) as assigned '
-         .' ,IF(ptopic.topic_pid IS NULL, topic.topic, CONCAT_WS(" / ", ptopic.topic, topic.topic)) as helptopic '
+         //.' ,IF(pcollection.collection_pid IS NULL, collection.collection, CONCAT_WS(" / ", pcollection.collection, collection.collection)) as collection '
          .' ,cdata.priority_id, cdata.subject, pri.priority_desc, pri.priority_color';
 
 $qfrom.=' LEFT JOIN '.TICKET_LOCK_TABLE.' tlock ON (ticket.ticket_id=tlock.ticket_id AND tlock.expire>NOW()
@@ -240,8 +240,8 @@ $qfrom.=' LEFT JOIN '.TICKET_LOCK_TABLE.' tlock ON (ticket.ticket_id=tlock.ticke
        .' LEFT JOIN '.STAFF_TABLE.' staff ON (ticket.staff_id=staff.staff_id) '
        .' LEFT JOIN '.TEAM_TABLE.' team ON (ticket.team_id=team.team_id) '
        .' LEFT JOIN '.SLA_TABLE.' sla ON (ticket.sla_id=sla.id AND sla.isactive=1) '
-       .' LEFT JOIN '.TOPIC_TABLE.' topic ON (ticket.topic_id=topic.topic_id) '
-       .' LEFT JOIN '.TOPIC_TABLE.' ptopic ON (ptopic.topic_id=topic.topic_pid) '
+       //.' LEFT JOIN '.COLLECTION_TABLE.' collection ON (ticket.collection_id=collection.collection_id) '
+       //.' LEFT JOIN '.COLLECTION_TABLE.' pcollection ON (pcollection.collection_id=collection.collection_pid) '
        .' LEFT JOIN '.TABLE_PREFIX.'ticket__cdata cdata ON (cdata.ticket_id = ticket.ticket_id) '
        .' LEFT JOIN '.PRIORITY_TABLE.' pri ON (pri.priority_id = cdata.priority_id)';
 
@@ -333,9 +333,8 @@ if ($results) {
                         title="Sort By Status <?php echo $negorder; ?>">Status</a></th>
             <?php
             } else { ?>
-                <th width="60" <?php echo $topic_sort;?>>
-                    <a <?php echo $topic_sort; ?> href="tickets.php?sort=topic&order=<?php echo $negorder; ?><?php echo $qstr; ?>"
-                        title="Sort By Collection <?php echo $negorder; ?>">Collection</a></th>
+                <th width="60" >
+                    Collection</th>
             <?php
             }
 
@@ -430,7 +429,19 @@ if ($results) {
                     echo "<td>$displaystatus</td>";
                 } else { ?>
                 <td class="nohover">
-                <?php if ($row['helptopic']) echo "<span class='label label-default'>".$row['helptopic']."</span>"; ?>
+                <!-- HA: super hacky code to display multiple collections -->
+                <?php 
+                $id=$row['ticket_id'];
+                $collections = array();
+                $sql='SELECT t.collection_id, CONCAT_WS(" / ", pt.collection, t.collection) as name, t.color as color  FROM '.COLLECTION_TABLE.' t '
+                .' INNER JOIN '.TICKET_COLLECTION_TABLE.' ft ON(ft.collection_id=t.collection_id AND ft.ticket_id='.$id.') '
+                .' LEFT JOIN '.COLLECTION_TABLE.' pt ON(pt.collection_id=t.collection_pid) '
+                .' ORDER BY t.collection';
+                if (($res=db_query($sql)) && db_num_rows($res)) {
+                    while(list($id,$name,$color) = db_fetch_row($res))
+                        echo sprintf('<span class="label label-default" style="background-color:'.$color.'">'.$name.'</span>');
+                        }
+                        ?>
                 </td>
                 <?php
                 }
@@ -609,13 +620,13 @@ if ($results) {
             </select>
         </fieldset>
         <fieldset>
-            <label for="topicId">Collection:</label>
-            <select class="form-control" id="topicId" name="topicId">
-                <option value="" selected onClick="ga('send', 'event', 'Search', 'Advanced', 'Topic All');">&mdash; All Collections &mdash;</option>
+            <label for="collectionId">Collection:</label>
+            <select class="form-control" id="collectionId" name="collectionId">
+                <option value="" selected onClick="ga('send', 'event', 'Search', 'Advanced', 'Collection All');">&mdash; All Collections &mdash;</option>
                 <?php
-                if($topics=Topic::getHelpTopics()) {
-                    foreach($topics as $id =>$name)
-                        echo sprintf('<option value="%d" onClick="ga(\'send\', \'event\', \'Search\', \'Advanced\', \'Topic %s\');">%s</option>', $id, $name, $name);
+                if($collections=Collection::getCollections()) {
+                    foreach($collections as $id =>$name)
+                        echo sprintf('<option value="%d" onClick="ga(\'send\', \'event\', \'Search\', \'Advanced\', \'Collection %s\');">%s</option>', $id, $name, $name);
                 }
                 ?>
             </select>

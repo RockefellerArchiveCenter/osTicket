@@ -20,6 +20,7 @@ include_once(INCLUDE_DIR.'class.team.php');
 include_once(INCLUDE_DIR.'class.email.php');
 include_once(INCLUDE_DIR.'class.dept.php');
 include_once(INCLUDE_DIR.'class.topic.php');
+include_once(INCLUDE_DIR.'class.collection.php');
 include_once(INCLUDE_DIR.'class.lock.php');
 include_once(INCLUDE_DIR.'class.file.php');
 include_once(INCLUDE_DIR.'class.attachment.php');
@@ -40,6 +41,7 @@ class Ticket {
     var $number;
 
     var $ht;
+    var $coll;
 
     var $lastMsgId;
 
@@ -49,6 +51,7 @@ class Ticket {
     var $client; //Client Obj
     var $team;  //Team obj
     var $topic; //Topic obj
+    var $collection; //Collection obj
     var $tlock; //TicketLock obj
 
     var $thread; //Thread obj.
@@ -99,6 +102,7 @@ class Ticket {
         $this->tlock = null;
         $this->stats = null;
         $this->topic = null;
+        $this->collections = null;
         $this->thread = null;
         $this->collaborators = null;
 
@@ -252,6 +256,35 @@ class Ticket {
 
         return $this->ht['helptopic'];
     }
+    
+    function getCollectionsIds() {
+
+        if (!isset($this->ht['collections']) && ($collections=$this->getCollections())) {
+            $this->ht['collections'] = array_keys($collections);
+        }
+
+        return $this->ht['collections'];
+    }
+
+    function getCollections() {
+        //XXX: change it to obj (when needed)!
+
+        if (!isset($this->collections)) {
+            $this->collections = array();
+            $sql='SELECT t.collection_id, CONCAT_WS(" / ", pt.collection, t.collection) as name, t.color as color  FROM '.COLLECTION_TABLE.' t '
+                .' INNER JOIN '.TICKET_COLLECTION_TABLE.' ft ON(ft.collection_id=t.collection_id AND ft.ticket_id='.db_input($this->id).') '
+                .' LEFT JOIN '.COLLECTION_TABLE.' pt ON(pt.collection_id=t.collection_pid) '
+                .' ORDER BY t.collection';
+            if (($res=db_query($sql)) && db_num_rows($res)) {
+                while(list($id,$name,$color) = db_fetch_row($res))
+                    $this->collections[$id]=array(
+                    'name' => $name,
+                    'color'=> $color);
+            }
+        }
+
+        return $this->collections;
+    }
 
     function getCreateDate() {
         return $this->ht['created'];
@@ -342,7 +375,7 @@ class Ticket {
         global $cfg;
 
         $info=array('source'    =>  $this->getSource(),
-                    'topicId'   =>  $this->getTopicId(),
+                    'collectionId'   =>  $this->getCollectionId(),
                     'slaId' =>  $this->getSLAId(),
                     'user_id' => $this->getOwnerId(),
                     'duedate'   =>  $this->getDueDate()
@@ -466,6 +499,10 @@ class Ticket {
     function getTopicId() {
         return $this->ht['topic_id'];
     }
+    
+    function getCollectionId() {
+        return $this->ht['collection_id'];
+    }
 
     function getTopic() {
 
@@ -473,6 +510,14 @@ class Ticket {
             $this->topic = Topic::lookup($this->getTopicId());
 
         return $this->topic;
+    }
+    
+     function getCollection() {
+
+        if(!$this->collection && $this->getCollectionId())
+            $this->collection = Collection::lookup($this->getCollectionId());
+
+        return $this->collection;
     }
 
 
@@ -755,8 +800,8 @@ class Ticket {
             $slaId = $trump;
         } elseif ($this->getDept() && $this->getDept()->getSLAId()) {
             $slaId = $this->getDept()->getSLAId();
-        } elseif ($this->getTopic() && $this->getTopic()->getSLAId()) {
-            $slaId = $this->getTopic()->getSLAId();
+        } elseif ($this->getCollection() && $this->getCollection()->getSLAId()) {
+            $slaId = $this->getCollection()->getSLAId();
         } else {
             $slaId = $cfg->getDefaultSLAId();
         }
@@ -1773,7 +1818,7 @@ class Ticket {
             .', staff_id='.db_input($this->getStaffId())
             .', team_id='.db_input($this->getTeamId())
             .', dept_id='.db_input($this->getDeptId())
-            .', topic_id='.db_input($this->getTopicId())
+            .', collection_id='.db_input($this->getCollectionId())
             .', timestamp=NOW(), state='.db_input($state)
             .', staff='.db_input($staff))
             && db_affected_rows() == 1;
@@ -1910,6 +1955,28 @@ class Ticket {
     function deleteDrafts() {
         Draft::deleteForNamespace('ticket.%.' . $this->getId());
     }
+    
+    function updateCollections($ids){
+
+        if($ids) {
+            $collections = $this->getCollectionsIds();
+            foreach($ids as $id) {
+                if($collections && in_array($id,$collections)) continue;
+                $sql='INSERT IGNORE INTO '.TICKET_COLLECTION_TABLE
+                    .' SET ticket_id='.db_input($this->getId())
+                    .', collection_id='.db_input($id);
+                db_query($sql);
+            }
+        }
+
+        $sql='DELETE FROM '.TICKET_COLLECTION_TABLE.' WHERE ticket_id='.db_input($this->getId());
+        if($ids)
+            $sql.=' AND collection_id NOT IN('.implode(',', db_input($ids)).')';
+
+        db_query($sql);
+
+        return true;
+    }
 
     function update($vars, &$errors) {
 
@@ -1919,7 +1986,7 @@ class Ticket {
             return false;
 
         $fields=array();
-        $fields['topicId']  = array('type'=>'int',      'required'=>1, 'error'=>'Help topic required');
+        $fields['collections[]']  = array('type'=>'int',      'required'=>0, 'error'=>'Collection required');
         $fields['slaId']    = array('type'=>'int',      'required'=>0, 'error'=>'Select SLA');
         $fields['duedate']  = array('type'=>'date',     'required'=>0, 'error'=>'Invalid date - must be MM/DD/YY');
 
@@ -1941,9 +2008,11 @@ class Ticket {
         }
 
         if($errors) return false;
+        
+        $this->updateCollections($vars['collections']);
 
         $sql='UPDATE '.TICKET_TABLE.' SET updated=NOW() '
-            .' ,topic_id='.db_input($vars['topicId'])
+            //.' ,collection_id='.db_input($vars['collectionId'])
             .' ,sla_id='.db_input($vars['slaId'])
             .' ,source='.db_input($vars['source'])
             .' ,duedate='.($vars['duedate']?db_input(date('Y-m-d G:i',Misc::dbtime($vars['duedate'].' '.$vars['time']))):'NULL');
@@ -2238,11 +2307,11 @@ class Ticket {
         $fields['message']  = array('type'=>'*',     'required'=>1, 'error'=>'Message required');
         switch (strtolower($origin)) {
             case 'web':
-                $fields['topicId']  = array('type'=>'int',  'required'=>1, 'error'=>'Select help topic');
+                $fields['collectionId']  = array('type'=>'int',  'required'=>1, 'error'=>'Select collection');
                 break;
             case 'staff':
                 $fields['deptId']   = array('type'=>'int',  'required'=>0, 'error'=>'Dept. required');
-                $fields['topicId']  = array('type'=>'int',  'required'=>1, 'error'=>'Topic required');
+                $fields['collectionId']  = array('type'=>'int',  'required'=>1, 'error'=>'Collection required');
                 $fields['duedate']  = array('type'=>'date', 'required'=>0, 'error'=>'Invalid date - must be MM/DD/YY');
             case 'api':
                 $fields['source']   = array('type'=>'string', 'required'=>1, 'error'=>'Indicate source');
@@ -2297,27 +2366,27 @@ class Ticket {
         // OK...just do it.
         $deptId=$vars['deptId']; //pre-selected Dept if any.
         $source=ucfirst($vars['source']);
-        $topic=NULL;
+        $collection=NULL;
         // Intenal mapping magic...see if we need to override anything
-        if(isset($vars['topicId']) && ($topic=Topic::lookup($vars['topicId']))) { //Ticket created via web by user/or staff
-            $deptId=$deptId?$deptId:$topic->getDeptId();
+        if(isset($vars['collectionId']) && ($collection=Collection::lookup($vars['collectionId']))) { //Ticket created via web by user/or staff
+            $deptId=$deptId?$deptId:$collection->getDeptId();
             $priority = $form->getAnswer('priority');
             if (!$priority || !$priority->getIdValue())
-                $form->setAnswer('priority', null, $topic->getPriorityId());
+                $form->setAnswer('priority', null, $collection->getPriorityId());
             if($autorespond) $autorespond=$topic->autoRespond();
             $source=$vars['source']?$vars['source']:'Web';
 
             //Auto assignment.
-            if (!isset($vars['staffId']) && $topic->getStaffId())
-                $vars['staffId'] = $topic->getStaffId();
-            elseif (!isset($vars['teamId']) && $topic->getTeamId())
-                $vars['teamId'] = $topic->getTeamId();
+            if (!isset($vars['staffId']) && $collection->getStaffId())
+                $vars['staffId'] = $collection->getStaffId();
+            elseif (!isset($vars['teamId']) && $collection->getTeamId())
+                $vars['teamId'] = $collection->getTeamId();
 
             //set default sla.
             if(isset($vars['slaId']))
                 $vars['slaId'] = $vars['slaId']?$vars['slaId']:$cfg->getDefaultSLAId();
-            elseif($topic && $topic->getSLAId())
-                $vars['slaId'] = $topic->getSLAId();
+            elseif($collection && $collection->getSLAId())
+                $vars['slaId'] = $collection->getSLAId();
 
         }elseif($vars['emailId'] && !$vars['deptId'] && ($email=Email::lookup($vars['emailId']))) { //Emailed Tickets
             $deptId=$email->getDeptId();
@@ -2333,7 +2402,7 @@ class Ticket {
         if (!$priority || !$priority->getIdValue())
             $form->setAnswer('priority', null, $cfg->getDefaultPriorityId());
         $deptId=$deptId?$deptId:$cfg->getDefaultDeptId();
-        $topicId=$vars['topicId']?$vars['topicId']:0;
+        $collectionId=$vars['collectionId']?$vars['collectionId']:0;
         $ipaddress=$vars['ip']?$vars['ip']:$_SERVER['REMOTE_ADDR'];
         // HA grabs date from header of email
         if ($vars['date']) 
@@ -2350,7 +2419,7 @@ class Ticket {
             .' ,user_id='.db_input($user->getId())
             .' ,`number`='.db_input($number)
             .' ,dept_id='.db_input($deptId)
-            .' ,topic_id='.db_input($topicId)
+            .' ,collection_id='.db_input($collectionId)
             .' ,ip_address='.db_input($ipaddress)
             .' ,source='.db_input($source);
 

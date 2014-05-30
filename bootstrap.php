@@ -81,9 +81,11 @@ class Bootstrap {
         define('FAQ_TABLE',$prefix.'faq');
         define('FAQ_TOPIC_TABLE',$prefix.'faq_topic');
         define('FAQ_CATEGORY_TABLE',$prefix.'faq_category');
+        define('FAQ_COLLECTION_TABLE',$prefix.'faq_collection');
 
         define('DRAFT_TABLE',$prefix.'draft');
         define('TICKET_TABLE',$prefix.'ticket');
+        define('TICKET_COLLECTION_TABLE',$prefix.'ticket_collection');
         define('TICKET_THREAD_TABLE',$prefix.'ticket_thread');
         define('TICKET_ATTACHMENT_TABLE',$prefix.'ticket_attachment');
         define('TICKET_LOCK_TABLE',$prefix.'ticket_lock');
@@ -103,6 +105,7 @@ class Bootstrap {
         define('FORM_ANSWER_TABLE',$prefix.'form_entry_values');
 
         define('TOPIC_TABLE',$prefix.'help_topic');
+        define('COLLECTION_TABLE',$prefix.'collection');
         define('SLA_TABLE', $prefix.'sla');
 
         define('EMAIL_TABLE',$prefix.'email');
@@ -222,7 +225,7 @@ class Bootstrap {
                         return $str;
                 }
             }
-            define('LATIN1_UC_CHARS', 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝ');
+            define('LATIN1_UC_CHARS', 'À�ÂÃÄÅÆÇÈÉÊËÌ�Î��ÑÒÓÔÕÖØÙÚÛÜ�');
             define('LATIN1_LC_CHARS', 'àáâãäåæçèéêëìíîïðñòóôõöøùúûüý');
             function mb_strtoupper($str) {
                 if (is_array($str)) $str = $str[0];

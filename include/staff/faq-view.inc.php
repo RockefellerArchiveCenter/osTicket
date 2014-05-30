@@ -28,9 +28,10 @@ if($thisstaff->canManageFAQ()) {
 </div>
 <div class="clear"></div>
 <p>
- <div><span class="faded"><b>Attachments:</b></span> <?php echo $faq->getAttachmentsLinks(); ?></div>
- <div><span class="faded"><b>Collections:</b></span>
-    <?php echo ($topics=$faq->getHelpTopics())?implode(', ',$topics):' '; ?>
+ <div><b>Attachments:</b> <?php echo $faq->getAttachmentsLinks(); ?></div>
+ <div><b>Collections:</b>
+    <?php foreach ($collections=$faq->getCollections() as $collection) 
+    echo sprintf('<span class="label label-default" style="background-color:%s">%s</span>', $collection['color'], $collection['name']) ?>
     </div>
 </p>
 <div class="faded">&nbsp;Last updated <?php echo Format::db_daydatetime($faq->getUpdateDate()); ?></div>

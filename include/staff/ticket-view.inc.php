@@ -265,8 +265,14 @@ if($ticket->isOverdue())
         <td width="50%">
             <table cellspacing="0" cellpadding="4" width="100%" border="0">
                 <tr>
-                    <th width="100">Collection:</th>
-                    <td><?php echo Format::htmlchars($ticket->getHelpTopic()); ?></td>
+                    <th width="100">Collections:</th>
+                    <td>
+                    <?php
+                        $collections=$ticket->getCollections();
+                        foreach ($collections as $collection)
+                            echo sprintf('<span class="label label-default" style="background-color:%s">%s</span>', $collection['color'], $collection['name']);
+                        ?>
+                    </td>
                 </tr>
                 <tr>
                     <th nowrap>Last Message:</th>

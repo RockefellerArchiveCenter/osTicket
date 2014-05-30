@@ -177,7 +177,7 @@ class AdminNav extends StaffNav{
             $tabs=array();
             $tabs['dashboard']=array('desc'=>'Dashboard','href'=>'logs.php','title'=>'Admin Dashboard');
             $tabs['settings']=array('desc'=>'Settings','href'=>'settings.php','title'=>'System Settings');
-            $tabs['manage']=array('desc'=>'Manage','href'=>'helptopics.php','title'=>'Manage Options');
+            $tabs['manage']=array('desc'=>'Manage','href'=>'collections.php','title'=>'Manage Options');
             $tabs['emails']=array('desc'=>'Emails','href'=>'emails.php','title'=>'Email Settings');
             $tabs['staff']=array('desc'=>'Staff','href'=>'staff.php','title'=>'Manage Staff');
             $this->tabs=$tabs;
@@ -206,7 +206,8 @@ class AdminNav extends StaffNav{
                     $subnav[]=array('desc'=>'Alerts&nbsp;&amp;&nbsp;Notices','href'=>'settings.php?t=alerts','iconclass'=>'alert-settings');
                     break;
                 case 'manage':
-                    $subnav[]=array('desc'=>'Collections','href'=>'helptopics.php','iconclass'=>'helpTopics');
+                    $subnav[]=array('desc'=>'Collections','href'=>'collections.php','iconclass'=>'collections');
+                    //$subnav[]=array('desc'=>'Collections','href'=>'helptopics.php','iconclass'=>'helpTopics');
                     $subnav[]=array('desc'=>'Ticket&nbsp;Filters','href'=>'filters.php',
                                         'title'=>'Ticket&nbsp;Filters','iconclass'=>'ticketFilters');
                     $subnav[]=array('desc'=>'SLA&nbsp;Plans','href'=>'slas.php','iconclass'=>'sla');

@@ -52,11 +52,11 @@ if(!defined('OSTSTAFFINC') || !$thisstaff) die('Access Denied');
 </form>
 <div>
 <?php
-if($_REQUEST['q'] || $_REQUEST['cid'] || $_REQUEST['topicId']) { //Search.
-    $sql='SELECT faq.faq_id, question, ispublished, count(attach.file_id) as attachments, count(ft.topic_id) as topics '
+if($_REQUEST['q'] || $_REQUEST['cid'] || $_REQUEST['collectionId']) { //Search.
+    $sql='SELECT faq.faq_id, question, ispublished, count(attach.file_id) as attachments, count(ft.collection_id) as collections '
         .' FROM '.FAQ_TABLE.' faq '
         .' LEFT JOIN '.FAQ_CATEGORY_TABLE.' cat ON(cat.category_id=faq.category_id) '
-        .' LEFT JOIN '.FAQ_TOPIC_TABLE.' ft ON(ft.faq_id=faq.faq_id) '
+        .' LEFT JOIN '.FAQ_COLLECTION_TABLE.' ft ON(ft.faq_id=faq.faq_id) '
         .' LEFT JOIN '.ATTACHMENT_TABLE.' attach
              ON(attach.object_id=faq.faq_id AND attach.type=\'F\' AND attach.inline = 0) '
         .' WHERE 1 ';
@@ -64,8 +64,8 @@ if($_REQUEST['q'] || $_REQUEST['cid'] || $_REQUEST['topicId']) { //Search.
     if($_REQUEST['cid'])
         $sql.=' AND faq.category_id='.db_input($_REQUEST['cid']);
 
-    if($_REQUEST['topicId'])
-        $sql.=' AND ft.topic_id='.db_input($_REQUEST['topicId']);
+    if($_REQUEST['collectionId'])
+        $sql.=' AND ft.collection_id='.db_input($_REQUEST['collectionId']);
 
     if($_REQUEST['q']) {
         $sql.=" AND (question LIKE ('%".db_input($_REQUEST['q'],false)."%')

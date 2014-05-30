@@ -8,7 +8,7 @@ if($faq){
     $submit_text='Save Changes';
     $info=$faq->getHashtable();
     $info['id']=$faq->getId();
-    $info['topics']=$faq->getHelpTopicsIds();
+    $info['collections']=$faq->getCollectionsIds();
     $info['answer']=Format::viewableImages($faq->getAnswer());
     $info['notes']=Format::viewableImages($faq->getNotes());
     $qstr='id='.$faq->getId();
@@ -118,22 +118,23 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             </td>
         </tr>
         <?php
-        $sql='SELECT ht.topic_id, CONCAT_WS(" / ", pht.topic, ht.topic) as name '
-            .' FROM '.TOPIC_TABLE.' ht '
-            .' LEFT JOIN '.TOPIC_TABLE.' pht ON(pht.topic_id=ht.topic_pid) ';
+        $sql='SELECT coll.collection_id, CONCAT_WS(" / ", pcoll.collection, coll.collection) as name, coll.color as color '
+            .' FROM '.COLLECTION_TABLE.' coll '
+            .' LEFT JOIN '.COLLECTION_TABLE.' pcoll ON(pcoll.collection_id=coll.collection_pid) ';
         if(($res=db_query($sql)) && db_num_rows($res)) { ?>
         <tr>
             <th colspan="2">
-                <em><strong>Collections</strong>: Check all help topics related to this FAQ.</em>
+                <em><strong>Collections</strong>: Check all collections related to this FAQ.</em>
             </th>
         </tr>
         <tr><td  class="form-group form-inline" colspan="2">
             <?php
-            while(list($topicId,$topic)=db_fetch_row($res)) {
-                echo sprintf('<input class="form-control checkbox" type="checkbox" name="topics[]" value="%d" %s><label>&nbsp;%s</label><br/>',
-                        $topicId,
-                        (($info['topics'] && in_array($topicId,$info['topics']))?'checked="checked"':''),
-                        $topic);
+            while(list($collectionId,$collection,$color)=db_fetch_row($res)) {
+                echo sprintf('<input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span>',
+                        $collectionId,
+                        (($info['collections'] && in_array($collectionId,$info['collections']))?'checked="checked"':''),
+                        $color,
+                        $collection);
             }
              ?>
             </td>

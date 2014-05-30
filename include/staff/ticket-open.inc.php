@@ -112,31 +112,44 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td width="160" class="required">
                 Collection:
             </td>
-            <td class="form-group form-inline has-error">
-                <select class="form-control" name="topicId" onchange="javascript:
+            <?php
+                $sql='SELECT coll.collection_id, CONCAT_WS(" / ", pcoll.collection, coll.collection) as name, coll.color as color '
+                    .' FROM '.COLLECTION_TABLE.' coll '
+                    .' LEFT JOIN '.COLLECTION_TABLE.' pcoll ON(pcoll.collection_id=coll.collection_pid) ';
+                if(($res=db_query($sql)) && db_num_rows($res)) { ?><td class="form-group form-inline has-error">
+                <!--<select class="form-control" name="collectionId" onchange="javascript:
                         $('#dynamic-form').load(
-                            'ajax.php/form/help-topic/' + this.value);
+                            'ajax.php/form/collection/' + this.value);
                         ">
                     <?php
-                    if ($topics=Topic::getHelpTopics()) {
-                        if (count($topics) == 1)
+                    if ($collections=Collection::getCollections()) {
+                        if (count($collections) == 1)
                             $selected = 'selected="selected"';
                         else { ?>
                 <option value="" selected >&mdash; Select Collection &mdash;</option>
 <?php                   }
-                        foreach($topics as $id =>$name) {
+                        foreach($collections as $id =>$name) {
                             echo sprintf('<option value="%d" %s %s>%s</option>',
-                                $id, ($info['topicId']==$id)?'selected="selected"':'',
+                                $id, ($info['collectionId']==$id)?'selected="selected"':'',
                                 $selected, $name);
                         }
-                        if (count($topics) == 1 && !$form) {
-                            $T = Topic::lookup($id);
+                        if (count($collection) == 1 && !$form) {
+                            $T = Collection::lookup($id);
                             $form = DynamicForm::lookup($T->ht['form_id']);
                         }
                     }
                     ?>
-                </select>
-                <?php if($errors['topicId']) echo '<span class="alert alert-danger">'.$errors['topicId']. '</span>'; ?>
+                </select>-->
+                <?php
+                while(list($collectionId,$collection,$color)=db_fetch_row($res)) {
+                    echo sprintf('<input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span>',
+                        $collectionId,
+                        (($info['collections'] && in_array($collectionId,$info['collections']))?'checked="checked"':''),
+                        $color,
+                        $collection);
+                }
+                ?>
+                <?php if($errors['collectionId']) echo '<span class="alert alert-danger">'.$errors['collectionId']. '</span>'; ?>
             </td>
         </tr>
         <tr>
