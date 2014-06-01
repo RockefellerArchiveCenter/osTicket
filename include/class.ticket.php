@@ -1818,7 +1818,6 @@ class Ticket {
             .', staff_id='.db_input($this->getStaffId())
             .', team_id='.db_input($this->getTeamId())
             .', dept_id='.db_input($this->getDeptId())
-            .', collection_id='.db_input($this->getCollectionId())
             .', timestamp=NOW(), state='.db_input($state)
             .', staff='.db_input($staff))
             && db_affected_rows() == 1;
@@ -2419,7 +2418,6 @@ class Ticket {
             .' ,user_id='.db_input($user->getId())
             .' ,`number`='.db_input($number)
             .' ,dept_id='.db_input($deptId)
-            .' ,collection_id='.db_input($collectionId)
             .' ,ip_address='.db_input($ipaddress)
             .' ,source='.db_input($source);
 
