@@ -821,7 +821,7 @@ Class ThreadEntry {
 
         if (list($id, $mid) = db_fetch_row(db_query(
                 sprintf($search, db_input($mailinfo['mid']))))) {
-            $seen = true;
+            //$seen = true;
             return ThreadEntry::lookup($id);
         }
 
