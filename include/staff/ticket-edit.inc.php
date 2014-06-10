@@ -85,7 +85,7 @@ if ($_POST)
                 <?php
                 $info['collections']=$ticket->getCollectionsIds();
                 while(list($collectionId,$collection,$color)=db_fetch_row($res)) {
-                echo sprintf('<input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span>',
+                echo sprintf('<span style="display:inline-block"><input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span></span>',
                         $collectionId,
                         (($info['collections'] && in_array($collectionId,$info['collections']))?'checked="checked"':''),
                         $color,

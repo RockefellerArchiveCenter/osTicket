@@ -116,38 +116,14 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 $sql='SELECT coll.collection_id, CONCAT_WS(" / ", pcoll.collection, coll.collection) as name, coll.color as color '
                     .' FROM '.COLLECTION_TABLE.' coll '
                     .' LEFT JOIN '.COLLECTION_TABLE.' pcoll ON(pcoll.collection_id=coll.collection_pid) ';
-                if(($res=db_query($sql)) && db_num_rows($res)) { ?><td class="form-group form-inline has-error">
-                <!--<select class="form-control" name="collectionId" onchange="javascript:
-                        $('#dynamic-form').load(
-                            'ajax.php/form/collection/' + this.value);
-                        ">
-                    <?php
-                    if ($collections=Collection::getCollections()) {
-                        if (count($collections) == 1)
-                            $selected = 'selected="selected"';
-                        else { ?>
-                <option value="" selected >&mdash; Select Collection &mdash;</option>
-<?php                   }
-                        foreach($collections as $id =>$name) {
-                            echo sprintf('<option value="%d" %s %s>%s</option>',
-                                $id, ($info['collectionId']==$id)?'selected="selected"':'',
-                                $selected, $name);
-                        }
-                        if (count($collection) == 1 && !$form) {
-                            $T = Collection::lookup($id);
-                            $form = DynamicForm::lookup($T->ht['form_id']);
-                        }
-                    }
-                    ?>
-                </select>-->
-                <?php
+                if(($res=db_query($sql)) && db_num_rows($res)) {echo '<td class="form-group form-inline has-error">';};
                 while(list($collectionId,$collection,$color)=db_fetch_row($res)) {
-                    echo sprintf('<input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span>',
+                    echo sprintf('<span style="display:inline-block"><input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span></span>',
                         $collectionId,
                         (($info['collections'] && in_array($collectionId,$info['collections']))?'checked="checked"':''),
                         $color,
                         $collection);
-                }
+                };
                 ?>
                 <?php if($errors['collectionId']) echo '<span class="alert alert-danger">'.$errors['collectionId']. '</span>'; ?>
             </td>
