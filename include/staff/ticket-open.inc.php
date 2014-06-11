@@ -231,7 +231,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         $tform->render(true);
         ?>
         </tbody>
-        <tbody>
+        <!--<tbody>
         <?php
         //is the user allowed to post replies??
         if($thisstaff->canPostReply()) { ?>
@@ -349,7 +349,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     ><?php echo $info['note']; ?></textarea>
             </td>
         </tr>
-    </tbody>
+    </tbody>-->
 </table>
 <p class="centered">
     <input class="btn btn-success" type="submit" name="submit" value="Open">

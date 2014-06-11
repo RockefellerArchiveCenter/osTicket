@@ -2306,11 +2306,11 @@ class Ticket {
         $fields['message']  = array('type'=>'*',     'required'=>1, 'error'=>'Message required');
         switch (strtolower($origin)) {
             case 'web':
-                $fields['collectionId']  = array('type'=>'int',  'required'=>1, 'error'=>'Select collection');
+                $fields['collectionId']  = array('type'=>'int',  'required'=>0, 'error'=>'Select collection');
                 break;
             case 'staff':
                 $fields['deptId']   = array('type'=>'int',  'required'=>0, 'error'=>'Dept. required');
-                $fields['collectionId']  = array('type'=>'int',  'required'=>1, 'error'=>'Collection required');
+                $fields['collectionId']  = array('type'=>'int',  'required'=>0, 'error'=>'Collection required');
                 $fields['duedate']  = array('type'=>'date', 'required'=>0, 'error'=>'Invalid date - must be MM/DD/YY');
             case 'api':
                 $fields['source']   = array('type'=>'string', 'required'=>1, 'error'=>'Indicate source');
@@ -2410,6 +2410,7 @@ class Ticket {
             $date=date('Y-m-d G:i');
 
         //We are ready son...hold on to the rails.
+                
         // HA inserting date from header of email rather than when the ticket is retrieved
         $number = Ticket::genRandTicketNumber();
         $sql='INSERT INTO '.TICKET_TABLE.' 
@@ -2447,6 +2448,8 @@ class Ticket {
         $ticket->loadDynamicData();
 
         $dept = $ticket->getDept();
+        
+        $ticket->updateCollections($vars['collections']);
 
         //post the message.
         unset($vars['cannedattachments']); //Ticket::open() might have it set as part of  open & respond.
