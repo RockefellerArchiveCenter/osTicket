@@ -212,8 +212,8 @@ class Collection {
 
         if(!$vars['collection'])
             $errors['collection']='Collection name required';
-        elseif(strlen($vars['collection'])<5)
-            $errors['collection']='Collection name is too short. 5 chars minimum';
+        elseif(strlen($vars['collection'])<2)
+            $errors['collection']='Collection name is too short. 2 characters minimum';
         elseif(($tid=self::getIdByName($vars['collection'], $vars['pid'])) && $tid!=$id)
             $errors['collection']='Collection already exists';
 
