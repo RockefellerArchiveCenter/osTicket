@@ -28,7 +28,7 @@ include_once(INCLUDE_DIR.'class.ticket.php');
  */
 class OverviewReportAjaxAPI extends AjaxController {
     function enumTabularGroups() {
-        return $this->encode(array("dept"=>"Department", /*"topic"=>"Collections",*/
+        return $this->encode(array("dept"=>"Department", "collection"=>"Collections",
             # XXX: This will be relative to permissions based on the
             # logged-in-staff. For basic staff, this will be 'My Stats'
             "staff"=>"Staff"));
@@ -43,24 +43,25 @@ class OverviewReportAjaxAPI extends AjaxController {
             "dept" => array(
                 "table" => DEPT_TABLE,
                 "pk" => "dept_id",
+                "pk2" => "dept_id",
                 "sort" => 'T1.dept_name',
                 "fields" => 'T1.dept_name',
                 "headers" => array('Department'),
                 "filter" => ('T1.dept_id IN ('.implode(',', db_input($thisstaff->getDepts())).')')
             ),
-            "topic" => array(
-                "table" => COLLECTION_TABLE,
+            "collection" => array(
+                "table" => TICKET_COLLECTION_TABLE,
                 "pk" => "collection_id",
+                "pk2" => "ticket_id",
                 "sort" => 'name',
-                "fields" => "CONCAT_WS(' / ',"
-                    ."(SELECT P.collection FROM ".COLLECTION_TABLE." P WHERE P.collection_id = T1.collection_pid),"
-                    ."T1.collection) as name ",
+                "fields" => "(SELECT P.collection FROM ".COLLECTION_TABLE." P WHERE P.collection_id = T1.collection_id) as name",
                 "headers" => array('Collection'),
                 "filter" => '1'
             ),
             "staff" => array(
                 "table" => STAFF_TABLE,
                 "pk" => 'staff_id',
+                "pk2" => 'staff_id',
                 "sort" => 'name',
                 "fields" => "CONCAT_WS(' ', T1.firstname, T1.lastname) as name",
                 "headers" => array('Staff Member'),
@@ -99,18 +100,18 @@ class OverviewReportAjaxAPI extends AjaxController {
             ORDER BY '.$info['sort']),
 
             array(1, 'SELECT '.$info['fields'].',
-                FORMAT(AVG(DATEDIFF(T2.closed, T2.created)),1) AS ServiceTime
+                FORMAT(AVG(DATEDIFF( T3.closed, T3.created)),1) AS ServiceTime
             FROM '.$info['table'].' T1
-                LEFT JOIN '.TICKET_TABLE.' T2 ON (T2.'.$info['pk'].'=T1.'.$info['pk'].')
-                LEFT JOIN '.STAFF_TABLE.' S1 ON (S1.staff_id=T2.staff_id)
-            WHERE '.$info['filter'].' AND T2.closed BETWEEN '.$start.' AND '.$stop.'
+                LEFT JOIN '.TICKET_TABLE.' T3 ON (T3.'.$info['pk2'].'=T1.'.$info['pk2'].')
+                LEFT JOIN '.STAFF_TABLE.' S1 ON (S1.staff_id=T3.staff_id)
+            WHERE '.$info['filter'].' AND T3.closed BETWEEN '.$start.' AND '.$stop.'
             GROUP BY T1.'.$info['pk'].'
             ORDER BY '.$info['sort']),
 
             array(1, 'SELECT '.$info['fields'].',
                 FORMAT(AVG(DATEDIFF(B2.created, B1.created)),1) AS ResponseTime
             FROM '.$info['table'].' T1
-                LEFT JOIN '.TICKET_TABLE.' T2 ON (T2.'.$info['pk'].'=T1.'.$info['pk'].')
+                LEFT JOIN '.TICKET_TABLE.' T2 ON (T2.'.$info['pk2'].'=T1.'.$info['pk2'].')
                 LEFT JOIN '.TICKET_THREAD_TABLE.' B2 ON (B2.ticket_id = T2.ticket_id
                     AND B2.thread_type="R")
                 LEFT JOIN '.TICKET_THREAD_TABLE.' B1 ON (B2.pid = B1.id)
