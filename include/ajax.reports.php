@@ -91,7 +91,7 @@ class OverviewReportAjaxAPI extends AjaxController {
                 COUNT(*)-COUNT(NULLIF(A1.state, "reopened")) AS Reopened
             FROM '.$info['table'].' T1
                 LEFT JOIN '.TICKET_EVENT_TABLE.' A1
-                    ON (A1.'.$info['pk'].'=T1.'.$info['pk'].'
+                    ON (A1.'.$info['pk2'].'=T1.'.$info['pk2'].'
                          AND NOT annulled
                          AND (A1.timestamp BETWEEN '.$start.' AND '.$stop.'))
                 LEFT JOIN '.STAFF_TABLE.' S1 ON (S1.staff_id=A1.staff_id)
@@ -99,6 +99,18 @@ class OverviewReportAjaxAPI extends AjaxController {
             GROUP BY T1.'.$info['pk'].'
             ORDER BY '.$info['sort']),
 
+            array(1, 'SELECT '.$info['fields'].',
+                COUNT(B2.ticket_id) AS Responses
+            FROM '.$info['table'].' T1
+                LEFT JOIN '.TICKET_TABLE.' T2 ON (T2.'.$info['pk2'].'=T1.'.$info['pk2'].')
+                LEFT JOIN '.TICKET_THREAD_TABLE.' B2 ON (B2.ticket_id = T2.ticket_id
+                    AND B2.thread_type="R")
+                LEFT JOIN '.TICKET_THREAD_TABLE.' B1 ON (B2.pid = B1.id)
+                LEFT JOIN '.STAFF_TABLE.' S1 ON (S1.staff_id=B2.staff_id)
+            WHERE '.$info['filter'].' AND B1.created BETWEEN '.$start.' AND '.$stop.'
+            GROUP BY T1.'.$info['pk'].'
+            ORDER BY '.$info['sort']),
+            
             array(1, 'SELECT '.$info['fields'].',
                 FORMAT(AVG(DATEDIFF( T3.closed, T3.created)),1) AS ServiceTime
             FROM '.$info['table'].' T1
@@ -145,7 +157,7 @@ class OverviewReportAjaxAPI extends AjaxController {
         }
         return array("columns" => array_merge($info['headers'],
                         array('Opened','Assigned','Overdue','Closed','Reopened',
-                              'Service Time','Response Time')),
+                              'Responses','Service Time','Response Time')),
                      "data" => $rows);
     }
 
