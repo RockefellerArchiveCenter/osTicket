@@ -528,13 +528,13 @@ if($cfg->showAnsweredTickets()) {
                             (!$_REQUEST['status'] || $_REQUEST['status']=='open'));
     }
 
-    if($stats['answered']) {
-        $nav->addSubMenu(array('desc'=>'Answered ('.number_format($stats['answered']).')',
-                               'title'=>'Answered Tickets',
-                               'href'=>'tickets.php?status=answered',
-                               'iconclass'=>'answeredTickets'),
-                            ($_REQUEST['status']=='answered'));
-    }
+    //if($stats['answered']) {
+    //    $nav->addSubMenu(array('desc'=>'Answered ('.number_format($stats['answered']).')',
+    //                           'title'=>'Answered Tickets',
+    //                           'href'=>'tickets.php?status=answered',
+    //                           'iconclass'=>'answeredTickets'),
+    //                        ($_REQUEST['status']=='answered'));
+    //}
 }
 
 if($stats['assigned']) {
