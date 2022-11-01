@@ -33,12 +33,10 @@ class DatabaseMigrater {
     var $end;
     var $sqldir;
 
-    function DatabaseMigrater($start, $end, $sqldir) {
-
+    function __construct($start, $end, $sqldir) {
         $this->start = $start;
         $this->end = $end;
         $this->sqldir = $sqldir;
-
     }
 
     function getPatches($stop=null) {
@@ -80,9 +78,8 @@ class DatabaseMigrater {
      * If the hash file doesn't match the schema_signature on record, then an
      * update is triggered and the patches in the stream folder are used to
      * upgrade the database.
-	 */
-	/* static */
-    function getUpgradeStreams($basedir) {
+     */
+    static function getUpgradeStreams($basedir) {
 		static $streams = array();
         if ($streams) return $streams;
 

@@ -71,17 +71,18 @@ class Mail
      * @return object Mail a instance of the driver class or if fails a PEAR Error
      * @access public
      */
-    function &factory($driver, $params = array())
+    static function &factory($driver, $params = array())
     {
         $driver = strtolower($driver);
-        @include_once 'Mail/' . $driver . '.php';
         $class = 'Mail_' . $driver;
-        if (class_exists($class)) {
-            $mailer = new $class($params);
-            return $mailer;
-        } else {
-            return PEAR::raiseError('Unable to find class for driver ' . $driver);
-        }
+        if (!class_exists($class))
+            include_once 'Mail/' . $driver . '.php';
+
+        if (!class_exists($class))
+            return PEAR::raiseError('Unable to find class for driver ' .  $driver);
+
+        $mailer = new $class($params);
+        return $mailer;
     }
 
     /**
@@ -250,7 +251,8 @@ class Mail
         // Parse recipients, leaving out all personal info. This is
         // for smtp recipients, etc. All relevant personal information
         // should already be in the headers.
-        $addresses = Mail_RFC822::parseAddressList($recipients, 'localhost', false);
+        $parser = new Mail_RFC822();
+        $addresses = $parser->parseAddressList($recipients, 'localhost', false);
 
         // If parseAddressList() returned a PEAR_Error object, just return it.
         if (is_a($addresses, 'PEAR_Error')) {

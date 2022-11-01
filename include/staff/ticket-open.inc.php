@@ -1,160 +1,287 @@
 <?php
-if(!defined('OSTSCPINC') || !$thisstaff || !$thisstaff->canCreateTickets()) die('Access Denied');
+if (!defined('OSTSCPINC') || !$thisstaff
+        || !$thisstaff->hasPerm(Ticket::PERM_CREATE, false))
+        die('Access Denied');
+
 $info=array();
-$info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
+$info=Format::htmlchars(($errors && $_POST)?$_POST:$info, true);
+
+if ($_SESSION[':form-data'] && !$_GET['tid'])
+  unset($_SESSION[':form-data']);
+
+//  Use thread entry to seed the ticket
+if (!$user && $_GET['tid'] && ($entry = ThreadEntry::lookup($_GET['tid']))) {
+    if ($entry->getThread()->getObjectType() == 'T')
+      $oldTicketId = $entry->getThread()->getObjectId();
+    if ($entry->getThread()->getObjectType() == 'A')
+      $oldTaskId = $entry->getThread()->getObjectId();
+
+    $_SESSION[':form-data']['message'] = Format::htmlchars($entry->getBody());
+    $_SESSION[':form-data']['ticketId'] = $oldTicketId;
+    $_SESSION[':form-data']['taskId'] = $oldTaskId;
+    $_SESSION[':form-data']['eid'] = $entry->getId();
+    $_SESSION[':form-data']['timestamp'] = $entry->getCreateDate();
+
+    if ($entry->user_id)
+       $user = User::lookup($entry->user_id);
+
+     if (($m= TicketForm::getInstance()->getField('message'))) {
+         $k = 'attach:'.$m->getId();
+         unset($_SESSION[':form-data'][$k]);
+        foreach ($entry->getAttachments() as $a) {
+          if (!$a->inline && $a->file) {
+            $_SESSION[':form-data'][$k][$a->file->getId()] = $a->getFilename();
+            $_SESSION[':uploadedFiles'][$a->file->getId()] = $a->getFilename();
+          }
+        }
+     }
+}
+
+if (!$info['topicId'])
+    $info['topicId'] = $cfg->getDefaultTopicId();
+
+$forms = array();
+if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
+    foreach ($topic->getForms() as $F) {
+        if (!$F->hasAnyVisibleFields())
+            continue;
+        if ($_POST) {
+            $F = $F->instanciate();
+            $F->isValidForClient();
+        }
+        $forms[] = $F;
+    }
+}
+
+if ($_POST)
+    $info['duedate'] = Format::date(strtotime($info['duedate']), false, false, 'UTC');
 ?>
-<form action="tickets.php?a=open" method="post" id="save"  enctype="multipart/form-data">
+<form action="tickets.php?a=open" method="post" class="save"  enctype="multipart/form-data">
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="create">
  <input type="hidden" name="a" value="open">
- <h2>Open New Ticket</h2>
- <table class="table" width="100%" border="0" cellspacing="0" cellpadding="2">
+<div style="margin-bottom:20px; padding-top:5px;">
+    <div class="pull-left flush-left">
+        <h2><?php echo __('Open a New Ticket');?></h2>
+    </div>
+</div>
+ <table class="form_table fixed" width="940" border="0" cellspacing="0" cellpadding="2">
     <thead>
     <!-- This looks empty - but beware, with fixed table layout, the user
          agent will usually only consult the cells in the first row to
          construct the column widths of the entire toable. Therefore, the
          first row needs to have two cells -->
-        <tr><td></td><td></td></tr>
-        <tr>
-            <th colspan="2">
-                <h4>New Ticket</h4>
-            </th>
-        </tr>
+        <tr><td style="padding:0;"></td><td style="padding:0;"></td></tr>
     </thead>
     <tbody>
         <tr>
             <th colspan="2">
-                <em><strong>User Information</strong>: </em>
+                <em><strong><?php echo __('User and Collaborators'); ?></strong>: </em>
+                <div class="error"><?php echo $errors['user']; ?></div>
             </th>
         </tr>
-        <?php
-        if ($user) { ?>
-        <tr><td>User:</td><td>
-            <div id="user-info">
-                <input type="hidden" name="uid" id="uid" value="<?php echo $user->getId(); ?>" />
-            <a href="#" onclick="javascript:
-                $.userLookup('ajax.php/users/<?php echo $user->getId(); ?>/edit',
-                        function (user) {
-                            $('#user-name').text(user.name);
-                            $('#user-email').text(user.email);
-                        });
-                return false;
-                "><i class="icon-user"></i>
-                <span id="user-name"><?php echo $user->getName(); ?></span>
-                &lt;<span id="user-email"><?php echo $user->getEmail(); ?></span>&gt;
-                </a>
-                <a class="action-button" style="float:none;overflow:inherit" href="#"
+              <?php
+              if ($user) { ?>
+                  <tr><td><?php echo __('User'); ?>:</td><td>
+                    <div id="user-info">
+                      <input type="hidden" name="uid" id="uid" value="<?php echo $user->getId(); ?>" />
+                      <?php if ($thisstaff->hasPerm(User::PERM_EDIT)) { ?>
+                      <a href="#" onclick="javascript:
+                      $.userLookup('ajax.php/users/<?php echo $user->getId(); ?>/edit',
+                      function (user) {
+                        $('#user-name').text(user.name);
+                        $('#user-email').text(user.email);
+                      });
+                      return false;
+                      ">
+                      <?php } else { ?>
+                      <a href="#">
+                      <?php } ?>
+                      <i class="icon-user"></i>
+                      <span id="user-name"><?php echo Format::htmlchars($user->getName()); ?></span>
+                      &lt;<span id="user-email"><?php echo $user->getEmail(); ?></span>&gt;
+                    </a>
+                    <a class="inline button" style="overflow:inherit" href="#"
                     onclick="javascript:
-                        $.userLookup('ajax.php/users/select/'+$('input#uid').val(),
-                            function(user) {
-                                $('input#uid').val(user.id);
-                                $('#user-name').text(user.name);
-                                $('#user-email').text('<'+user.email+'>');
-                        });
-                        return false;
-                "><i class="icon-edit"></i> Change</a>
-            </div>
-        </td></tr>
-        <?php
-        } else { //Fallback: Just ask for email and name
-            ?>
-        <tr>
-            <td width="160" class="required"> Email Address: </td>
-            <td class="form-group form-inline has-error">
-                    <input class="form-control" type="text" size=45 name="email" id="user-email"
-                        autocomplete="off" autocorrect="off" value="<?php echo $info['email']; ?>" />
-                <?php if($errors['email']) echo '<span class="alert alert-danger">'.$errors['email']. '</span>'; ?>
-            </td>
-        </tr>
-        <tr>
-            <td width="160" class="required"> Full Name: </td>
-            <td class="form-group form-inline has-error">
-                <span style="display:inline-block;">
-                    <input class="form-control" type="text" size=45 name="name" id="user-name" value="<?php echo $info['name']; ?>" /> </span>
-                <?php if($errors['name']) echo '<span class="alert alert-danger">'.$errors['name']. '</span>'; ?>
-            </td>
-        </tr>
-        <?php
-        } ?>
+                    $.userLookup('ajax.php/users/select/'+$('input#uid').val(),
+                    function(user) {
+                      $('input#uid').val(user.id);
+                      $('#user-name').text(user.name);
+                      $('#user-email').text('<'+user.email+'>');
+                    });
+                    return false;
+                    "><i class="icon-retweet"></i> <?php echo __('Change'); ?></a>
+                  </div>
+                </td>
+              </tr>
+              <?php
+            } else { //Fallback: Just ask for email and name
+              ?>
+              <tr id="userRow">
+                <td width="120"><?php echo __('User'); ?>:</td>
+                <td>
+                  <span>
+                    <select class="userSelection" name="name" id="user-name"
+                    data-placeholder="<?php echo __('Select User'); ?>">
+                  </select>
+                </span>
 
-        <?php
-        if($cfg->notifyONNewStaffTicket()) {  ?>
-        <tr>
-            <td width="160">Ticket Notice:</td>
-            <td class="form-group form-inline">
-            <input type="checkbox" name="alertuser" <?php echo (!$errors || $info['alertuser'])? 'checked="checked"': ''; ?>>
-            <label>Send alert to user.</label>
-            </td>
+                <a class="inline button" style="overflow:inherit" href="#"
+                onclick="javascript:
+                $.userLookup('ajax.php/users/lookup/form', function (user) {
+                  var newUser = new Option(user.email + ' - ' + user.name, user.id, true, true);
+                  return $(&quot;#user-name&quot;).append(newUser).trigger('change');
+                });
+                return false;
+                "><i class="icon-plus"></i> <?php echo __('Add New'); ?></a>
+
+                <span class="error">*</span>
+                <br/><span class="error"><?php echo $errors['name']; ?></span>
+              </td>
+              <div>
+                <input type="hidden" size=45 name="email" id="user-email" class="attached"
+                placeholder="<?php echo __('User Email'); ?>"
+                autocomplete="off" autocorrect="off" value="<?php echo $info['email']; ?>" />
+              </div>
+            </tr>
+            <?php
+          } ?>
+          <tr id="ccRow">
+            <td width="160"><?php echo __('Cc'); ?>:</td>
+            <td>
+              <span>
+                <select class="collabSelections" name="ccs[]" id="cc_users_open" multiple="multiple"
+                ref="tags" data-placeholder="<?php echo __('Select Contacts'); ?>">
+              </select>
+            </span>
+
+            <a class="inline button" style="overflow:inherit" href="#"
+            onclick="javascript:
+            $.userLookup('ajax.php/users/lookup/form', function (user) {
+              var newUser = new Option(user.name, user.id, true, true);
+              return $(&quot;#cc_users_open&quot;).append(newUser).trigger('change');
+            });
+            return false;
+            "><i class="icon-plus"></i> <?php echo __('Add New'); ?></a>
+
+            <br/><span class="error"><?php echo $errors['ccs']; ?></span>
+          </td>
         </tr>
         <?php
-        } ?>
+        if ($cfg->notifyONNewStaffTicket()) {
+         ?>
+        <tr class="no_border">
+          <td>
+            <?php echo __('Ticket Notice');?>:
+          </td>
+          <td>
+            <select id="reply-to" name="reply-to">
+              <option value="all"><?php echo __('Alert All'); ?></option>
+              <option value="user"><?php echo __('Alert to User'); ?></option>
+              <option value="none">&mdash; <?php echo __('Do Not Send Alert'); ?> &mdash;</option>
+            </select>
+          </td>
+        </tr>
+      <?php } ?>
     </tbody>
     <tbody>
         <tr>
             <th colspan="2">
-                <em><strong>Ticket Information &amp; Options</strong>:</em>
+                <em><strong><?php echo __('Ticket Information and Options');?></strong>:</em>
             </th>
         </tr>
         <tr>
             <td width="160" class="required">
-                Ticket Source:
+                <?php echo __('Ticket Source');?>:
             </td>
-            <td class="form-group form-inline has-error">
-                <select name="source" class="form-control">
-                    <option value="Phone" <?php echo ($info['source']=='Phone')?'selected="selected"':''; ?> selected="selected">Phone</option>
-                    <option value="Email" <?php echo ($info['source']=='Email')?'selected="selected"':''; ?>>Email</option>
-                    <option value="Other" <?php echo ($info['source']=='Other')?'selected="selected"':''; ?>>Other</option>
+            <td>
+                <select name="source">
+                    <?php
+                    $source = $info['source'] ?: 'Phone';
+                    $sources = Ticket::getSources();
+                    unset($sources['Web'], $sources['API']);
+                    foreach ($sources as $k => $v)
+                        echo sprintf('<option value="%s" %s>%s</option>',
+                                $k,
+                                ($source == $k ) ? 'selected="selected"' : '',
+                                $v);
+                    ?>
                 </select>
-                <?php if($errors['source']) echo '<span class="alert alert-danger">'.$errors['source']. '</span>'; ?>
+                &nbsp;<font class="error"><b>*</b>&nbsp;<?php echo $errors['source']; ?></font>
             </td>
         </tr>
         <tr>
             <td width="160" class="required">
-                Collection:
+                <?php echo __('Help Topic'); ?>:
             </td>
-            <?php
-                $sql='SELECT coll.collection_id, CONCAT_WS(" / ", pcoll.collection, coll.collection) as name, coll.color as color '
-                    .' FROM '.COLLECTION_TABLE.' coll '
-                    .' LEFT JOIN '.COLLECTION_TABLE.' pcoll ON(pcoll.collection_id=coll.collection_pid) ';
-                if(($res=db_query($sql)) && db_num_rows($res)) {echo '<td class="form-group form-inline has-error">';};
-                while(list($collectionId,$collection,$color)=db_fetch_row($res)) {
-                    echo sprintf('<span style="display:inline-block"><input class="form-control checkbox" type="checkbox" name="collections[]" value="%d" %s><span class="label label-default" style="background-color:%s">%s</span></span>',
-                        $collectionId,
-                        (($info['collections'] && in_array($collectionId,$info['collections']))?'checked="checked"':''),
-                        $color,
-                        $collection);
-                };
-                ?>
-                <?php if($errors['collectionId']) echo '<span class="alert alert-danger">'.$errors['collectionId']. '</span>'; ?>
+            <td>
+                <select name="topicId" onchange="javascript:
+                        var data = $(':input[name]', '#dynamic-form').serialize();
+                        $.ajax(
+                          'ajax.php/form/help-topic/' + this.value,
+                          {
+                            data: data,
+                            dataType: 'json',
+                            success: function(json) {
+                              $('#dynamic-form').empty().append(json.html);
+                              $(document.head).append(json.media);
+                            }
+                          });">
+                    <?php
+                    if ($topics=$thisstaff->getTopicNames(false, false)) {
+                        if (count($topics) == 1)
+                            $selected = 'selected="selected"';
+                        else { ?>
+                        <option value="" selected >&mdash; <?php echo __('Select Help Topic'); ?> &mdash;</option>
+<?php                   }
+                        foreach($topics as $id =>$name) {
+                            echo sprintf('<option value="%d" %s %s>%s</option>',
+                                $id, ($info['topicId']==$id)?'selected="selected"':'',
+                                $selected, $name);
+                        }
+                        if (count($topics) == 1 && !$forms) {
+                            if (($T = Topic::lookup($id)))
+                                $forms =  $T->getForms();
+                        }
+                    }
+                    ?>
+                </select>
+                &nbsp;<font class="error"><b>*</b>&nbsp;<?php echo $errors['topicId']; ?></font>
             </td>
         </tr>
         <tr>
             <td width="160">
-                Department:
+                <?php echo __('Department'); ?>:
             </td>
-            <td class="form-group form-inline">
-                <select class="form-control" name="deptId">
-                    <option value="" selected >&mdash; Select Department &mdash;</option>
+            <td>
+                <select name="deptId">
+                    <option value="" selected >&mdash; <?php echo __('Select Department'); ?>&mdash;</option>
                     <?php
-                    if($depts=Dept::getDepartments()) {
+                    if($depts=$thisstaff->getDepartmentNames(true)) {
                         foreach($depts as $id =>$name) {
+                            if (!($role = $thisstaff->getRole($id))
+                                || !$role->hasPerm(Ticket::PERM_CREATE)
+                            ) {
+                                // No access to create tickets in this dept
+                                continue;
+                            }
                             echo sprintf('<option value="%d" %s>%s</option>',
                                     $id, ($info['deptId']==$id)?'selected="selected"':'',$name);
                         }
                     }
                     ?>
                 </select>
-                <?php if($errors['deptId']) echo '<span class="alert alert-danger">'.$errors['deptId']. '</span>'; ?>
+                &nbsp;<font class="error"><?php echo $errors['deptId']; ?></font>
             </td>
         </tr>
 
          <tr>
             <td width="160">
-                SLA Plan:
+                <?php echo __('SLA Plan');?>:
             </td>
-            <td class="form-group form-inline">
-                <select class="form-control" name="slaId">
-                    <option value="0" selected="selected" >&mdash; System Default &mdash;</option>
+            <td>
+                <select name="slaId">
+                    <option value="0" selected="selected" >&mdash; <?php echo __('System Default');?> &mdash;</option>
                     <?php
                     if($slas=SLA::getSLAs()) {
                         foreach($slas as $id =>$name) {
@@ -164,48 +291,49 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                     }
                     ?>
                 </select>
-                <?php if($errors['slaId']) echo '<span class="alert alert-danger">'.$errors['slaId']. '</span>'; ?>
+                &nbsp;<font class="error">&nbsp;<?php echo $errors['slaId']; ?></font>
             </td>
          </tr>
 
          <tr>
             <td width="160">
-                Due Date:
+                <?php echo __('Due Date');?>:
             </td>
-            <td class="form-group form-inline">
-                <input type="text" class="dp form-control" id="duedate" name="duedate" value="<?php echo Format::htmlchars($info['duedate']); ?>" size="12" autocomplete=OFF>
+            <td>
                 <?php
-                $min=$hr=null;
-                if($info['time'])
-                    list($hr, $min)=explode(':', $info['time']);
-
-                echo Misc::timeDropdown($hr, $min, 'time');
+                $duedateField = Ticket::duedateField('duedate', $info['duedate']);
+                $duedateField->render();
                 ?>
-                <?php if($errors['duedate']) echo '<span class="alert alert-danger">'.$errors['duedate']; ?> &nbsp; <?php echo $errors['time']. '</span>'; ?>
-                <label>Time is based on your time zone (GMT <?php echo $thisstaff->getTZoffset(); ?>)</label>
+                &nbsp;<font class="error">&nbsp;<?php echo $errors['duedate']; ?> &nbsp; <?php echo $errors['time']; ?></font>
+                <em><?php echo __('Time is based on your time
+                        zone');?>&nbsp;(<?php echo $cfg->getTimezone($thisstaff); ?>)</em>
             </td>
         </tr>
 
         <?php
-        if($thisstaff->canAssignTickets()) { ?>
+        if($thisstaff->hasPerm(Ticket::PERM_ASSIGN, false)) { ?>
         <tr>
-            <td width="160">Assign To:</td>
-            <td class="form-group form-inline">
-                <select class="form-control" id="assignId" name="assignId">
-                    <option value="0" selected="selected">&mdash; Select Staff Member OR a Team &mdash;</option>
+            <td width="160"><?php echo __('Assign To');?>:</td>
+            <td>
+                <select id="assignId" name="assignId">
+                    <option value="0" selected="selected">&mdash; <?php echo __('Select an Agent OR a Team');?> &mdash;</option>
                     <?php
-                    if(($users=Staff::getAvailableStaffMembers())) {
-                        echo '<OPTGROUP label="Staff Members ('.count($users).')">';
-                        foreach($users as $id => $name) {
+                    $users = Staff::getStaffMembers(array(
+                                'available' => true,
+                                'staff' => $thisstaff,
+                                ));
+                    if ($users) {
+                        echo '<OPTGROUP label="'.sprintf(__('Agents (%d)'), count($users)).'">';
+                        foreach ($users as $id => $name) {
                             $k="s$id";
                             echo sprintf('<option value="%s" %s>%s</option>',
-                                        $k,(($info['assignId']==$k)?'selected="selected"':''),$name);
+                                        $k, (($info['assignId']==$k) ? 'selected="selected"' : ''), $name);
                         }
                         echo '</OPTGROUP>';
                     }
 
                     if(($teams=Team::getActiveTeams())) {
-                        echo '<OPTGROUP label="Teams ('.count($teams).')">';
+                        echo '<OPTGROUP label="'.sprintf(__('Teams (%d)'), count($teams)).'">';
                         foreach($teams as $id => $name) {
                             $k="t$id";
                             echo sprintf('<option value="%s" %s>%s</option>',
@@ -214,120 +342,110 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                         echo '</OPTGROUP>';
                     }
                     ?>
-                </select>
-                <?php if($errors['assignId']) echo '<span class="alert alert-danger">'.$errors['assignId']. '</span>'; ?>
+                </select>&nbsp;<span class='error'>&nbsp;<?php echo $errors['assignId']; ?></span>
             </td>
         </tr>
         <?php } ?>
         </tbody>
         <tbody id="dynamic-form">
         <?php
-            if ($form) $form->getForm()->render(true);
+            $options = array('mode' => 'create');
+            foreach ($forms as $form) {
+                print $form->getForm($_SESSION[':form-data'])->getMedia();
+                include(STAFFINC_DIR .  'templates/dynamic-form.tmpl.php');
+            }
         ?>
         </tbody>
-        <tbody> <?php
-        $tform = TicketForm::getInstance()->getForm($_POST);
-        if ($_POST) $tform->isValid();
-        $tform->render(true);
-        ?>
-        </tbody>
-        <!--<tbody>
+        <tbody>
         <?php
         //is the user allowed to post replies??
-        if($thisstaff->canPostReply()) { ?>
+        if ($thisstaff->getRole()->hasPerm(Ticket::PERM_REPLY)) { ?>
         <tr>
             <th colspan="2">
-                <em><strong>Response</strong>: Optional response to the above issue.</em>
+                <em><strong><?php echo __('Response');?></strong>: <?php echo __('Optional response to the above issue.');?></em>
             </th>
         </tr>
         <tr>
             <td colspan=2>
             <?php
-            if(($cannedResponses=Canned::getCannedResponses())) {
+            if($cfg->isCannedResponseEnabled() && ($cannedResponses=Canned::getCannedResponses())) {
                 ?>
-                <div style="margin-top:0.3em;margin-bottom:0.5em" class="form-group form-inline">
-                    Canned Response:&nbsp;
-                    <select class="form-control" id="cannedResp" name="cannedResp">
-                        <option value="0" selected="selected">&mdash; Select a canned response &mdash;</option>
+                <div style="margin-top:0.3em;margin-bottom:0.5em">
+                    <?php echo __('Canned Response');?>:&nbsp;
+                    <select id="cannedResp" name="cannedResp">
+                        <option value="0" selected="selected">&mdash; <?php echo __('Select a canned response');?> &mdash;</option>
                         <?php
                         foreach($cannedResponses as $id =>$title) {
                             echo sprintf('<option value="%d">%s</option>',$id,$title);
                         }
                         ?>
                     </select>
-                    <label><input class="form-control checkbox" type='checkbox' value='1' name="append" id="append" checked="checked">Append</label>
+                    &nbsp;&nbsp;
+                    <label class="checkbox inline"><input type='checkbox' value='1' name="append" id="append" checked="checked"><?php echo __('Append');?></label>
                 </div>
             <?php
             }
                 $signature = '';
                 if ($thisstaff->getDefaultSignatureType() == 'mine')
                     $signature = $thisstaff->getSignature(); ?>
-                <textarea class="richtext ifhtml draft draft-delete form-control"
-                    data-draft-namespace="ticket.staff.response"
-                    data-signature="<?php
+                <textarea
+                    class="<?php if ($cfg->isRichTextEnabled()) echo 'richtext';
+                        ?> draft draft-delete" data-signature="<?php
                         echo Format::htmlchars(Format::viewableImages($signature)); ?>"
                     data-signature-field="signature" data-dept-field="deptId"
-                    placeholder="Intial response for the ticket"
+                    placeholder="<?php echo __('Initial response for the ticket'); ?>"
                     name="response" id="response" cols="21" rows="8"
-                    style="width:80%;"><?php echo $info['response']; ?></textarea>
-                <table border="0" cellspacing="0" cellpadding="2" width="100%">
-                <?php
-                if($cfg->allowAttachments()) { ?>
-                    <tr><td width="100" valign="top">Attachments:</td>
-                        <td>
-                            <div class="canned_attachments">
-                            <?php
-                            if($info['cannedattachments']) {
-                                foreach($info['cannedattachments'] as $k=>$id) {
-                                    if(!($file=AttachmentFile::lookup($id))) continue;
-                                    $hash=$file->getKey().md5($file->getId().session_id().$file->getKey());
-                                    echo sprintf('<label><input type="checkbox" name="cannedattachments[]"
-                                            id="f%d" value="%d" checked="checked"
-                                            <a href="file.php?h=%s">%s</a>&nbsp;&nbsp;</label>&nbsp;',
-                                            $file->getId(), $file->getId() , $hash, $file->getName());
-                                }
-                            }
-                            ?>
-                            </div>
-                            <div class="uploads"></div>
-                            <div class="file_input">
-                                <input type="file" class="multifile" name="attachments[]" size="30" value="" />
-                            </div>
-                            <p class="help-block">Attachments must have a valid file extension (.doc, .pdf, .jpg, .jpeg, .gif, .png, .xls, .docx, .xlsx, pptx, .txt, .htm, .html) and total attachment size must be less than 16MB.</p>
-                        </td>
-                    </tr>
-                <?php
-                } ?>
+                    style="width:80%;" <?php
+    list($draft, $attrs) = Draft::getDraftAndDataAttrs('ticket.staff.response', false, $info['response']);
+    echo $attrs; ?>><?php echo ThreadEntryBody::clean($_POST ? $info['response'] : $draft);
+                ?></textarea>
+                    <div class="attachments">
+<?php
+print $response_form->getField('attachments')->render();
+?>
+                    </div>
 
-            <?php
-            } ?>
+                <table border="0" cellspacing="0" cellpadding="2" width="100%">
+            <tr>
+                <td width="100"><?php echo __('Ticket Status');?>:</td>
+                <td>
+                    <select name="statusId">
+                    <?php
+                    $statusId = $info['statusId'] ?: $cfg->getDefaultTicketStatusId();
+                    $states = array('open');
+                    if ($thisstaff->hasPerm(Ticket::PERM_CLOSE, false))
+                        $states = array_merge($states, array('closed'));
+                    foreach (TicketStatusList::getStatuses(
+                                array('states' => $states)) as $s) {
+                        if (!$s->isEnabled()) continue;
+                        $selected = ($statusId == $s->getId());
+                        echo sprintf('<option value="%d" %s>%s</option>',
+                                $s->getId(),
+                                $selected
+                                 ? 'selected="selected"' : '',
+                                __($s->getName()));
+                    }
+                    ?>
+                    </select>
+                </td>
+            </tr>
              <tr>
-                <td width="100">Signature:</td>
-                <td class="form-group form-inline">
+                <td width="100"><?php echo __('Signature');?>:</td>
+                <td>
                     <?php
                     $info['signature']=$info['signature']?$info['signature']:$thisstaff->getDefaultSignatureType();
                     ?>
-                    <label><input class="form-control radio" type="radio" name="signature" value="none"> None</label>
+                    <label><input type="radio" name="signature" value="none" checked="checked"> <?php echo __('None');?></label>
                     <?php
                     if($thisstaff->getSignature()) { ?>
                         <label><input type="radio" name="signature" value="mine"
-                            <?php echo ($info['signature']=='mine')?'checked="checked"':''; ?>> My signature</label>
+                            <?php echo ($info['signature']=='mine')?'checked="checked"':''; ?>> <?php echo __('My Signature');?></label>
                     <?php
                     } ?>
-                    <label><input class="form-control radio" type="radio" name="signature" value="dept" checked="checked"
-                        <?php echo ($info['signature']=='dept')?'checked="checked"':''; ?>> Dept. Signature (if set)</label>
+                    <label><input type="radio" name="signature" value="dept"
+                        <?php echo ($info['signature']=='dept')?'checked="checked"':''; ?>> <?php echo sprintf(__('Department Signature (%s)'), __('if set')); ?></label>
                 </td>
              </tr>
-             <?php
-            if($thisstaff->canCloseTickets()) { ?>
-                <tr>
-                    <td width="100">Ticket Status:</td>
-                    <td class="form-group form-inline">
-                        <input class="form-control checkbox" type="checkbox" checked="checked" name="ticket_state" value="closed" <?php echo $info['ticket_state']?'checked="checked"':''; ?>>
-                        <label>Close On Response (only applicable if response is entered)</label>
-                    </td>
-                </tr>
-             
             </table>
             </td>
         </tr>
@@ -336,25 +454,31 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
         ?>
         <tr>
             <th colspan="2">
-                <em><strong>Internal Note</strong></em>
-                <?php if($errors['email']) echo '<span class="alert alert-danger">'. $errors['note']. '</span>'; ?>
+                <em><strong><?php echo __('Internal Note');?></strong>
+                <font class="error">&nbsp;<?php echo $errors['note']; ?></font></em>
             </th>
         </tr>
         <tr>
             <td colspan=2>
-                <textarea class="richtext ifhtml draft draft-delete form-control"
-                    placeholder="Optional internal note (recommended on assignment)"
-                    data-draft-namespace="ticket.staff.note" name="note"
-                    cols="21" rows="6" style="width:80%;"
-                    ><?php echo $info['note']; ?></textarea>
+                <textarea
+                    class="<?php if ($cfg->isRichTextEnabled()) echo 'richtext';
+                        ?> draft draft-delete"
+                    placeholder="<?php echo __('Optional internal note (recommended on assignment)'); ?>"
+                    name="note" cols="21" rows="6" style="width:80%;" <?php
+    list($draft, $attrs) = Draft::getDraftAndDataAttrs('ticket.staff.note', false, $info['note']);
+    echo $attrs; ?>><?php echo ThreadEntryBody::clean($_POST ? $info['note'] : $draft);
+                ?></textarea>
             </td>
         </tr>
-    </tbody>-->
+    </tbody>
 </table>
-<p class="centered">
-    <input class="btn btn-success" type="submit" name="submit" value="Open">
-    <input class="btn btn-warning" type="reset"  name="reset"  value="Reset">
-    <input class="btn btn-danger" type="button" name="cancel" value="Cancel" onclick='window.location.href="tickets.php"'>
+<p style="text-align:center;">
+    <input type="submit" name="submit" value="<?php echo _P('action-button', 'Open');?>">
+    <input type="reset"  name="reset"  value="<?php echo __('Reset');?>">
+    <input type="button" name="cancel" value="<?php echo __('Cancel');?>" onclick="javascript:
+        $(this.form).find('textarea.richtext')
+          .redactor('plugin.draft.deleteDraft');
+        window.location.href='tickets.php'; " />
 </p>
 </form>
 <script type="text/javascript">
@@ -381,11 +505,93 @@ $(function() {
     // Popup user lookup on the initial page load (not post) if we don't have a
     // user selected
     if (!$_POST && !$user) {?>
-    $.userLookup('ajax.php/users/lookup/form', function (user) {
+    setTimeout(function() {
+      $.userLookup('ajax.php/users/lookup/form', function (user) {
         window.location.href = window.location.href+'&uid='+user.id;
-     });
+      });
+    }, 100);
     <?php
     } ?>
 });
-</script>
 
+$(function() {
+    $('a#editorg').click( function(e) {
+        e.preventDefault();
+        $('div#org-profile').hide();
+        $('div#org-form').fadeIn();
+        return false;
+     });
+
+    $(document).on('click', 'form.org input.cancel', function (e) {
+        e.preventDefault();
+        $('div#org-form').hide();
+        $('div#org-profile').fadeIn();
+        return false;
+    });
+
+    $('.userSelection').select2({
+      width: '450px',
+      minimumInputLength: 3,
+      ajax: {
+        url: "ajax.php/users/local",
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: params.term,
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: $.map(data, function (item) {
+              return {
+                text: item.email + ' - ' + item.name,
+                slug: item.slug,
+                email: item.email,
+                id: item.id
+              }
+            })
+          };
+          $('#user-email').val(item.name);
+        }
+      }
+    });
+
+    $('.userSelection').on('select2:select', function (e) {
+      var data = e.params.data;
+      $('#user-email').val(data.email);
+    });
+
+    $('.userSelection').on("change", function (e) {
+      var data = $('.userSelection').select2('data');
+      var data = data[0].text;
+      var email = data.substr(0,data.indexOf(' '));
+      $('#user-email').val(data.substr(0,data.indexOf(' ')));
+     });
+
+    $('.collabSelections').select2({
+      width: '450px',
+      minimumInputLength: 3,
+      ajax: {
+        url: "ajax.php/users/local",
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: params.term,
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: $.map(data, function (item) {
+              return {
+                text: item.name,
+                slug: item.slug,
+                id: item.id
+              }
+            })
+          };
+        }
+      }
+    });
+
+  });
+</script>

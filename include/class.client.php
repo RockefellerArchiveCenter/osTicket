@@ -13,11 +13,15 @@
 
     vim: expandtab sw=4 ts=4 sts=4:
 **********************************************************************/
-abstract class TicketUser {
+require_once INCLUDE_DIR.'class.user.php';
+
+abstract class TicketUser
+implements EmailContact, ITicketUser, TemplateVariable {
 
     static private $token_regex = '/^(?P<type>\w{1})(?P<algo>\d+)x(?P<hash>.*)$/i';
 
     protected  $user;
+    protected $_guest = false;
 
     function __construct($user) {
         $this->user = $user;
@@ -32,57 +36,57 @@ abstract class TicketUser {
                 ? call_user_func_array(array($this->user, $name), $args)
                 : call_user_func(array($this->user, $name));
 
-        if ($rv) return $rv;
+        return $rv ?: false;
+    }
 
-        $tag =  substr($name, 3);
+    // Required for Internationalization::getCurrentLanguage() in templates
+    function getLanguage() {
+        return $this->user->getLanguage();
+    }
+
+    static function getVarScope() {
+        return array(
+            'email' => __('Email Address'),
+            'name' => array('class' => 'PersonsName', 'desc' => __('Full Name')),
+            'ticket_link' => __('Link to view the ticket'),
+        );
+    }
+
+    function getVar($tag) {
         switch (strtolower($tag)) {
-            case 'ticket_link':
-                return sprintf('%s/view.php?auth=%s',
+        case 'ticket_link':
+            $ticket = $this->getTicket();
+            return $this->getTicketLink(($ticket &&
+                        !$ticket->getNumCollaborators()));
+            break;
+        }
+    }
+
+    function getTicketLink($authtoken=true) {
+        global $cfg;
+
+        $ticket = $this->getTicket();
+        if ($authtoken
+                && $ticket
+                && $cfg->isAuthTokenEnabled()) {
+            $qstr = array();
+            $qstr['auth'] = $ticket->getAuthToken($this);
+            return sprintf('%s/view.php?%s',
                         $cfg->getBaseUrl(),
-                        urlencode($this->getAuthToken()));
-                break;
+                        Http::build_query($qstr, false)
+                        );
         }
 
-        return false;
-
+        return sprintf('%s/view.php?id=%s',
+                $cfg->getBaseUrl(),
+                $ticket ? $ticket->getId() : 0
+                );
     }
 
-    function sendAccessLink() {
-        global $ost;
-
-        if (!($ticket = $this->getTicket())
-                || !($dept = $ticket->getDept())
-                || !($email = $dept->getAutoRespEmail())
-                || !($tpl = $dept->getTemplate()->getMsgTemplate('user.accesslink')))
-            return;
-
-        $vars = array(
-            'url' => $ost->getConfig()->getBaseUrl(),
-            'ticket' => $this->getTicket(),
-            'recipient' => $this);
-
-        $msg = $ost->replaceTemplateVariables($tpl->asArray(), $vars);
-        $email->send($this->getEmail(), $msg['subj'], $msg['body']);
-    }
-
-    protected function getAuthToken($algo=1) {
-
-        //Format: // <user type><algo id used>x<pack of uid & tid><hash of the algo>
-        $authtoken = sprintf('%s%dx%s',
-                ($this->isOwner() ? 'o' : 'c'),
-                $algo,
-                Base32::encode(pack('VV',$this->getId(), $this->getTicketId())));
-
-        switch($algo) {
-            case 1:
-                $authtoken .= substr(base64_encode(
-                            md5($this->getId().$this->getTicket()->getCreateDate().$this->getTicketId().SECRET_SALT, true)), 8);
-                break;
-            default:
-                return null;
-        }
-
-        return $authtoken;
+    function getId() { return ($this->user) ? $this->user->getId() : null; }
+    function getEmail() { return ($this->user) ? $this->user->getEmail() : null; }
+    function getName() {
+        return ($this->user) ? $this->user->getName() : null;
     }
 
     static function lookupByToken($token) {
@@ -97,6 +101,10 @@ abstract class TicketUser {
                 Base32::decode(strtolower(substr($matches['hash'], 0, 13))));
 
         $user = null;
+        if (!($ticket = Ticket::lookup($matches['tid'])))
+            // Require a ticket for now
+            return null;
+
         switch ($matches['type']) {
             case 'c': //Collaborator c
                 if (($user = Collaborator::lookup($matches['uid']))
@@ -104,17 +112,16 @@ abstract class TicketUser {
                     $user = null;
                 break;
             case 'o': //Ticket owner
-                if (($ticket = Ticket::lookup($matches['tid']))) {
-                    if (($user = $ticket->getOwner())
-                            && $user->getId() != $matches['uid'])
-                        $user = null;
+                if (($user = $ticket->getOwner())
+                        && $user->getId() != $matches['uid']) {
+                    $user = null;
                 }
                 break;
         }
 
         if (!$user
-                || !$user instanceof TicketUser
-                || strcasecmp($user->getAuthToken($matches['algo']), $token))
+                || !$user instanceof ITicketUser
+                || strcasecmp($ticket->getAuthToken($user, $matches['algo']), $token))
             return false;
 
         return $user;
@@ -129,8 +136,32 @@ abstract class TicketUser {
     }
 
     function isOwner() {
-        return  ($this->user
-                    && $this->user->getId() == $this->getTicket()->getOwnerId());
+        return $this instanceof TicketOwner;
+    }
+
+    function flagGuest() {
+        $this->_guest = true;
+    }
+
+    function isGuest() {
+        return $this->_guest;
+    }
+
+    function getUserId() {
+        return $this->user->getId();
+    }
+
+    function getEmailAddress() {
+        $emailaddr =  (string) $this->getEmail();
+        if (($name=$this->getName()))
+            $emailaddr = sprintf('"%s" <%s>',
+                    (string) $name,
+                    $emailaddr);
+        return $emailaddr;
+    }
+
+    function __toString() {
+        return $this->getEmailAddress();
     }
 
     abstract function getTicketId();
@@ -146,6 +177,11 @@ class TicketOwner extends  TicketUser {
         $this->ticket = $ticket;
     }
 
+    function __toString() {
+        return (string) $this->getName();
+    }
+
+
     function getTicket() {
         return $this->ticket;
     }
@@ -160,9 +196,12 @@ class TicketOwner extends  TicketUser {
  *
  */
 
-class  EndUser extends AuthenticatedUser {
+class EndUser extends BaseAuthenticatedUser {
 
     protected $user;
+    protected $_account = false;
+    protected $_stats;
+    protected $topic_stats;
 
     function __construct($user) {
         $this->user = $user;
@@ -175,11 +214,24 @@ class  EndUser extends AuthenticatedUser {
 
         if(!$this->user
                 || !is_callable(array($this->user, $name)))
-            return false;
+            return $this->getVar(substr($name, 3));
 
         return  $args
             ? call_user_func_array(array($this->user, $name), $args)
             : call_user_func(array($this->user, $name));
+    }
+
+    function getVar($tag) {
+        $u = $this;
+        // Traverse the $user properties of all nested user objects to get
+        // to the User instance with the custom data
+        while (isset($u->user)) {
+            $u = $u->user;
+            if (method_exists($u, 'getVar')) {
+                if ($rv = $u->getVar($tag))
+                    return $rv;
+            }
+        }
     }
 
     function getId() {
@@ -187,7 +239,10 @@ class  EndUser extends AuthenticatedUser {
         if ($this->user instanceof Collaborator)
             return $this->user->getUserId();
 
-        return $this->user->getId();
+        elseif ($this->user)
+            return $this->user->getId();
+
+        return false;
     }
 
     function getUserName() {
@@ -196,7 +251,7 @@ class  EndUser extends AuthenticatedUser {
         return $this->user->getEmail();
     }
 
-    function getRole() {
+    function getUserType() {
         return $this->isOwner() ? 'owner' : 'collaborator';
     }
 
@@ -205,41 +260,270 @@ class  EndUser extends AuthenticatedUser {
         return UserAuthenticationBackend::getBackend($authkey);
     }
 
+    function get2FABackend() {
+        //TODO: support 2FA on client portal
+        return null;
+    }
+
     function getTicketStats() {
+        if (!isset($this->_stats))
+            $this->_stats = $this->getStats();
 
-        if (!isset($this->ht['stats']))
-            $this->ht['stats'] = $this->getStats();
-
-        return $this->ht['stats'];
+        return $this->_stats;
     }
 
-    function getNumTickets() {
-        return ($stats=$this->getTicketStats())?($stats['open']+$stats['closed']):0;
+    function getNumTickets($forMyOrg=false, $state=false) {
+        $stats = $this->getTicketStats();
+        $count = 0;
+        $section = $forMyOrg ? 'myorg' : 'mine';
+        foreach ($stats[$section] as $row) {
+            if ($state && $row['status__state'] != $state)
+                continue;
+            $count += $row['count'];
+        }
+        return $count;
     }
 
-    function getNumOpenTickets() {
-        return ($stats=$this->getTicketStats())?$stats['open']:0;
+    function getNumOpenTickets($forMyOrg=false) {
+        return $this->getNumTickets($forMyOrg, 'open') ?: 0;
     }
 
-    function getNumClosedTickets() {
-        return ($stats=$this->getTicketStats())?$stats['closed']:0;
+    function getNumClosedTickets($forMyOrg=false) {
+        return $this->getNumTickets($forMyOrg, 'closed') ?: 0;
+    }
+
+    function getNumTopicTickets($topic_id, $forMyOrg=false) {
+        $stats = $this->getTicketStats();
+        $section = $forMyOrg ? 'myorg' : 'mine';
+        if (!isset($this->topic_stats)) {
+            $this->topic_stats = array();
+            foreach ($stats[$section] as $row) {
+                $this->topic_stats[$row['topic_id']] += $row['count'];
+            }
+        }
+        return $this->topic_stats[$topic_id];
+    }
+
+    function getNumTopicTicketsInState($topic_id, $state=false, $forMyOrg=false) {
+        $stats = $this->getTicketStats();
+        $count = 0;
+        $section = $forMyOrg ? 'myorg' : 'mine';
+        foreach ($stats[$section] as $row) {
+            if ($topic_id != $row['topic_id'])
+                continue;
+            if ($state && $state != $row['status__state'])
+                continue;
+            $count += $row['count'];
+        }
+        return $count;
+    }
+
+    function getNumOrganizationTickets() {
+        return $this->getNumTickets(true);
+    }
+    function getNumOpenOrganizationTickets() {
+        return $this->getNumTickets(true, 'open');
+    }
+    function getNumClosedOrganizationTickets() {
+        return $this->getNumTickets(true, 'closed');
+    }
+
+    function getAccount() {
+        if ($this->_account === false)
+            $this->_account =
+                ClientAccount::lookup(array('user_id'=>$this->getId()));
+
+        return $this->_account;
+    }
+
+    function getUser() {
+        if ($this->user === false)
+            $this->user = User::lookup($this->getId());
+
+        return $this->user;
+    }
+
+    function getLanguage($flags=false) {
+        if ($acct = $this->getAccount())
+            return $acct->getLanguage($flags);
     }
 
     private function getStats() {
+        global $cfg;
+        $basic = Ticket::objects()
+            ->annotate(array('count' => SqlAggregate::COUNT('ticket_id')))
+            ->values('status__state', 'topic_id')
+            ->distinct('status_id', 'topic_id');
 
-        $sql='SELECT count(open.ticket_id) as open, count(closed.ticket_id) as closed '
-            .' FROM '.TICKET_TABLE.' ticket '
-            .' LEFT JOIN '.TICKET_TABLE.' open
-                ON (open.ticket_id=ticket.ticket_id AND open.status=\'open\') '
-            .' LEFT JOIN '.TICKET_TABLE.' closed
-                ON (closed.ticket_id=ticket.ticket_id AND closed.status=\'closed\')'
-            .' LEFT JOIN '.TICKET_COLLABORATOR_TABLE.' collab
-                ON (collab.ticket_id=ticket.ticket_id
-                    AND collab.user_id = '.db_input($this->getId()).' )'
-            .' WHERE ticket.user_id = '.db_input($this->getId())
-            .' OR collab.user_id = '.db_input($this->getId());
+        // Share tickets among the organization for owners only
+        $mine = clone $basic;
+        $collab = clone $basic;
+        $mine->filter(array(
+            'user_id' => $this->getId(),
+        ));
 
-        return db_fetch_array(db_query($sql));
+        // Also add collaborator tickets to the list. This may seem ugly;
+        // but the general rule for SQL is that a single query can only use
+        // one index. Therefore, to scan two indexes (by user_id and
+        // thread.collaborators.user_id), we need two queries. A union will
+        // help out with that.
+        if ($cfg->collaboratorTicketsVisibility())
+            $mine->union($collab->filter(array(
+                'thread__collaborators__user_id' => $this->getId(),
+                Q::not(array('user_id' => $this->getId()))
+            )));
+
+        if ($orgid = $this->getOrgId()) {
+            // Also generate a separate query for all the tickets owned by
+            // either my organization or ones that I'm collaborating on
+            // which are not part of the organization.
+            $myorg = clone $basic;
+            $myorg->values('user__org_id');
+            $collab = clone $myorg;
+
+            $myorg->filter(array('user__org_id' => $orgid));
+            $myorg->union($collab->filter(array(
+                'thread__collaborators__user_id' => $this->getId(),
+                Q::not(array('user__org_id' => $orgid))
+            )));
+        }
+
+        return array('mine' => $mine, 'myorg' => $myorg);
     }
+
+    function onLogin($bk) {
+        if ($account = $this->getAccount())
+            $account->onLogin($bk);
+    }
+}
+
+class ClientAccount extends UserAccount {
+
+    function check_passwd($password, $autoupdate=true) {
+
+        /*bcrypt based password match*/
+        if(Passwd::cmp($password, $this->get('passwd')))
+            return true;
+
+        //Fall back to MD5
+        if(!$password || strcmp($this->get('passwd'), MD5($password)))
+            return false;
+
+        //Password is a MD5 hash: rehash it (if enabled) otherwise force passwd change.
+        if ($autoupdate)
+            $this->set('passwd', Passwd::hash($password));
+
+        if (!$autoupdate || !$this->save())
+            $this->forcePasswdReset();
+
+        return true;
+    }
+
+    function hasCurrentPassword($password) {
+        return $this->check_passwd($password, false);
+    }
+
+    function cancelResetTokens() {
+        // TODO: Drop password-reset tokens from the config table for
+        //       this user id
+        $sql = 'DELETE FROM '.CONFIG_TABLE.' WHERE `namespace`="pwreset"
+            AND `value`='.db_input('c'.$this->getUserId());
+        if (!db_query($sql, false))
+            return false;
+
+        unset($_SESSION['_client']['reset-token']);
+    }
+
+    function onLogin($bk) {
+        $this->setExtraAttr('browser_lang',
+            Internationalization::getCurrentLanguage());
+        $this->save();
+    }
+
+    function update($vars, &$errors) {
+        global $cfg;
+
+        // FIXME: Updates by agents should go through UserAccount::update()
+        global $thisstaff, $thisclient;
+        if ($thisstaff)
+            return parent::update($vars, $errors);
+
+        $rtoken = $_SESSION['_client']['reset-token'];
+
+
+		if ($rtoken) {
+			$_config = new Config('pwreset');
+			if ($_config->get($rtoken) != 'c'.$this->getUserId())
+				$errors['err'] =
+					__('Invalid reset token. Logout and try again');
+			elseif (!($ts = $_config->lastModified($rtoken))
+					&& ($cfg->getPwResetWindow() < (time() - strtotime($ts))))
+				$errors['err'] =
+					__('Invalid reset token. Logout and try again');
+		} elseif ($vars['passwd1'] || $vars['passwd2'] || $vars['cpasswd']) {
+
+            if (!$vars['passwd1'])
+                $errors['passwd1']=__('New password is required');
+            elseif ($vars['passwd1'] && strcmp($vars['passwd1'], $vars['passwd2']))
+                $errors['passwd2']=__('Passwords do not match');
+            elseif ($this->get('passwd')) {
+                if (!$vars['cpasswd'])
+                    $errors['cpasswd']=__('Current password is required');
+                elseif (!$this->hasCurrentPassword($vars['cpasswd']))
+                    $errors['cpasswd']=__('Invalid current password!');
+            }
+
+            // Check password policies
+			if (!$errors) {
+                try {
+                    UserAccount::checkPassword($vars['passwd1'], @$vars['cpasswd']);
+                } catch (BadPassword $ex) {
+                    $errors['passwd1'] = $ex->getMessage();
+                }
+            }
+        }
+
+        // Timezone selection is not required. System default is a valid
+        // fallback
+
+        if ($errors) return false;
+
+        $this->set('timezone', $vars['timezone']);
+        // Change language
+        $this->set('lang', $vars['lang'] ?: null);
+        Internationalization::setCurrentLanguage(null);
+        TextDomain::configureForUser($this);
+
+        if ($vars['backend']) {
+            $this->set('backend', $vars['backend']);
+            if ($vars['username'])
+                $this->set('username', $vars['username']);
+        }
+
+        if ($vars['passwd1']) {
+            $this->set('passwd', Passwd::hash($vars['passwd1']));
+            $info = array('password' => $vars['passwd1']);
+            Signal::send('auth.pwchange', $this->getUser(), $info);
+            $this->cancelResetTokens();
+            $this->clearStatus(UserAccountStatus::REQUIRE_PASSWD_RESET);
+            // Clean sessions
+            Signal::send('auth.clean', $this->getUser(), $thisclient);
+        }
+
+        return $this->save();
+    }
+}
+
+
+interface ITicketUser {
+/* PHP 5.3 < 5.3.8 will crash with some abstract inheritance issue
+ * ------------------------------------------------------------
+    function isOwner();
+    function flagGuest();
+    function isGuest();
+    function getUserId();
+    function getTicketId();
+    function getTicket();
+ */
 }
 ?>
