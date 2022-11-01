@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    platform: linux/x86_64
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: osticket
+    volumes:
+      - db:/var/lib/mysql
+      - .:/code
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+  web:
+    build: .
+    volumes:
+      - .:/var/www/html/osTicket
+    ports:
+      - 80:80
+    depends_on:
+      - db
+
+volumes:
+  db:
