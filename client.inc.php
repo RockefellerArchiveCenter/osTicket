@@ -22,6 +22,10 @@ require_once($thisdir.'main.inc.php');
 
 if(!defined('INCLUDE_DIR')) die('Fatal error');
 
+// Enforce ACL (if applicable)
+if (!Validator::check_acl('client'))
+    die(__('Access Denied'));
+
 /*Some more include defines specific to client only */
 define('CLIENTINC_DIR',INCLUDE_DIR.'client/');
 define('OSTCLIENTINC',TRUE);
@@ -29,7 +33,7 @@ define('OSTCLIENTINC',TRUE);
 define('ASSETS_PATH',ROOT_PATH.'assets/default/');
 
 //Check the status of the HelpDesk.
-if (!in_array(strtolower(basename($_SERVER['SCRIPT_NAME'])), array('logo.php',))
+if (!in_array(strtolower(basename($_SERVER['SCRIPT_NAME'])), array('logo.php','file.php'))
         && !(is_object($ost) && $ost->isSystemOnline())) {
     include(ROOT_DIR.'offline.php');
     exit;
@@ -46,6 +50,15 @@ $msg='';
 $nav=null;
 //Make sure the user is valid..before doing anything else.
 $thisclient = UserAuthenticationBackend::getUser();
+
+if (isset($_GET['lang']) && $_GET['lang']) {
+    Internationalization::setCurrentLanguage($_GET['lang']);
+}
+
+// Bootstrap gettext translations as early as possible, but after attempting
+// to sign on the agent
+TextDomain::configureForUser($thisclient);
+
 //is the user logged in?
 if($thisclient && $thisclient->getId() && $thisclient->isValid()){
      $thisclient->refreshSession();
@@ -56,7 +69,7 @@ if($thisclient && $thisclient->getId() && $thisclient->isValid()){
 /******* CSRF Protectin *************/
 // Enforce CSRF protection for POSTS
 if ($_POST  && !$ost->checkCSRFToken()) {
-    @header('Location: index.php');
+    Http::redirect('index.php');
     //just incase redirect fails
     die('Action denied (400)!');
 }
@@ -67,5 +80,15 @@ $ost->addExtraHeader('<meta name="csrf_token" content="'.$ost->getCSRFToken().'"
 /* Client specific defaults */
 define('PAGE_LIMIT', DEFAULT_PAGE_LIMIT);
 
+require(INCLUDE_DIR.'class.nav.php');
 $nav = new UserNav($thisclient, 'home');
+
+$exempt = in_array(basename($_SERVER['SCRIPT_NAME']), array('logout.php', 'ajax.php', 'logs.php', 'upgrade.php'));
+
+if (!$exempt && $thisclient && ($acct = $thisclient->getAccount())
+        && $acct->isPasswdResetForced()) {
+    $warn = __('Password change required to continue');
+    require('profile.php'); //profile.php must request this file as require_once to avoid problems.
+    exit;
+}
 ?>

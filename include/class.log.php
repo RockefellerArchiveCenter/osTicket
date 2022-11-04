@@ -19,7 +19,7 @@ class Log {
     var $id;
     var $info;
 
-    function Log($id){
+    function __construct($id){
         $this->id=0;
         return $this->load($id);
     }
@@ -69,7 +69,7 @@ class Log {
     }
 
     /*** static function ***/
-    function lookup($id){
+    static function lookup($id){
         return ($id && is_numeric($id) && ($l= new Log($id)) && $l->getId()==$id)?$l:null;
     }
 }

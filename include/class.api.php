@@ -13,13 +13,15 @@
 
     vim: expandtab sw=4 ts=4 sts=4:
 **********************************************************************/
+include_once INCLUDE_DIR.'class.controller.php';
+
 class API {
 
     var $id;
 
     var $ht;
 
-    function API($id) {
+    function __construct($id) {
         $this->id = 0;
         $this->load($id);
     }
@@ -91,15 +93,15 @@ class API {
     }
 
     /** Static functions **/
-    function add($vars, &$errors) {
+    static function add($vars, &$errors) {
         return API::save(0, $vars, $errors);
     }
 
-    function validate($key, $ip) {
+    static function validate($key, $ip) {
         return ($key && $ip && self::getIdByKey($key, $ip));
     }
 
-    function getIdByKey($key, $ip='') {
+    static function getIdByKey($key, $ip='') {
 
         $sql='SELECT id FROM '.API_KEY_TABLE.' WHERE apikey='.db_input($key);
         if($ip)
@@ -111,18 +113,18 @@ class API {
         return $id;
     }
 
-    function lookupByKey($key, $ip='') {
+    static function lookupByKey($key, $ip='') {
         return self::lookup(self::getIdByKey($key, $ip));
     }
 
-    function lookup($id) {
+    static function lookup($id) {
         return ($id && is_numeric($id) && ($k= new API($id)) && $k->getId()==$id)?$k:null;
     }
 
-    function save($id, $vars, &$errors) {
+    static function save($id, $vars, &$errors) {
 
         if(!$id && (!$vars['ipaddr'] || !Validator::is_ip($vars['ipaddr'])))
-            $errors['ipaddr'] = 'Valid IP required';
+            $errors['ipaddr'] = __('Valid IP is required');
 
         if($errors) return false;
 
@@ -137,7 +139,8 @@ class API {
             if(db_query($sql))
                 return true;
 
-            $errors['err']='Unable to update API key. Internal error occurred';
+            $errors['err']=sprintf(__('Unable to update %s.'), __('this API key'))
+               .' '.__('Internal error occurred');
 
         } else {
             $sql='INSERT INTO '.API_KEY_TABLE.' SET '.$sql
@@ -148,7 +151,9 @@ class API {
             if(db_query($sql) && ($id=db_insert_id()))
                 return $id;
 
-            $errors['err']='Unable to add API key. Try again!';
+            $errors['err']=sprintf('%s %s',
+                sprintf(__('Unable to add %s.'), __('this API key')),
+                __('Correct any errors below and try again.'));
         }
 
         return false;
@@ -162,7 +167,7 @@ class API {
  * API request.
  */
 
-class ApiController {
+class ApiController extends Controller {
 
     var $apikey;
 
@@ -171,9 +176,9 @@ class ApiController {
         # header
 
         if(!($key=$this->getApiKey()))
-            return $this->exerr(401, 'Valid API key required');
+            return $this->exerr(401, __('Valid API key required'));
         elseif (!$key->isActive() || $key->getIPAddr()!=$_SERVER['REMOTE_ADDR'])
-            return $this->exerr(401, 'API key not found/active or source IP not authorized');
+            return $this->exerr(401, __('API key not found/active or source IP not authorized'));
 
         return $key;
     }
@@ -192,19 +197,23 @@ class ApiController {
      * work will be done for XML requests
      */
     function getRequest($format) {
-        global $ost;
-
-        $input = $ost->is_cli()?'php://stdin':'php://input';
-
+        $input = osTicket::is_cli()?'php://stdin':'php://input';
         if (!($stream = @fopen($input, 'r')))
-            $this->exerr(400, "Unable to read request body");
+            $this->exerr(400, __("Unable to read request body"));
 
+        return $this->parseRequest($stream, $format);
+    }
+
+    function getEmailRequest() {
+        return $this->getRequest('email');
+    }
+
+    function parseRequest($stream, $format, $validate=true) {
         $parser = null;
         switch(strtolower($format)) {
             case 'xml':
                 if (!function_exists('xml_parser_create'))
-                    $this->exerr(501, 'XML extension not supported');
-
+                    $this->exerr(501, __('XML extension not supported'));
                 $parser = new ApiXmlDataParser();
                 break;
             case 'json':
@@ -214,22 +223,24 @@ class ApiController {
                 $parser = new ApiEmailDataParser();
                 break;
             default:
-                $this->exerr(415, 'Unsupported data format');
+                return $this->exerr(415, __('Unsupported data format'));
         }
 
-        if (!($data = $parser->parse($stream)))
+        if (!($data = $parser->parse($stream))) {
             $this->exerr(400, $parser->lastError());
+            throw new Exception($parser->lastError());
+        }
 
         //Validate structure of the request.
-        $this->validate($data, $format);
+        if ($validate && $data)
+            $this->validate($data, $format, false);
 
         return $data;
     }
 
-    function getEmailRequest() {
-        return $this->getRequest('email');
+    function parseEmail($content) {
+        return $this->parseRequest($content, 'email', false);
     }
-
 
     /**
      * Structure to validate the request against -- must be overridden to be
@@ -241,19 +252,25 @@ class ApiController {
      * expected. It is assumed that the functions actually implementing the
      * API will further validate the contents of the request
      */
-    function validateRequestStructure($data, $structure, $prefix="") {
+    function validateRequestStructure($data, $structure, $prefix="", $strict=true) {
+        global $ost;
 
         foreach ($data as $key=>$info) {
-            if (is_array($structure) and is_array($info)) {
+            if (is_array($structure) && (is_array($info) || $info instanceof ArrayAccess)) {
                 $search = (isset($structure[$key]) && !is_numeric($key)) ? $key : "*";
                 if (isset($structure[$search])) {
-                    $this->validateRequestStructure($info, $structure[$search], "$prefix$key/");
+                    $this->validateRequestStructure($info, $structure[$search], "$prefix$key/", $strict);
                     continue;
                 }
             } elseif (in_array($key, $structure)) {
                 continue;
             }
-            return $this->exerr(400, "$prefix$key: Unexpected data received");
+            if ($strict)
+                return $this->exerr(400, sprintf(__("%s: Unexpected data received in API request"), "$prefix$key"));
+            else
+                $ost->logWarning(__('API Unexpected Data'),
+                    sprintf(__("%s: Unexpected data received in API request"), "$prefix$key"),
+                    false);
         }
 
         return true;
@@ -263,11 +280,12 @@ class ApiController {
      * Validate request.
      *
      */
-    function validate(&$data, $format) {
+    function validate(&$data, $format, $strict=true) {
         return $this->validateRequestStructure(
                 $data,
-                $this->getRequestStructure($format, $data)
-                );
+                $this->getRequestStructure($format, $data),
+                "",
+                $strict);
     }
 
     /**
@@ -286,9 +304,11 @@ class ApiController {
         $msg = $error;
         if($_SERVER['HTTP_X_API_KEY'])
             $msg.="\n*[".$_SERVER['HTTP_X_API_KEY']."]*\n";
-        $ost->logWarning("API Error ($code)", $msg, false);
+        $ost->logWarning(__('API Error')." ($code)", $msg, false);
 
-        $this->response($code, $error); //Responder should exit...
+        if (PHP_SAPI != 'cli') {
+            $this->response($code, $error); //Responder should exit...
+        }
         return false;
     }
 
@@ -312,8 +332,8 @@ class ApiXmlDataParser extends XmlDataParser {
     function fixup($current) {
         global $cfg;
 
-        if($current['ticket'])
-            $current = $current['ticket'];
+		if($current['ticket'])
+			$current = $current['ticket'];
 
         if (!is_array($current))
             return $current;
@@ -321,9 +341,9 @@ class ApiXmlDataParser extends XmlDataParser {
             if ($key == "phone" && is_array($value)) {
                 $value = $value[":text"];
             } else if ($key == "alert") {
-                $value = (bool)$value;
+                $value = (bool) (strtolower($value) === 'false' ? false : $value);
             } else if ($key == "autorespond") {
-                $value = (bool)$value;
+                $value = (bool) (strtolower($value) === 'false' ? false : $value);
             } else if ($key == "message") {
                 if (!is_array($value)) {
                     $value = array(
@@ -336,15 +356,15 @@ class ApiXmlDataParser extends XmlDataParser {
                     unset($value[":text"]);
                 }
                 if (isset($value['encoding']))
-                    $value['body'] = Format::utf8encode($value['body'], $value['encoding']);
+                    $value['body'] = Charset::utf8($value['body'], $value['encoding']);
 
                 if (!strcasecmp($value['type'], 'text/html'))
-                    $value = new HtmlThreadBody($value['body']);
+                    $value = new HtmlThreadEntryBody($value['body']);
                 else
-                    $value = new TextThreadBody($value['body']);
+                    $value = new TextThreadEntryBody($value['body']);
 
             } else if ($key == "attachments") {
-                if(!isset($value['file'][':text']))
+                if(isset($value['file']) && !isset($value['file'][':text']))
                     $value = $value['file'];
 
                 if($value && is_array($value)) {
@@ -366,10 +386,10 @@ class ApiXmlDataParser extends XmlDataParser {
 
 include_once "class.json.php";
 class ApiJsonDataParser extends JsonDataParser {
-    function parse($stream) {
-        return $this->fixup(parent::parse($stream));
+    static function parse($stream, $tidy=false) {
+        return self::fixup(parent::parse($stream));
     }
-    function fixup($current) {
+    static function fixup($current) {
         if (!is_array($current))
             return $current;
         foreach ($current as $key=>&$value) {
@@ -381,12 +401,12 @@ class ApiJsonDataParser extends JsonDataParser {
                 $value = (bool)$value;
             } elseif ($key == "message") {
                 // Allow message specified in RFC 2397 format
-                $data = Format::parseRfc2397($value, 'utf-8');
+                $data = Format::strip_emoticons(Format::parseRfc2397($value, 'utf-8'));
 
                 if (isset($data['type']) && $data['type'] == 'text/html')
-                    $value = new HtmlThreadBody($data['data']);
+                    $value = new HtmlThreadEntryBody($data['data']);
                 else
-                    $value = new TextThreadBody($data['data']);
+                    $value = new TextThreadEntryBody($data['data']);
 
             } else if ($key == "attachments") {
                 foreach ($value as &$info) {

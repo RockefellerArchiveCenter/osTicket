@@ -22,33 +22,41 @@ require_once(INCLUDE_DIR.'class.page.php');
 
 // Determine the requested page
 // - Strip extension
-$slug = Format::slugify($ost->get_path_info());
+$slug = Format::slugify(Osticket::get_path_info());
 
 // Get the part before the first dash
 $first_word = explode('-', $slug);
 $first_word = $first_word[0];
 
-$sql = 'SELECT id, name FROM '.PAGE_TABLE
-    .' WHERE name LIKE '.db_input("$first_word%");
-$page_id = null;
+$pages = Page::objects()->filter(array(
+    'name__like' => "$first_word%"
+));
 
-$res = db_query($sql);
-while (list($id, $name) = db_fetch_row($res)) {
-    if (Format::slugify($name) == $slug) {
-        $page_id = $id;
+$selected_page = null;
+foreach ($pages as $P) {
+    if (Format::slugify($P->name) == $slug) {
+        $selected_page = $P;
         break;
     }
 }
 
-if (!$page_id || !($page = Page::lookup($page_id)))
-    Http::response(404, 'Page Not Found');
+if (!$selected_page)
+    Http::response(404, __('Page Not Found'));
 
-if (!$page->isActive() || $page->getType() != 'other')
-    Http::response(404, 'Page Not Found');
+if (!$selected_page->isActive() || $selected_page->getType() != 'other')
+    Http::response(404, __('Page Not Found'));
 
 require(CLIENTINC_DIR.'header.inc.php');
 
-print $page->getBodyWithImages();
+$BUTTONS = false;
+include CLIENTINC_DIR.'templates/sidebar.tmpl.php';
+?>
+<div class="main-content">
+<?php
+print $selected_page->getBodyWithImages();
+?>
+</div>
 
+<?php
 require(CLIENTINC_DIR.'footer.inc.php');
 ?>
