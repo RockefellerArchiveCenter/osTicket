@@ -62,6 +62,15 @@
     <![endif]-->
     <link type="text/css" rel="stylesheet" href="./css/dropdown.css">
     <script type="text/javascript" src="./js/jquery.dropdown.js"></script>
+    
+    <!-- Matomo Tag Manager --><script>
+    var _mtm = window._mtm = window._mtm || [];
+    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src='https://cdn.matomo.cloud/rockarch.matomo.cloud/container_y1tuNVCg.js'; s.parentNode.insertBefore(g,s);
+    </script>
+    <!-- End Matomo Tag Manager -->
+
     <?php
     if($ost && ($headers=$ost->getExtraHeaders())) {
         echo "\n\t".implode("\n\t", $headers)."\n";
