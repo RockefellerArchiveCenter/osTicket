@@ -20,41 +20,54 @@ require_once INCLUDE_DIR.'class.signal.php';
 
 class Cron {
 
-    function MailFetcher() {
-        require_once(INCLUDE_DIR.'class.mailfetch.php');
-        MailFetcher::run(); //Fetch mail..frequency is limited by email account setting.
+    static function MailFetcher() {
+        require_once(INCLUDE_DIR.'class.email.php');
+        osTicket\Mail\Fetcher::run(); //Fetch mail..frequency is limited by email account setting.
     }
 
-    function TicketMonitor() {
+    static function TicketMonitor() {
         require_once(INCLUDE_DIR.'class.ticket.php');
-        require_once(INCLUDE_DIR.'class.lock.php');
         Ticket::checkOverdue(); //Make stale tickets overdue
-        TicketLock::cleanup(); //Remove expired locks
+        // Cleanup any expired locks
+        require_once(INCLUDE_DIR.'class.lock.php');
+        Lock::cleanup();
+
     }
 
-    function PurgeLogs() {
+    static function PurgeLogs() {
         global $ost;
         // Once a day on a 5-minute cron
         if (rand(1,300) == 42)
             if($ost) $ost->purgeLogs();
     }
 
-    function PurgeDrafts() {
+    static function PurgeDrafts() {
         require_once(INCLUDE_DIR.'class.draft.php');
         Draft::cleanup();
     }
 
-    function CleanOrphanedFiles() {
+    static function CleanOrphanedFiles() {
         require_once(INCLUDE_DIR.'class.file.php');
         AttachmentFile::deleteOrphans();
     }
 
-    function MaybeOptimizeTables() {
+    static function CleanExpiredSessions() {
+        require_once(INCLUDE_DIR.'class.ostsession.php');
+        $backend = new DbSessionBackend();
+        $backend->cleanup();
+    }
+
+    static function CleanPwResets() {
+        require_once(INCLUDE_DIR.'class.config.php');
+        ConfigItem::cleanPwResets();
+    }
+
+    static function MaybeOptimizeTables() {
         // Once a week on a 5-minute cron
         $chance = rand(1,2000);
         switch ($chance) {
         case 42:
-            @db_query('OPTIMIZE TABLE '.TICKET_LOCK_TABLE);
+            @db_query('OPTIMIZE TABLE `'.LOCK_TABLE.'`');
             break;
         case 242:
             @db_query('OPTIMIZE TABLE '.SYSLOG_TABLE);
@@ -90,7 +103,7 @@ class Cron {
         }
     }
 
-    function run(){ //called by outside cron NOT autocron
+    static function run(){ //called by outside cron NOT autocron
         global $ost;
         if (!$ost || $ost->isUpgradePending())
             return;
@@ -98,11 +111,16 @@ class Cron {
         self::MailFetcher();
         self::TicketMonitor();
         self::PurgeLogs();
-        self::CleanOrphanedFiles();
+        self::CleanExpiredSessions();
+        self::CleanPwResets();
+        // Run file purging about every 10 cron runs
+        if (mt_rand(1, 9) == 4)
+            self::CleanOrphanedFiles();
         self::PurgeDrafts();
         self::MaybeOptimizeTables();
 
-        Signal::send('cron', null);
+        $data = array('autocron'=>false);
+        Signal::send('cron', null, $data);
     }
 }
 ?>

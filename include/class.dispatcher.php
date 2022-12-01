@@ -21,7 +21,7 @@
  * functions aren't separated
  */
 class Dispatcher {
-    function Dispatcher($file=false) {
+    function __construct($file=false) {
         $this->urls = array();
         $this->file = $file;
     }
@@ -38,7 +38,7 @@ class Dispatcher {
                 return $matcher->dispatch($url, $args);
             }
         }
-        Http::response(400, "URL not supported");
+        Http::response(400, __("URL not supported"));
     }
     /**
      * Returns the url for the given function and arguments (arguments
@@ -81,7 +81,7 @@ class Dispatcher {
 }
 
 class UrlMatcher {
-    function UrlMatcher($regex, $func, $args=false, $method=false) {
+    function __construct($regex, $func, $args=false, $method=false) {
         # Add the slashes for the Perl syntax
         $this->regex = "@" . $regex . "@";
         $this->func = $func;
@@ -105,7 +105,7 @@ class UrlMatcher {
         $f = array_filter(array_keys($this->matches), 'is_numeric');
         $this->matches = array_intersect_key($this->matches, array_flip($f));
 
-        if (@get_class($this->func) == "Dispatcher") {
+        if (is_object($this->func) && (@get_class($this->func) == "Dispatcher")) {
             # Trim the leading match off the $url and call the
             # sub-dispatcher. This will be the case for lines in the URL
             # file like
@@ -136,11 +136,17 @@ class UrlMatcher {
         if ($class) {
             # Create instance of the class, which is the first item,
             # then call the method which is the second item
-            $func = array(new $class, $func);
+            $class = new $class;
+            # Check access at the controller level
+            if (!$class->access())
+                 Http::response(403,  __('Access Denied!!!'));
+            # Create callable function, class is the first item,
+            # then call the method is the second item
+            $func = array($class, $func);
         }
 
         if (!is_callable($func))
-            Http::response(500, 'Dispatcher compile error. Function not callable');
+            Http::response(500, __('Dispatcher compile error. Function not callable'));
 
         return call_user_func_array($func, $args);
     }
@@ -160,7 +166,7 @@ class UrlMatcher {
 
         if (strpos($class, ":")) {
             list($file, $class) = explode(":", $class, 2);
-            include $file;
+            include_once $file;
         }
         return array($class, $func);
     }

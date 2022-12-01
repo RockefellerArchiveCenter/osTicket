@@ -17,23 +17,27 @@
     vim: expandtab sw=4 ts=4 sts=4:
 **********************************************************************/
 
-class Error extends Exception {
+class BaseError extends Exception {
     static $title = '';
     static $sendAlert = true;
 
     function __construct($message) {
         global $ost;
 
-        $message = str_replace(ROOT_DIR, '(root)/', $message);
+        parent::__construct(__($message));
 
-        if ($ost->getConfig()->getLogLevel() == 3)
-            $message .= "\n\n" . $this->getBacktrace();
+        if ($ost) {
+            $message = str_replace(ROOT_DIR, '(root)/', _S($message));
 
-        $ost->logError($this->getTitle(), $message, static::$sendAlert);
+            if ($ost->getConfig()->getLogLevel() == 3)
+                $message .= "\n\n" . $this->getBacktrace();
+
+            $ost->logError($this->getTitle(), $message, static::$sendAlert);
+        }
     }
 
     function getTitle() {
-        return get_class($this) . ': ' . static::$title;
+        return get_class($this) . ': ' . _S(static::$title);
     }
 
     function getBacktrace() {
@@ -41,7 +45,7 @@ class Error extends Exception {
     }
 }
 
-class InitialDataError extends Error {
+class InitialDataError extends BaseError {
     static $title = 'Problem with install initial data';
 }
 
@@ -51,7 +55,7 @@ function raise_error($message, $class=false) {
 }
 
 // File storage backend exceptions
-class IOException extends Error {
+class IOException extends BaseError {
     static $title = 'Unable to read resource content';
 }
 
