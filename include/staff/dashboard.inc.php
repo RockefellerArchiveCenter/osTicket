@@ -3,13 +3,13 @@ $report = new OverviewReport($_POST['start'], $_POST['period']);
 $plots = $report->getPlotData();
 
 ?>
-<script type="text/javascript" src="js/raphael-min.js?8fbc7ee"></script>
-<script type="text/javascript" src="js/g.raphael.js?8fbc7ee"></script>
-<script type="text/javascript" src="js/g.line-min.js?8fbc7ee"></script>
-<script type="text/javascript" src="js/g.dot-min.js?8fbc7ee"></script>
-<script type="text/javascript" src="js/dashboard.inc.js?8fbc7ee"></script>
+<script type="text/javascript" src="js/raphael-min.js?7c20036"></script>
+<script type="text/javascript" src="js/g.raphael.js?7c20036"></script>
+<script type="text/javascript" src="js/g.line-min.js?7c20036"></script>
+<script type="text/javascript" src="js/g.dot-min.js?7c20036"></script>
+<script type="text/javascript" src="js/dashboard.inc.js?7c20036"></script>
 
-<link rel="stylesheet" type="text/css" href="css/dashboard.css?8fbc7ee"/>
+<link rel="stylesheet" type="text/css" href="css/dashboard.css?7c20036"/>
 
 <form method="post" action="dashboard.php">
 <div id="basic_search">
@@ -25,23 +25,10 @@ $plots = $report->getPlotData();
                     ?>" />
             </label>
             <label>
-                <?php echo __( 'period');?>:
+                <?php echo __('period');?>:
                 <select name="period">
-                    <option value="now" selected="selected">
-                        <?php echo __( 'Up to today');?>
-                    </option>
-                    <option value="+7 days">
-                        <?php echo __( 'One Week');?>
-                    </option>
-                    <option value="+14 days">
-                        <?php echo __( 'Two Weeks');?>
-                    </option>
-                    <option value="+1 month">
-                        <?php echo __( 'One Month');?>
-                    </option>
-                    <option value="+3 months">
-                        <?php echo __( 'One Quarter');?>
-                    </option>
+                    <?php foreach ($report::$end_choices as $val=>$desc)
+                            echo "<option value='$val'>" . __($desc) . "</option>"; ?>
                 </select>
             </label>
             <button class="green button action-button muted" type="submit">
