@@ -54,6 +54,15 @@ class Bootstrap {
             }
         }
 
+        if (!function_exists('exif_imagetype')) {
+            function exif_imagetype ($filename) {
+                if ((list($width,$height,$type,) = getimagesize($filename)) !== false)
+                    return $type;
+
+                return false;
+            }
+        }
+
         if (!isset($_SERVER['REMOTE_ADDR']))
             $_SERVER['REMOTE_ADDR'] = '';
     }
@@ -202,13 +211,21 @@ class Bootstrap {
                 'key' => DBSSLKEY
             );
 
-        if (!db_connect(DBHOST, DBUSER, DBPASS, $options)) {
-            $ferror=sprintf('Unable to connect to the database — %s',db_connect_error());
-        }elseif(!db_select_database(DBNAME)) {
-            $ferror=sprintf('Unknown or invalid database: %s',DBNAME);
+        $hosts = explode(',', DBHOST);
+        foreach ($hosts as $host) {
+            $ferror  = null;
+            if (!db_connect($host, DBUSER, DBPASS, $options)) {
+                $ferror = sprintf('Unable to connect to the database — %s',
+                        db_connect_error());
+            }elseif(!db_select_database(DBNAME)) {
+                $ferror = sprintf('Unknown or invalid database: %s',
+                        DBNAME);
+           }
+           // break if no error
+           if (!$ferror) break;
         }
 
-        if($ferror) //Fatal error
+        if ($ferror) //Fatal error
             self::croak($ferror);
     }
 
@@ -350,9 +367,9 @@ define('CLI_DIR', INCLUDE_DIR.'cli/');
 /*############## Do NOT monkey with anything else beyond this point UNLESS you really know what you are doing ##############*/
 
 #Current version && schema signature (Changes from version to version)
-define('GIT_VERSION', '8fbc7ee'); // Set by installer
+define('GIT_VERSION', '7c20036'); // Set by installer
 define('MAJOR_VERSION', '1.17');
-define('THIS_VERSION', 'v1.17.2'); // Set by installer
+define('THIS_VERSION', 'v1.17.5'); // Set by installer
 //Path separator
 if(!defined('PATH_SEPARATOR')){
     if(strpos($_ENV['OS'],'Win')!==false || !strcasecmp(substr(PHP_OS, 0, 3),'WIN'))

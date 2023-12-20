@@ -137,7 +137,10 @@ trait UserSessionTrait {
 
         // If TIME_BOMB is set and less than the current time we need to regenerate
         // session id to help mitigate session fixation attacks.
-        if (isset($_SESSION['TIME_BOMB'])
+        // Only regenerate on GET to avoid invalidating data in-flight on a
+        // POST request
+        if ($_SERVER['REQUEST_METHOD'] === 'GET'
+                && isset($_SESSION['TIME_BOMB'])
                 && ($_SESSION['TIME_BOMB'] < time())
                 && ($id=$this->regenerateSession())) {
             // unset timer and set next one based on maxlife for the user or
@@ -168,7 +171,7 @@ trait UserSessionTrait {
         // If ttl is 0 then session is destroyed immediatetly
         $_SESSION['TTD'] = time() + $ttl; // now + ttl
         if (($id=osTicketSession::regenerate($ttl)))
-            $this->session_id = $id;
+            $this->session->session_id = $id;
         // unset TTD on the new session - new life my boy!
         unset($_SESSION['TTD']);
         return $id;
@@ -211,7 +214,7 @@ class ClientSession extends EndUser {
         parent::__construct($user);
         $this->class ='client';
         // XXX: Change the key to user-id
-        $this->session = new UserSession($user->getId());
+        $this->session = new UserSession($user->getUserId());
         $this->setSessionToken();
         $this->maxidletime = $cfg->getClientTimeout();
     }

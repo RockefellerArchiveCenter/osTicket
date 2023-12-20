@@ -897,8 +897,8 @@ implements TemplateVariable {
             // a response to an existing thread entry
             if ($ost)
                 $ost->log(LOG_ERR, _S('Email loop detected'), sprintf(
-                _S('It appears as though %s is being used as a forwarded or fetched email account and is also being used as a user / system account. Please correct the loop or seek technical assistance.'),
-                $mailinfo['email']),
+                _S('It appears as though %s is being used as a forwarded or fetched email account and is also being used as a user / system account. Please correct the loop or seek technical assistance.\n\n%s'),
+                $mailinfo['email'], $mailinfo['header']),
 
                 // This is quite intentional -- don't continue the loop
                 false,
@@ -2115,6 +2115,7 @@ class ThreadEvent extends VerySimpleModel {
                 case 'timestamp':
                     $timeFormat = null;
                     if ($mode != self::MODE_CLIENT && $thisstaff
+                            && (!isset($_REQUEST['a']) || $_REQUEST['a']!='print')
                             && !strcasecmp($thisstaff->datetime_format,
                                 'relative')) {
                         $timeFormat = function ($timestamp) {
@@ -2285,7 +2286,7 @@ class Event extends VerySimpleModel {
     static function getStates($dropdown=false) {
         $names = array();
         if ($dropdown)
-            $names = array(__('All'));
+            $names = array('All');
 
         $events = self::objects()->values_flat('name');
         foreach ($events as $val)

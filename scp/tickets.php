@@ -507,8 +507,8 @@ if ($thisstaff->hasPerm(Ticket::PERM_CREATE, false)) {
 }
 
 
-$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js?8fbc7ee"></script>');
-$ost->addExtraHeader('<script type="text/javascript" src="js/thread.js?8fbc7ee"></script>');
+$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js?7c20036"></script>');
+$ost->addExtraHeader('<script type="text/javascript" src="js/thread.js?7c20036"></script>');
 $ost->addExtraHeader('<meta name="tip-namespace" content="tickets.queue" />',
     "$('#content').data('tipNamespace', 'tickets.queue');");
 
@@ -540,7 +540,7 @@ if($ticket) {
       require_once(sprintf('phar:///%s/plugins/audit.phar/class.audit.php', INCLUDE_DIR));
       $show = AuditEntry::$show_view_audits;
       $filename = sprintf('%s-audits-%s.csv',
-              $ticket->getNumber(), strftime('%Y%m%d'));
+              $ticket->getNumber(), date('Ymd'));
       $tableInfo = AuditEntry::getTableInfo($ticket, true);
       if (!Export::audits('ticket', $filename, $tableInfo, $ticket, 'csv', $show))
           $errors['err'] = __('Unable to dump query results.')

@@ -68,7 +68,7 @@ namespace osTicket\Session {
             } else {
                 // local handler is being used force this namespace
                 $handler = sprintf('%s\%s', __NAMESPACE__, $backend);
-                $impl = 'AbstractSessionhandler';
+                $impl = ($bk == 'system') ? 'SystemSessionHandler' : 'AbstractSessionHandler';
             }
 
             // Make sure handler / backend class exits
@@ -310,6 +310,7 @@ namespace osTicket\Session {
 
         public function getRecord($id, $autocreate = false) {
             if (!isset($this->record)
+                    || !is_object($this->record)
                    // Mismatch here means new session id
                     || strcmp($id, $this->record->getId()))
                 $this->record = static::lookupRecord($id, $autocreate, $this);
@@ -543,7 +544,7 @@ namespace osTicket\Session {
      * Use this session handler when you don't care about session data.
      *
      */
-    class NoopSessionStorageBackend extends AbstractSessionhandler {
+    class NoopSessionStorageBackend extends AbstractSessionHandler {
         public function read($id) {
             return "";
         }

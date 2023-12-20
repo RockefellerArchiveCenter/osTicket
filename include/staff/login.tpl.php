@@ -45,7 +45,7 @@ if ($thisstaff && $thisstaff->is2FAPending())
             <input type="text" name="userid" id="name" value="<?php
                 echo $info['userid'] ?? null; ?>" placeholder="<?php echo __('Email or Username'); ?>"
                 autofocus autocorrect="off" autocapitalize="off">
-            <input type="password" name="passwd" id="pass" placeholder="<?php echo __('Password'); ?>" autocorrect="off" autocapitalize="off">
+            <input type="password" name="passwd" id="pass" maxlength="128" placeholder="<?php echo __('Password'); ?>" autocorrect="off" autocapitalize="off">
                 <h3 style="display:inline"><a id="reset-link" class="<?php
                     if (!$show_reset || !$cfg->allowPasswordReset()) echo 'hidden';
                     ?>" href="pwreset.php"><?php echo __('Forgot My Password'); ?></a></h3>
@@ -167,6 +167,6 @@ if (($bks=StaffAuthenticationBackend::getExternal())) { ?>
         #loginBox:after { background-color: white !important; }
     </style>
     <![endif]-->
-    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery-ui-1.13.1.custom.min.js?8fbc7ee"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery-ui-1.13.2.custom.min.js?7c20036"></script>
 </body>
 </html>

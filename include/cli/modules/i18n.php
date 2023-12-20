@@ -291,21 +291,21 @@ class i18n_Compiler extends Module {
         }
 
         // Include a manifest
-        include_once INCLUDE_DIR . 'class.mailfetch.php';
+        include_once INCLUDE_DIR . 'class.mailparse.php';
 
         $po_header = Mail_Parse::splitHeaders($mo['']);
         $info = array(
             'Build-Date' => date(DATE_RFC822),
-            'Phrases-Version' => $po_header['X-Osticket-Major-Version'],
+            'Phrases-Version' => $po_header['x-osticket-major-version'],
             'Build-Version' => trim(`git describe`),
             'Build-Major-Version' => MAJOR_VERSION,
-            'Language' => $po_header['Language'],
+            'Language' => $po_header['language'],
             #'Phrases' =>
             #'Translated' =>
             #'Approved' =>
             'Id' => 'lang:' . $lang,
-            'Last-Revision' => $po_header['PO-Revision-Date'],
-            'Version' => (int)(strtotime($po_header['PO-Revision-Date']) / 10000),
+            'Last-Revision' => $po_header['po-revision-date'],
+            'Version' => (int)(strtotime($po_header['po-revision-date']) / 10000),
         );
         $phar->addFromString(
             'MANIFEST.php',
@@ -353,34 +353,42 @@ class i18n_Compiler extends Module {
                 $this->fail('Unable to include AWS phar file. Download to INCLUDE_DIR');
             require_once INCLUDE_DIR . 'aws.phar';
 
-            $aws = Aws\Common\Aws::factory(array());
-            $client = $aws->get('Route53');
+            // Services only available via global endpoints (eg. Route 53)
+            // must be instantiated with 'us-east-1'
+            $aws = new Aws\Sdk([
+                'region' => 'us-east-1',
+                'version' => '2013-04-01',
+                'credentials' => [
+                    'key' => getenv('AWS_ACCESS_KEY_ID'),
+                    'secret' => getenv('AWS_SECRET_ACCESS_KEY')
+                ]
+            ]);
+            $client = $aws->createRoute53();
 
             try {
-            $resp = $client->changeResourceRecordSets(array(
-                'HostedZoneId' => $options['dns'],
-                'ChangeBatch' => array(
-                    'Changes' => array(
-                        array(
-                            'Action' => 'CREATE',
-                            'ResourceRecordSet' => array(
-                                'Name' => "{$signature['hash']}.updates.osticket.com.",
-                                'Type' => 'TXT',
-                                'TTL' => 172800,
-                                'ResourceRecords' => array(
-                                    array(
-                                        'Value' => $seal,
+                $resp = $client->changeResourceRecordSets(array(
+                    'HostedZoneId' => $options['dns'],
+                    'ChangeBatch' => array(
+                        'Changes' => array(
+                            array(
+                                'Action' => 'CREATE',
+                                'ResourceRecordSet' => array(
+                                    'Name' => "{$signature['hash']}.updates.osticket.com.",
+                                    'Type' => 'TXT',
+                                    'TTL' => 172800,
+                                    'ResourceRecords' => array(
+                                        array(
+                                            'Value' => $seal,
+                                        ),
                                     ),
                                 ),
                             ),
                         ),
                     ),
-                ),
-            ));
-            $this->stdout->write(sprintf('%s: %s', $resp['ChangeInfo']['Comment'],
-                $resp['ChangeInfo']['Status']));
-            }
-            catch (Exception $ex) {
+                ));
+                $this->stdout->write(sprintf('%s: %s', $resp['ChangeInfo']['Comment'],
+                    $resp['ChangeInfo']['Status']));
+            } catch (Exception $ex) {
                 $this->stdout->write("Seal: $seal\n");
                 $this->fail('!! AWS Update Failed: '.$ex->getMessage());
             }
@@ -390,10 +398,11 @@ class i18n_Compiler extends Module {
         }
     }
 
-    function __read_next_string($tokens) {
+    function __read_next_string(&$tokens) {
         $string = array();
 
-        foreach ($tokens as $x=>$T) {
+        while ($T = current($tokens)) {
+            next($tokens);
             switch ($T[0]) {
                 case T_CONSTANT_ENCAPSED_STRING:
                     // Strip leading and trailing ' and " chars
@@ -431,7 +440,7 @@ class i18n_Compiler extends Module {
             }
         }
     }
-    function __read_args($tokens, $proto=false) {
+    function __read_args(&$tokens, $proto=false) {
         $args = array('forms'=>array());
         $arg = null;
         $proto = $proto ?: array('forms'=>1);
@@ -467,8 +476,9 @@ class i18n_Compiler extends Module {
         }
     }
 
-    function __get_func_args($tokens, $args) {
-        foreach ($tokens as $x=>$T) {
+    function __get_func_args(&$tokens, $args) {
+        while ($T = current($tokens)) {
+            next($tokens);
             switch ($T[0]) {
             case T_WHITESPACE:
                 continue 2;
@@ -480,10 +490,11 @@ class i18n_Compiler extends Module {
             }
         }
     }
-    function __find_strings($tokens, $funcs, $parens=0) {
+    function __find_strings(&$tokens, $funcs, $parens=0) {
         $T_funcs = array();
         $funcdef = false;
-        foreach ($tokens as $x=>$T) {
+        while ($T = current($tokens)) {
+            next($tokens);
             switch ($T[0]) {
             case T_STRING:
             case T_VARIABLE:
@@ -640,7 +651,7 @@ class i18n_Compiler extends Module {
         foreach ($files as $f) {
             $F = str_replace($root.'/', $domain, $f);
             $this->stderr->write("$F\n");
-            $tokens = new ArrayObject(token_get_all(fread(fopen($f, 'r'), filesize($f))));
+            $tokens = token_get_all(fread(fopen($f, 'r'), filesize($f)));
             foreach ($this->__find_strings($tokens, $funcs, 1) as $call) {
                 self::__addString($strings, $call, $F);
             }
@@ -713,7 +724,8 @@ class i18n_Compiler extends Module {
             preg_match_all('/(?:function\s+)?__\(\s*[^\'"]*(([\'"])(?:(?<!\\\\)\2|.)+\2)\s*[^)]*\)/',
                 $script, $calls, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
             foreach ($calls as $c) {
-                if (!($call = $this->__find_strings(token_get_all('<?php '.$c[0][0]), $funcs, 0)))
+                $tokens = token_get_all('<?php '.$c[0][0]);
+                if (!($call = $this->__find_strings($tokens, $funcs, 0)))
                     continue;
                 $call = $call[0];
 
